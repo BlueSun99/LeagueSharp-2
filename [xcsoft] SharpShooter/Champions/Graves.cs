@@ -3,7 +3,6 @@ using System.Linq;
 using LeagueSharp;
 using LeagueSharp.Common;
 using SharpDX;
-using SharpDX.Direct3D9;
 using Color = System.Drawing.Color;
 using System.Collections.Generic;
 using Collision = LeagueSharp.Common.Collision;

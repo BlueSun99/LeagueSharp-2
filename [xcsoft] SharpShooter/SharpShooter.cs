@@ -107,7 +107,7 @@ namespace Sharpshooter
 
             //part of marksman
 
-            var drawMinionLastHit = SharpShooter.Menu.Item("drawMinionLastHit").GetValue<Circle>();
+            var drawMinionLastHit = Menu.Item("drawMinionLastHit").GetValue<Circle>();
             var drawMinionNearKill = SharpShooter.Menu.Item("drawMinionNearKill").GetValue<Circle>();
 
             if (drawMinionLastHit.Active || drawMinionNearKill.Active)

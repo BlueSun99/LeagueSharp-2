@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using LeagueSharp;
 using LeagueSharp.Common;
-using SharpDX;
-using SharpDX.Direct3D9;
 using Color = System.Drawing.Color;
 
 namespace Sharpshooter.Champions
