@@ -48,6 +48,7 @@ namespace Sharpshooter.Champions
             SharpShooter.Menu.SubMenu("Misc").AddItem(new MenuItem("mobsteal", "Use Mobsteal (With E)", true).SetValue(true));
             SharpShooter.Menu.SubMenu("Misc").AddItem(new MenuItem("lasthitassist", "Use Lasthit Assist (With E)", true).SetValue(true));
             SharpShooter.Menu.SubMenu("Misc").AddItem(new MenuItem("soulboundsaver", "Use Soulbound Saver (With R)", true).SetValue(true));
+            SharpShooter.Menu.SubMenu("Misc").AddItem(new MenuItem("autoEHarass", "Auto Lasthit a Minion For Harass (With E)", true).SetValue(true));
 
             SharpShooter.Menu.SubMenu("Drawings").AddItem(new MenuItem("drawingAA", "Real AA Range", true).SetValue(new Circle(true, Color.FromArgb(0, 230, 255))));
             SharpShooter.Menu.SubMenu("Drawings").AddItem(new MenuItem("drawingQ", "Q Range", true).SetValue(new Circle(true, Color.FromArgb(0, 230, 255))));
@@ -103,11 +104,14 @@ namespace Sharpshooter.Champions
             Mobsteal();
 
             #region E harass with lasthit for anytime
-            var Minion = MinionManager.GetMinions(Player.ServerPosition, E.Range, MinionTypes.All, MinionTeam.Enemy).Where(x => x.Health <= E.GetDamage(x)).OrderBy(x => x.Health).FirstOrDefault();
-            var Target = HeroManager.Enemies.Where(x => E.CanCast(x) && E.GetDamage(x) >= 1 && !x.HasBuffOfType(BuffType.Invulnerability) && !x.HasBuffOfType(BuffType.SpellShield)).OrderByDescending(x => E.GetDamage(x)).FirstOrDefault();
+            if (SharpShooter.Menu.Item("autoEHarass", true).GetValue<bool>())
+            {
+                var Minion = MinionManager.GetMinions(Player.ServerPosition, E.Range, MinionTypes.All, MinionTeam.Enemy).Where(x => x.Health <= E.GetDamage(x)).OrderBy(x => x.Health).FirstOrDefault();
+                var Target = HeroManager.Enemies.Where(x => E.CanCast(x) && E.GetDamage(x) >= 1 && !x.HasBuffOfType(BuffType.Invulnerability) && !x.HasBuffOfType(BuffType.SpellShield)).OrderByDescending(x => E.GetDamage(x)).FirstOrDefault();
 
-            if (E.CanCast(Minion) && E.CanCast(Target))
-                E.Cast(); 
+                if (E.CanCast(Minion) && E.CanCast(Target))
+                    E.Cast();
+            }
             #endregion
         }
 
