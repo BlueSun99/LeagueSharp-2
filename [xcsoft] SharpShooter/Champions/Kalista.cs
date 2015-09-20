@@ -164,7 +164,7 @@ namespace Sharpshooter.Champions
             if (!SharpShooter.Menu.Item("killsteal", true).GetValue<Boolean>() || !E.IsReady())
                 return;
 
-            var target = HeroManager.Enemies.FirstOrDefault(x => !x.HasBuffOfType(BuffType.Invulnerability) && !x.HasBuffOfType(BuffType.SpellShield) && E.CanCast(x) && (x.Health + x.AttackShield + (x.HPRegenRate / 2)) <= E.GetDamage(x));
+            var target = HeroManager.Enemies.FirstOrDefault(x => !x.HasBuffOfType(BuffType.Invulnerability) && !x.HasBuffOfType(BuffType.SpellShield) && E.CanCast(x) && (x.Health + (x.HPRegenRate / 2)) <= E.GetDamage(x));
 
             if (E.CanCast(target))
                 E.Cast();
@@ -237,7 +237,7 @@ namespace Sharpshooter.Champions
             {
                 var eTarget = HeroManager.Enemies.Where(x => x.IsValidTarget(E.Range) && E.GetDamage(x) >= 1 && !x.HasBuffOfType(BuffType.Invulnerability) && !x.HasBuffOfType(BuffType.SpellShield)).OrderByDescending(x => E.GetDamage(x)).FirstOrDefault();
 
-                if (eTarget != null && eTarget.Health + (eTarget.HPRegenRate/2) + eTarget.AttackShield <= E.GetDamage(eTarget))
+                if (eTarget != null && eTarget.Health + (eTarget.HPRegenRate/2) <= E.GetDamage(eTarget))
                     E.Cast();
             }
         }
