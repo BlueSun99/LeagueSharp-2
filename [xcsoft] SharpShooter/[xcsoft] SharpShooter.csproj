@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Sharpshooter</RootNamespace>
     <AssemblyName>[xcsoft] SharpShooter</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <PreBuildEvent />
     <PostBuildEvent />
@@ -36,13 +36,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="LeagueSharp">
-      <HintPath>C:\Users\workstation\Desktop\LeagueSharp\System\LeagueSharp.dll</HintPath>
+      <HintPath>C:\Users\impsh\Desktop\LeagueSharp\System\LeagueSharp.dll</HintPath>
     </Reference>
     <Reference Include="LeagueSharp.Common">
-      <HintPath>C:\Users\workstation\Desktop\LeagueSharp\System\LeagueSharp.Common.dll</HintPath>
+      <HintPath>C:\Users\impsh\Desktop\LeagueSharp\System\LeagueSharp.Common.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX">
-      <HintPath>C:\Users\workstation\Desktop\LeagueSharp\System\SharpDX.dll</HintPath>
+      <HintPath>C:\Users\impsh\Desktop\LeagueSharp\System\SharpDX.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -68,6 +68,7 @@
     <Compile Include="Champions\Vayne.cs" />
     <Compile Include="Champions\_base.cs" />
     <Compile Include="DamageIndicator.cs" />
+    <Compile Include="ExtraExtensions.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SharpShooter.cs" />
