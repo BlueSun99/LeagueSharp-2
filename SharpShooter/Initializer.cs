@@ -18,6 +18,8 @@ namespace SharpShooter
                 OrbwalkerTargetIndicator.Load();
                 LasthitIndicator.Load();
             }
+
+            Console.WriteLine("SharpShooter: Initialized.");
         }
     }
 }
