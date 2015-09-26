@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 
 using LeagueSharp;
 using LeagueSharp.Common;
@@ -44,9 +45,11 @@ namespace SharpShooter.Plugins
             Game.OnUpdate += Game_OnUpdate;
             Drawing.OnDraw += Drawing_OnDraw;
             AntiGapcloser.OnEnemyGapcloser += AntiGapcloser_OnEnemyGapcloser;
+
+            Console.WriteLine("Sharpshooter: Graves Loaded.");
         }
 
-        private void Game_OnUpdate(System.EventArgs args)
+        private void Game_OnUpdate(EventArgs args)
         {
             if (!ObjectManager.Player.IsDead)
             {
@@ -125,7 +128,7 @@ namespace SharpShooter.Plugins
                             E.Cast(ObjectManager.Player.Position.Extend(gapcloser.Sender.Position, -E.Range));
         }
 
-        private void Drawing_OnDraw(System.EventArgs args)
+        private void Drawing_OnDraw(EventArgs args)
         {
             if (!ObjectManager.Player.IsDead)
             {

@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 
 using LeagueSharp;
@@ -52,6 +53,8 @@ namespace SharpShooter.Plugins
             Drawing.OnDraw += Drawing_OnDraw;
             Orbwalking.OnNonKillableMinion += Orbwalking_OnNonKillableMinion;
             Spellbook.OnCastSpell += Spellbook_OnCastSpell;
+
+            Console.WriteLine("Sharpshooter: Kalista Loaded.");
         }
 
         private void Game_OnUpdate(System.EventArgs args)
