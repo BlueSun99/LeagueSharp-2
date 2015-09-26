@@ -24,7 +24,7 @@ namespace SharpShooter.Plugins
             R.SetSkillshot(0.25f, 100f, 2100f, false, SkillshotType.SkillshotLine);
 
             MenuProvider.Champion.Combo.addUseQ();
-            MenuProvider.Champion.Combo.addItem("Q Range", new Slider(600, 100, 850));
+            MenuProvider.Champion.Combo.addItem("Q Range", new Slider(425, 100, 850));
             MenuProvider.Champion.Combo.addUseW();
             MenuProvider.Champion.Combo.addUseR();
 
@@ -34,7 +34,6 @@ namespace SharpShooter.Plugins
             MenuProvider.Champion.Jungleclear.addUseQ();
             MenuProvider.Champion.Jungleclear.addIfMana(60);
 
-            MenuProvider.Champion.Misc.addUseKillsteal();
             MenuProvider.Champion.Misc.addUseAntiGapcloser();
 
             MenuProvider.Champion.Drawings.addDrawQrange(System.Drawing.Color.DeepSkyBlue, true);
