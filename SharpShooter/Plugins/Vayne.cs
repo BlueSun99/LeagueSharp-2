@@ -19,7 +19,7 @@ namespace SharpShooter.Plugins
             E = new Spell(SpellSlot.E, 650f) { Width = 1f };
             R = new Spell(SpellSlot.R);
 
-            E.SetTargetted(0.14f, 1200f);//I don't know exactly. fuck it. not bad
+            E.SetTargetted(0.14f, 1600f);//I don't know exactly. fuck it. not bad
 
             MenuProvider.Champion.Combo.addUseQ();
             MenuProvider.Champion.Combo.addUseE();
@@ -31,16 +31,14 @@ namespace SharpShooter.Plugins
             MenuProvider.Champion.Laneclear.addIfMana(60);
 
             MenuProvider.Champion.Jungleclear.addUseQ();
-            //MenuProvider.Champion.Jungleclear.addUseE();
             MenuProvider.Champion.Jungleclear.addIfMana(60);
 
-            MenuProvider.Champion.Misc.addItem("Auto Q when using R", true);
             MenuProvider.Champion.Misc.addUseAntiGapcloser();
             MenuProvider.Champion.Misc.addUseInterrupter();
+            MenuProvider.Champion.Misc.addItem("Auto Q when using R", true);
+            MenuProvider.Champion.Misc.addItem("Q Stealth duration (ms)", new Slider(200, 0, 1000));
 
-            //MenuProvider.Champion.Drawings.addDrawQrange(System.Drawing.Color.DeepSkyBlue, true);
             MenuProvider.Champion.Drawings.addDrawErange(System.Drawing.Color.DeepSkyBlue, false);
-            //MenuProvider.Champion.Drawings.addItem("Draw E Prediction", true);
             MenuProvider.Champion.Drawings.addDamageIndicator(GetComboDamage);
 
             Game.OnUpdate += Game_OnUpdate;
@@ -49,12 +47,24 @@ namespace SharpShooter.Plugins
             Obj_AI_Base.OnDoCast += Obj_AI_Base_OnDoCast;
             AntiGapcloser.OnEnemyGapcloser += AntiGapcloser_OnEnemyGapcloser;
             Interrupter2.OnInterruptableTarget += Interrupter2_OnInterruptableTarget;
+            Orbwalking.BeforeAttack += Orbwalking_BeforeAttack;
+        }
+
+        private void Orbwalking_BeforeAttack(Orbwalking.BeforeAttackEventArgs args)
+        {
+            if (args.Unit.IsMe)
+            {
+                var buff = ObjectManager.Player.GetBuff("vaynetumblefade");
+                if (buff != null)
+                    if (buff.IsValidBuff())
+                        if (buff.EndTime - Game.Time > (buff.EndTime - buff.StartTime) - (MenuProvider.Champion.Misc.getSliderValue("Q Stealth duration (ms)").Value / 1000))
+                            args.Process = false;
+            }
         }
 
         private void Game_OnUpdate(System.EventArgs args)
         {
             if (!ObjectManager.Player.IsDead)
-            {
                 switch (MenuProvider.Orbwalker.ActiveMode)
                 {
                     case Orbwalking.OrbwalkingMode.Combo:
@@ -64,15 +74,12 @@ namespace SharpShooter.Plugins
                                     foreach (var enemy in HeroManager.Enemies.Where(x => x.IsValidTarget(E.Range)))
                                     {
                                         var Prediction = E.GetPrediction(enemy);
-
                                         if (Prediction.Hitchance >= HitChance.High)
                                         {
                                             var FinalPosition = Prediction.UnitPosition.To2D().Extend(ObjectManager.Player.ServerPosition.To2D(), 350).To3D();
-
                                             for (int i = 1; i <= 350; i += (int)enemy.BoundingRadius)
                                             {
                                                 Vector3 loc3 = Prediction.UnitPosition.Extend(ObjectManager.Player.ServerPosition, -i);
-
                                                 if (loc3.IsWall())
                                                 {
                                                     E.CastOnUnit(enemy);
@@ -81,11 +88,9 @@ namespace SharpShooter.Plugins
                                             }
                                         }
                                     }
-
                             break;
                         }
                 }
-            }
         }
 
         private void Obj_AI_Base_OnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
@@ -108,7 +113,6 @@ namespace SharpShooter.Plugins
                                 if (MenuProvider.Champion.Combo.UseQ)
                                     if (Q.isReadyPerfectly())
                                         Q.Cast(Game.CursorPos);
-
                                 break;
                             }
                         case Orbwalking.OrbwalkingMode.Mixed:
@@ -117,7 +121,6 @@ namespace SharpShooter.Plugins
                                     if (Q.isReadyPerfectly())
                                         if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Harass.IfMana))
                                             Q.Cast(Game.CursorPos);
-
                                 break;
                             }
                         case Orbwalking.OrbwalkingMode.LaneClear:
@@ -135,7 +138,6 @@ namespace SharpShooter.Plugins
                                         if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Jungleclear.IfMana))
                                             if (MinionManager.GetMinions(Orbwalking.GetRealAutoAttackRange(ObjectManager.Player), MinionTypes.All, MinionTeam.Neutral).Any())
                                                 Q.Cast(Game.CursorPos);
-
                                 break;
                             }
                     }
@@ -143,31 +145,27 @@ namespace SharpShooter.Plugins
 
         private void AntiGapcloser_OnEnemyGapcloser(ActiveGapcloser gapcloser)
         {
-            if (!ObjectManager.Player.IsDead)
-                if (MenuProvider.Champion.Misc.UseAntiGapcloser)
-                    if (gapcloser.End.Distance(ObjectManager.Player.Position) <= 200)
-                        if (gapcloser.Sender.IsValidTarget(E.Range))
-                            if (E.isReadyPerfectly())
-                                E.CastOnUnit(gapcloser.Sender);
+            if (MenuProvider.Champion.Misc.UseAntiGapcloser)
+                if (gapcloser.End.Distance(ObjectManager.Player.Position) <= 200)
+                    if (gapcloser.Sender.IsValidTarget(E.Range))
+                        if (E.isReadyPerfectly())
+                            E.CastOnUnit(gapcloser.Sender);
         }
 
         private void Interrupter2_OnInterruptableTarget(Obj_AI_Hero sender, Interrupter2.InterruptableTargetEventArgs args)
         {
-            if (!ObjectManager.Player.IsDead)
-                if (MenuProvider.Champion.Misc.UseInterrupter)
-                    if (args.DangerLevel >= Interrupter2.DangerLevel.High)
-                        if (sender.IsValidTarget(E.Range))
-                            if (E.isReadyPerfectly())
-                                E.CastOnUnit(sender);
+            if (MenuProvider.Champion.Misc.UseInterrupter)
+                if (args.DangerLevel >= Interrupter2.DangerLevel.High)
+                    if (sender.IsValidTarget(E.Range))
+                        if (E.isReadyPerfectly())
+                            E.CastOnUnit(sender);
         }
 
         private void Drawing_OnDraw(System.EventArgs args)
         {
             if (!ObjectManager.Player.IsDead)
-            {
                 if (MenuProvider.Champion.Drawings.DrawErange.Active)
                     Render.Circle.DrawCircle(ObjectManager.Player.Position, E.Range, MenuProvider.Champion.Drawings.DrawErange.Color);
-            }
         }
 
         private float GetComboDamage(Obj_AI_Base enemy)

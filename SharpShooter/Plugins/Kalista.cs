@@ -41,7 +41,6 @@ namespace SharpShooter.Plugins
             MenuProvider.Champion.Misc.addUseKillsteal();
             MenuProvider.Champion.Misc.addItem("Use Mobsteal", true);
             MenuProvider.Champion.Misc.addItem("Use Lasthit Assist", true);
-            MenuProvider.Champion.Misc.addItem("Use Soulbound Saver", true);
 
             MenuProvider.Champion.Drawings.addDrawQrange(System.Drawing.Color.DeepSkyBlue, true);
             MenuProvider.Champion.Drawings.addDrawWrange(System.Drawing.Color.DeepSkyBlue, false);
