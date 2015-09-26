@@ -30,9 +30,9 @@ namespace SharpShooter.Plugins
             MenuProvider.Champion.Harass.addIfMana();
 
             MenuProvider.Champion.Laneclear.addUseQ();
-            MenuProvider.Champion.Laneclear.addItem("Cast Q if killable minion number >=", new Slider(3, 1, 7));
+            MenuProvider.Champion.Laneclear.addItem("Cast Q if Killable Minion Number >=", new Slider(3, 1, 7));
             MenuProvider.Champion.Laneclear.addUseE();
-            MenuProvider.Champion.Laneclear.addItem("Cast E if killable minion number >=", new Slider(2, 1, 5));
+            MenuProvider.Champion.Laneclear.addItem("Cast E if Killable Minion Number >=", new Slider(2, 1, 5));
             MenuProvider.Champion.Laneclear.addIfMana(20);
 
             MenuProvider.Champion.Jungleclear.addUseQ();
@@ -40,8 +40,9 @@ namespace SharpShooter.Plugins
             MenuProvider.Champion.Jungleclear.addIfMana(20);
 
             MenuProvider.Champion.Misc.addUseKillsteal();
-            MenuProvider.Champion.Misc.addItem("Use Mobsteal", true);
-            MenuProvider.Champion.Misc.addItem("Use Lasthit Assist", true);
+            MenuProvider.Champion.Misc.addItem("Use Mobsteal (With E)", true);
+            MenuProvider.Champion.Misc.addItem("Use Lasthit Assist (With E)", true);
+            MenuProvider.Champion.Misc.addItem("Use Soulbound Saver (With R)");
 
             MenuProvider.Champion.Drawings.addDrawQrange(System.Drawing.Color.DeepSkyBlue, true);
             MenuProvider.Champion.Drawings.addDrawWrange(System.Drawing.Color.DeepSkyBlue, false);
@@ -53,6 +54,7 @@ namespace SharpShooter.Plugins
             Drawing.OnDraw += Drawing_OnDraw;
             Orbwalking.OnNonKillableMinion += Orbwalking_OnNonKillableMinion;
             Spellbook.OnCastSpell += Spellbook_OnCastSpell;
+            Obj_AI_Base.OnProcessSpellCast += Obj_AI_Base_OnProcessSpellCast;
 
             Console.WriteLine("Sharpshooter: Kalista Loaded.");
         }
@@ -129,7 +131,7 @@ namespace SharpShooter.Plugins
                                                             break;
                                                     }
 
-                                                    if (killableNumber >= MenuProvider.Champion.Laneclear.getSliderValue("Cast Q if killable minion number >=").Value)
+                                                    if (killableNumber >= MenuProvider.Champion.Laneclear.getSliderValue("Cast Q if Killable Minion Number >=").Value)
                                                     {
                                                         if (!ObjectManager.Player.IsWindingUp)
                                                         {
@@ -143,7 +145,7 @@ namespace SharpShooter.Plugins
                             if (MenuProvider.Champion.Laneclear.UseE)
                                 if (E.isReadyPerfectly())
                                     if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Laneclear.IfMana))
-                                        if (MinionManager.GetMinions(float.MaxValue).Count(x => x.isKillableAndValidTarget(E.GetDamage(x))) >= MenuProvider.Champion.Laneclear.getSliderValue("Cast E if killable minion number >=").Value)
+                                        if (MinionManager.GetMinions(float.MaxValue).Count(x => x.isKillableAndValidTarget(E.GetDamage(x))) >= MenuProvider.Champion.Laneclear.getSliderValue("Cast E if Killable Minion Number >=").Value)
                                             E.Cast();
 
                             //Jugnle
@@ -172,7 +174,7 @@ namespace SharpShooter.Plugins
                         if (HeroManager.Enemies.Any(x => x.isKillableAndValidTarget(E.GetDamage(x))))
                             E.Cast();
 
-                if (MenuProvider.Champion.Misc.getBoolValue("Use Mobsteal"))
+                if (MenuProvider.Champion.Misc.getBoolValue("Use Mobsteal (With E)"))
                     if (E.isReadyPerfectly())
                         if (MinionManager.GetMinions(float.MaxValue, MinionTypes.All, MinionTeam.Neutral).Any(x => x.isKillableAndValidTarget(E.GetDamage(x))))
                             E.Cast();
@@ -185,7 +187,7 @@ namespace SharpShooter.Plugins
             {
                 Obj_AI_Minion Minion = minion as Obj_AI_Minion;
 
-                if (MenuProvider.Champion.Misc.getBoolValue("Use Lasthit Assist"))
+                if (MenuProvider.Champion.Misc.getBoolValue("Use Lasthit Assist (With E)"))
                     if (E.isReadyPerfectly())
                         if (Minion.isKillableAndValidTarget(E.GetDamage(Minion)))
                             E.Cast();
@@ -201,6 +203,20 @@ namespace SharpShooter.Plugins
                             args.Process = false;
                         else
                             ELastCastTime = Utils.TickCount;
+        }
+
+        private void Obj_AI_Base_OnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
+        {
+            if (sender.IsEnemy)
+                if (sender.IsChampion())
+                    if (R.isReadyPerfectly())
+                    {
+                        var soulbound = HeroManager.Allies.FirstOrDefault(x => x.HasBuff("kalistacoopstrikeally"));
+                        if (soulbound != null)
+                            if (args.Target.NetworkId == soulbound.NetworkId || args.End.Distance(soulbound.Position) <= 200)
+                                if (soulbound.HealthPercent < 20)
+                                    R.Cast();
+                    }
         }
 
         private void Drawing_OnDraw(EventArgs args)

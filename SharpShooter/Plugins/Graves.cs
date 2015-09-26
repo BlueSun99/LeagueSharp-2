@@ -23,6 +23,7 @@ namespace SharpShooter.Plugins
 
             MenuProvider.Champion.Combo.addUseQ();
             MenuProvider.Champion.Combo.addItem("Q Range", new Slider(425, 100, 850));
+            MenuProvider.Champion.Combo.addUseE();
             MenuProvider.Champion.Combo.addUseW();
             MenuProvider.Champion.Combo.addUseR();
 
@@ -64,6 +65,11 @@ namespace SharpShooter.Plugins
                                     if (QTarget != null)
                                         Q.Cast(QTarget);
                                 }
+
+                            if (MenuProvider.Champion.Combo.UseE)
+                                if (E.isReadyPerfectly())
+                                    if (ObjectManager.Player.Position.Extend(Game.CursorPos, 450).CountEnemiesInRange(1000) <= 1)
+                                        E.Cast(Game.CursorPos);
 
                             if (MenuProvider.Champion.Combo.UseW)
                                 if (W.isReadyPerfectly())
