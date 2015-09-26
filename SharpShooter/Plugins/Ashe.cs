@@ -77,7 +77,7 @@ namespace SharpShooter.Plugins
                                             if (Target.isKillableAndValidTarget(Damage.GetSpellDamage(ObjectManager.Player, Target, SpellSlot.R), R.Range) && !Orbwalking.InAutoAttackRange(Target))
                                                 R.Cast(Target);//killable
 
-                                            if (Target.IsValidTarget(500f))
+                                            if (Target.IsValidTarget(600f))
                                                 R.Cast(Target);//too close
 
                                             if (Target.isImmobileUntil() > Target.ServerPosition.Distance(ObjectManager.Player.ServerPosition) / R.Speed)
