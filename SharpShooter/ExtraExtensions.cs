@@ -1,4 +1,7 @@
-﻿using LeagueSharp;
+﻿using System;
+using System.Linq;
+
+using LeagueSharp;
 using LeagueSharp.Common;
 
 namespace SharpShooter
@@ -66,6 +69,18 @@ namespace SharpShooter
         internal static bool isManaPercentOkay(this Obj_AI_Hero hero, int ManaPercent)
         {
             return hero.ManaPercent > ManaPercent;
+        }
+
+        internal static double isImmobileUntil(this Obj_AI_Hero unit)
+        {
+            var result =
+                unit.Buffs.Where(
+                    buff =>
+                        buff.IsActive && Game.Time <= buff.EndTime &&
+                        (buff.Type == BuffType.Charm || buff.Type == BuffType.Knockup || buff.Type == BuffType.Stun ||
+                         buff.Type == BuffType.Suppression || buff.Type == BuffType.Snare))
+                    .Aggregate(0d, (current, buff) => Math.Max(current, buff.EndTime));
+            return (result - Game.Time);
         }
     }
 }

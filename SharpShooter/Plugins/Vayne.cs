@@ -67,32 +67,33 @@ namespace SharpShooter.Plugins
         private void Game_OnUpdate(EventArgs args)
         {
             if (!ObjectManager.Player.IsDead)
-                switch (MenuProvider.Orbwalker.ActiveMode)
-                {
-                    case Orbwalking.OrbwalkingMode.Combo:
-                        {
-                            if (MenuProvider.Champion.Combo.UseE)
-                                if (E.isReadyPerfectly())
-                                    foreach (var enemy in HeroManager.Enemies.Where(x => x.IsValidTarget(E.Range)))
-                                    {
-                                        var Prediction = E.GetPrediction(enemy);
-                                        if (Prediction.Hitchance >= HitChance.High)
+                if (Orbwalking.CanMove(10))
+                    switch (MenuProvider.Orbwalker.ActiveMode)
+                    {
+                        case Orbwalking.OrbwalkingMode.Combo:
+                            {
+                                if (MenuProvider.Champion.Combo.UseE)
+                                    if (E.isReadyPerfectly())
+                                        foreach (var enemy in HeroManager.Enemies.Where(x => x.IsValidTarget(E.Range)))
                                         {
-                                            var FinalPosition = Prediction.UnitPosition.To2D().Extend(ObjectManager.Player.ServerPosition.To2D(), 350).To3D();
-                                            for (int i = 1; i <= 350; i += (int)enemy.BoundingRadius)
+                                            var Prediction = E.GetPrediction(enemy);
+                                            if (Prediction.Hitchance >= HitChance.High)
                                             {
-                                                Vector3 loc3 = Prediction.UnitPosition.Extend(ObjectManager.Player.ServerPosition, -i);
-                                                if (loc3.IsWall())
+                                                var FinalPosition = Prediction.UnitPosition.To2D().Extend(ObjectManager.Player.ServerPosition.To2D(), 350).To3D();
+                                                for (int i = 1; i <= 350; i += (int)enemy.BoundingRadius)
                                                 {
-                                                    E.CastOnUnit(enemy);
-                                                    break;
+                                                    Vector3 loc3 = Prediction.UnitPosition.Extend(ObjectManager.Player.ServerPosition, -i);
+                                                    if (loc3.IsWall())
+                                                    {
+                                                        E.CastOnUnit(enemy);
+                                                        break;
+                                                    }
                                                 }
                                             }
                                         }
-                                    }
-                            break;
-                        }
-                }
+                                break;
+                            }
+                    }
         }
 
         private void Obj_AI_Base_OnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
@@ -175,8 +176,9 @@ namespace SharpShooter.Plugins
             var buff = ObjectManager.Player.GetBuff("vaynesilvereddebuff");
 
             if (buff != null)
-                if (buff.Count == 2)
-                    return W.GetDamage(enemy) + (float)ObjectManager.Player.GetAutoAttackDamage(enemy, true);
+                if (buff.Caster.IsMe)
+                    if (buff.Count == 2)
+                        return W.GetDamage(enemy) + (float)ObjectManager.Player.GetAutoAttackDamage(enemy, true);
 
             return 0;
         }

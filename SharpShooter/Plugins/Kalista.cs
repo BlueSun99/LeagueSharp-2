@@ -74,7 +74,7 @@ namespace SharpShooter.Plugins
                                             if (!E.isReadyPerfectly())
                                                 Q.CastOnBestTarget();
                                             else
-                                               if (ObjectManager.Player.Mana - Q.Instance.ManaCost >= E.Instance.ManaCost)
+                                               if (ObjectManager.Player.Mana - Q.ManaCost >= E.ManaCost)
                                                 Q.CastOnBestTarget();
 
                             if (MenuProvider.Champion.Combo.UseE)
@@ -239,7 +239,7 @@ namespace SharpShooter.Plugins
 
         private float GetComboDamage(Obj_AI_Base enemy)
         {
-            return E.IsReady() ? E.GetDamage(enemy) : 0;
+            return E.isReadyPerfectly() ? E.GetDamage(enemy) : 0;
         }
     }
 }

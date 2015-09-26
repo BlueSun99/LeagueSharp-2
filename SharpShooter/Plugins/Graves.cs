@@ -23,8 +23,8 @@ namespace SharpShooter.Plugins
 
             MenuProvider.Champion.Combo.addUseQ();
             MenuProvider.Champion.Combo.addItem("Q Range", new Slider(425, 100, 850));
-            MenuProvider.Champion.Combo.addUseE();
             MenuProvider.Champion.Combo.addUseW();
+            MenuProvider.Champion.Combo.addUseE();
             MenuProvider.Champion.Combo.addUseR();
 
             MenuProvider.Champion.Harass.addUseQ();
@@ -54,62 +54,69 @@ namespace SharpShooter.Plugins
         {
             if (!ObjectManager.Player.IsDead)
             {
-                switch (MenuProvider.Orbwalker.ActiveMode)
+                if (Orbwalking.CanMove(10))
                 {
-                    case Orbwalking.OrbwalkingMode.Combo:
-                        {
-                            if (MenuProvider.Champion.Combo.UseQ)
-                                if (Q.isReadyPerfectly())
-                                {
-                                    var QTarget = TargetSelector.GetTarget(MenuProvider.Champion.Combo.getSliderValue("Q Range").Value, Q.DamageType);
-                                    if (QTarget != null)
-                                        Q.Cast(QTarget);
-                                }
-
-                            if (MenuProvider.Champion.Combo.UseE)
-                                if (E.isReadyPerfectly())
-                                    if (ObjectManager.Player.Position.Extend(Game.CursorPos, 450).CountEnemiesInRange(1000) <= 1)
-                                        E.Cast(Game.CursorPos);
-
-                            if (MenuProvider.Champion.Combo.UseW)
-                                if (W.isReadyPerfectly())
-                                    W.CastOnBestTarget();
-
-                            if (MenuProvider.Champion.Combo.UseR)
-                                if (R.isReadyPerfectly())
-                                {
-                                    var RKillableTarget = HeroManager.Enemies.FirstOrDefault(x => x.isKillableAndValidTarget(R.GetDamage(x), R.Range));
-                                    if (RKillableTarget != null)
-                                        R.Cast(RKillableTarget);
-                                    R.CastIfWillHit(TargetSelector.GetTarget(R.Range, R.DamageType), 3);
-                                }
-                            break;
-                        }
-                    case Orbwalking.OrbwalkingMode.Mixed:
-                        {
-                            if (MenuProvider.Champion.Harass.UseQ)
-                                if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Harass.IfMana))
+                    switch (MenuProvider.Orbwalker.ActiveMode)
+                    {
+                        case Orbwalking.OrbwalkingMode.Combo:
+                            {
+                                if (MenuProvider.Champion.Combo.UseQ)
                                     if (Q.isReadyPerfectly())
                                     {
-                                        var QTarget = TargetSelector.GetTarget(MenuProvider.Champion.Harass.getSliderValue("Q Range").Value, Q.DamageType);
+                                        var QTarget = TargetSelector.GetTarget(MenuProvider.Champion.Combo.getSliderValue("Q Range").Value, Q.DamageType);
                                         if (QTarget != null)
                                             Q.Cast(QTarget);
                                     }
-                            break;
-                        }
-                    case Orbwalking.OrbwalkingMode.LaneClear:
-                        {
-                            //Jungleclear
-                            if (MenuProvider.Champion.Jungleclear.UseQ)
-                                if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Jungleclear.IfMana))
-                                    if (Q.isReadyPerfectly())
+
+                                if (MenuProvider.Champion.Combo.UseE)
+                                    if (E.isReadyPerfectly())
+                                        if (ObjectManager.Player.Position.Extend(Game.CursorPos, 450).CountEnemiesInRange(1000) <= 1)
+                                            if (!Q.isReadyPerfectly())
+                                                E.Cast(ObjectManager.Player.Position.Extend(Game.CursorPos, 450));
+                                            else
+                                               if (ObjectManager.Player.Mana - E.ManaCost >= Q.ManaCost)
+                                                E.Cast(ObjectManager.Player.Position.Extend(Game.CursorPos, 450));
+
+                                if (MenuProvider.Champion.Combo.UseW)
+                                    if (W.isReadyPerfectly())
+                                        W.CastOnBestTarget();
+
+                                if (MenuProvider.Champion.Combo.UseR)
+                                    if (R.isReadyPerfectly())
                                     {
-                                        var QTarget = MinionManager.GetMinions(Q.Range, MinionTypes.All, MinionTeam.Neutral).FirstOrDefault(x => x.IsValidTarget(Q.Range));
-                                        if (QTarget != null)
-                                            Q.Cast(QTarget);
+                                        var RKillableTarget = HeroManager.Enemies.FirstOrDefault(x => x.isKillableAndValidTarget(R.GetDamage(x), R.Range));
+                                        if (RKillableTarget != null)
+                                            R.Cast(RKillableTarget);
+                                        R.CastIfWillHit(TargetSelector.GetTarget(R.Range, R.DamageType), 3);
                                     }
-                            break;
-                        }
+                                break;
+                            }
+                        case Orbwalking.OrbwalkingMode.Mixed:
+                            {
+                                if (MenuProvider.Champion.Harass.UseQ)
+                                    if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Harass.IfMana))
+                                        if (Q.isReadyPerfectly())
+                                        {
+                                            var QTarget = TargetSelector.GetTarget(MenuProvider.Champion.Harass.getSliderValue("Q Range").Value, Q.DamageType);
+                                            if (QTarget != null)
+                                                Q.Cast(QTarget);
+                                        }
+                                break;
+                            }
+                        case Orbwalking.OrbwalkingMode.LaneClear:
+                            {
+                                //Jungleclear
+                                if (MenuProvider.Champion.Jungleclear.UseQ)
+                                    if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Jungleclear.IfMana))
+                                        if (Q.isReadyPerfectly())
+                                        {
+                                            var QTarget = MinionManager.GetMinions(Q.Range, MinionTypes.All, MinionTeam.Neutral).FirstOrDefault(x => x.IsValidTarget(Q.Range));
+                                            if (QTarget != null)
+                                                Q.Cast(QTarget);
+                                        }
+                                break;
+                            }
+                    }
                 }
 
                 if (MenuProvider.Champion.Misc.UseKillsteal)
@@ -157,7 +164,7 @@ namespace SharpShooter.Plugins
 
         private float GetComboDamage(Obj_AI_Base enemy)
         {
-            return R.IsReady() ? R.GetDamage(enemy) : 0;
+            return R.isReadyPerfectly() ? R.GetDamage(enemy) : 0;
         }
     }
 }
