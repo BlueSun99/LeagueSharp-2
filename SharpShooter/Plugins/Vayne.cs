@@ -64,7 +64,7 @@ namespace SharpShooter.Plugins
             }
         }
 
-        private void Game_OnUpdate(System.EventArgs args)
+        private void Game_OnUpdate(EventArgs args)
         {
             if (!ObjectManager.Player.IsDead)
                 switch (MenuProvider.Orbwalker.ActiveMode)
@@ -163,7 +163,7 @@ namespace SharpShooter.Plugins
                             E.CastOnUnit(sender);
         }
 
-        private void Drawing_OnDraw(System.EventArgs args)
+        private void Drawing_OnDraw(EventArgs args)
         {
             if (!ObjectManager.Player.IsDead)
                 if (MenuProvider.Champion.Drawings.DrawErange.Active)

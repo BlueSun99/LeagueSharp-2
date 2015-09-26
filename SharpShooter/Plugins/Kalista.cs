@@ -57,7 +57,7 @@ namespace SharpShooter.Plugins
             Console.WriteLine("Sharpshooter: Kalista Loaded.");
         }
 
-        private void Game_OnUpdate(System.EventArgs args)
+        private void Game_OnUpdate(EventArgs args)
         {
             if (!ObjectManager.Player.IsDead)
             {
@@ -203,7 +203,7 @@ namespace SharpShooter.Plugins
                             ELastCastTime = Utils.TickCount;
         }
 
-        private void Drawing_OnDraw(System.EventArgs args)
+        private void Drawing_OnDraw(EventArgs args)
         {
             if (!ObjectManager.Player.IsDead)
             {
