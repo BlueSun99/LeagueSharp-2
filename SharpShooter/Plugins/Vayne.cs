@@ -16,10 +16,10 @@ namespace SharpShooter.Plugins
         {
             Q = new Spell(SpellSlot.Q);
             W = new Spell(SpellSlot.W);
-            E = new Spell(SpellSlot.E, 600f) { Width = 1f };
+            E = new Spell(SpellSlot.E, 650f) { Width = 1f };
             R = new Spell(SpellSlot.R);
 
-            E.SetTargetted(0.14f, 1200f);
+            E.SetTargetted(0.14f, 1200f);//I don't know exactly. fuck it
 
             MenuProvider.Champion.Combo.addUseQ();
             MenuProvider.Champion.Combo.addUseE();
@@ -40,7 +40,7 @@ namespace SharpShooter.Plugins
 
             MenuProvider.Champion.Drawings.addDrawQrange(System.Drawing.Color.DeepSkyBlue, true);
             MenuProvider.Champion.Drawings.addDrawErange(System.Drawing.Color.DeepSkyBlue, false);
-            MenuProvider.Champion.Drawings.addItem("Draw E Prediction", true);
+            //MenuProvider.Champion.Drawings.addItem("Draw E Prediction", true);
             MenuProvider.Champion.Drawings.addDamageIndicator(GetComboDamage);
 
             Game.OnUpdate += Game_OnUpdate;
@@ -67,7 +67,7 @@ namespace SharpShooter.Plugins
 
                                         if (Prediction.Hitchance >= HitChance.High)
                                         {
-                                            var FinalPosition = Prediction.UnitPosition.Extend(ObjectManager.Player.ServerPosition, 350);
+                                            var FinalPosition = Prediction.UnitPosition.To2D().Extend(ObjectManager.Player.ServerPosition.To2D(), 350).To3D();
 
                                             for (int i = 1; i <= 350; i += (int)enemy.BoundingRadius)
                                             {
@@ -161,20 +161,6 @@ namespace SharpShooter.Plugins
 
                 if (MenuProvider.Champion.Drawings.DrawErange.Active)
                     Render.Circle.DrawCircle(ObjectManager.Player.Position, E.Range, MenuProvider.Champion.Drawings.DrawErange.Color);
-
-                if (MenuProvider.Champion.Drawings.getBoolValue("Draw E Prediction"))
-                    foreach (var enemy in HeroManager.Enemies.Where(x => x.IsValidTarget(1000f)))
-                    {
-                        var Prediction = E.GetPrediction(enemy);
-
-                        for (int i = 0; i < 350; i += (int)enemy.BoundingRadius)
-                        {
-                            Vector3 loc3 = Prediction.UnitPosition.Extend(ObjectManager.Player.Position, -i);
-
-                            if (loc3.IsWall())
-                                Render.Circle.DrawCircle(loc3, 10, Prediction.Hitchance >= HitChance.High ? System.Drawing.Color.Green : System.Drawing.Color.Red, 3, true);
-                        }
-                    }
             }
         }
 
