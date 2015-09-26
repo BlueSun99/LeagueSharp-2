@@ -19,7 +19,7 @@ namespace SharpShooter.Plugins
             E = new Spell(SpellSlot.E, 650f) { Width = 1f };
             R = new Spell(SpellSlot.R);
 
-            E.SetTargetted(0.14f, 1200f);//I don't know exactly. fuck it
+            E.SetTargetted(0.14f, 1200f);//I don't know exactly. fuck it. not bad
 
             MenuProvider.Champion.Combo.addUseQ();
             MenuProvider.Champion.Combo.addUseE();
@@ -38,7 +38,7 @@ namespace SharpShooter.Plugins
             MenuProvider.Champion.Misc.addUseAntiGapcloser();
             MenuProvider.Champion.Misc.addUseInterrupter();
 
-            MenuProvider.Champion.Drawings.addDrawQrange(System.Drawing.Color.DeepSkyBlue, true);
+            //MenuProvider.Champion.Drawings.addDrawQrange(System.Drawing.Color.DeepSkyBlue, true);
             MenuProvider.Champion.Drawings.addDrawErange(System.Drawing.Color.DeepSkyBlue, false);
             //MenuProvider.Champion.Drawings.addItem("Draw E Prediction", true);
             MenuProvider.Champion.Drawings.addDamageIndicator(GetComboDamage);
@@ -143,22 +143,28 @@ namespace SharpShooter.Plugins
 
         private void AntiGapcloser_OnEnemyGapcloser(ActiveGapcloser gapcloser)
         {
-            throw new System.NotImplementedException();
+            if (!ObjectManager.Player.IsDead)
+                if (MenuProvider.Champion.Misc.UseAntiGapcloser)
+                    if (gapcloser.End.Distance(ObjectManager.Player.Position) <= 200)
+                        if (gapcloser.Sender.IsValidTarget(E.Range))
+                            if (E.isReadyPerfectly())
+                                E.CastOnUnit(gapcloser.Sender);
         }
 
         private void Interrupter2_OnInterruptableTarget(Obj_AI_Hero sender, Interrupter2.InterruptableTargetEventArgs args)
         {
-            throw new System.NotImplementedException();
+            if (!ObjectManager.Player.IsDead)
+                if (MenuProvider.Champion.Misc.UseInterrupter)
+                    if (args.DangerLevel >= Interrupter2.DangerLevel.High)
+                        if (sender.IsValidTarget(E.Range))
+                            if (E.isReadyPerfectly())
+                                E.CastOnUnit(sender);
         }
-
 
         private void Drawing_OnDraw(System.EventArgs args)
         {
             if (!ObjectManager.Player.IsDead)
             {
-                if (MenuProvider.Champion.Drawings.DrawQrange.Active)
-                    Render.Circle.DrawCircle(ObjectManager.Player.Position, Q.Range, MenuProvider.Champion.Drawings.DrawQrange.Color);
-
                 if (MenuProvider.Champion.Drawings.DrawErange.Active)
                     Render.Circle.DrawCircle(ObjectManager.Player.Position, E.Range, MenuProvider.Champion.Drawings.DrawErange.Color);
             }
