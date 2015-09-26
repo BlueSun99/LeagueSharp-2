@@ -139,13 +139,10 @@ namespace SharpShooter.Plugins
             if (!ObjectManager.Player.IsDead)
             {
                 if (MenuProvider.Champion.Drawings.DrawQrange.Active)
-                {
-                    if (MenuProvider.Orbwalker.ActiveMode == Orbwalking.OrbwalkingMode.Combo)
-                        Render.Circle.DrawCircle(ObjectManager.Player.Position, MenuProvider.Champion.Combo.getSliderValue("Q Range").Value, MenuProvider.Champion.Drawings.DrawQrange.Color);
-
                     if (MenuProvider.Orbwalker.ActiveMode == Orbwalking.OrbwalkingMode.Mixed)
                         Render.Circle.DrawCircle(ObjectManager.Player.Position, MenuProvider.Champion.Harass.getSliderValue("Q Range").Value, MenuProvider.Champion.Drawings.DrawQrange.Color);
-                }
+                    else
+                        Render.Circle.DrawCircle(ObjectManager.Player.Position, MenuProvider.Champion.Combo.getSliderValue("Q Range").Value, MenuProvider.Champion.Drawings.DrawQrange.Color);
 
                 if (MenuProvider.Champion.Drawings.DrawWrange.Active)
                     Render.Circle.DrawCircle(ObjectManager.Player.Position, W.Range, MenuProvider.Champion.Drawings.DrawWrange.Color);
