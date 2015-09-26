@@ -63,7 +63,11 @@ namespace SharpShooter.Plugins
                             {
                                 if (MenuProvider.Champion.Combo.UseW)
                                     if (W.isReadyPerfectly())
-                                        W.CastOnBestTarget();
+                                    {
+                                        var Target = TargetSelector.GetTargetNoCollision(W);
+                                        if (Target.IsValidTarget(W.Range))
+                                            W.Cast(Target);
+                                    }
 
                                 if (MenuProvider.Champion.Combo.UseR)
                                     if (R.isReadyPerfectly())
@@ -86,7 +90,11 @@ namespace SharpShooter.Plugins
                                 if (MenuProvider.Champion.Harass.UseW)
                                     if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Harass.IfMana))
                                         if (W.isReadyPerfectly())
-                                            W.CastOnBestTarget();
+                                        {
+                                            var Target = TargetSelector.GetTargetNoCollision(W);
+                                            if (Target.IsValidTarget(W.Range))
+                                                W.Cast(Target);
+                                        }
                                 break;
                             }
                         case Orbwalking.OrbwalkingMode.LaneClear:
