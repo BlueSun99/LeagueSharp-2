@@ -64,6 +64,7 @@
     <Compile Include="MenuProvider.cs" />
     <Compile Include="OrbwalkerTargetIndicator.cs" />
     <Compile Include="PluginLoader.cs" />
+    <Compile Include="Plugins\Graves.cs" />
     <Compile Include="Plugins\Kalista.cs" />
     <Compile Include="Plugins\Vayne.cs" />
     <Compile Include="Program.cs" />

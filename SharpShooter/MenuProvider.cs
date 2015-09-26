@@ -36,10 +36,13 @@ namespace SharpShooter
             {
                 MenuInstance = new Menu("SharpShooter: " + ObjectManager.Player.ChampionName + "(X)", "SharpShooterCommon", true);
 
-                addItem("txt1", "Sorry. " + ObjectManager.Player.ChampionName + "is not supported.", null);
+                addItem("txt1", "Sorry. " + ObjectManager.Player.ChampionName + " is not supported.", null);
                 addItem("txt2", " ");
                 addItem("txt3", "---Supported---");
+
                 addItem("Kalista");
+                addItem("Vayne");
+                addItem("Graves");
             }
 
             MenuInstance.AddToMainMenu();

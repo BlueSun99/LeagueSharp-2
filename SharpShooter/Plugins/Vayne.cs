@@ -27,7 +27,7 @@ namespace SharpShooter.Plugins
             MenuProvider.Champion.Harass.addUseQ();
             MenuProvider.Champion.Harass.addIfMana();
 
-            MenuProvider.Champion.Laneclear.addUseQ();
+            MenuProvider.Champion.Laneclear.addUseQ(false);
             MenuProvider.Champion.Laneclear.addIfMana(60);
 
             MenuProvider.Champion.Jungleclear.addUseQ();
@@ -170,7 +170,13 @@ namespace SharpShooter.Plugins
 
         private float GetComboDamage(Obj_AI_Base enemy)
         {
-            return Q.IsReady() ? Q.GetDamage(enemy) + (float)ObjectManager.Player.GetAutoAttackDamage(enemy, true) : 0;
+            var buff = ObjectManager.Player.GetBuff("vaynesilvereddebuff");
+
+            if (buff != null)
+                if (buff.Count == 2)
+                    return W.GetDamage(enemy) + (float)ObjectManager.Player.GetAutoAttackDamage(enemy, true);
+
+            return 0;
         }
     }
 }

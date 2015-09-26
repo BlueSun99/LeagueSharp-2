@@ -15,7 +15,7 @@ namespace SharpShooter.Plugins
 
         public Kalista()
         {
-            Q = new Spell(SpellSlot.Q, 1150f) { DamageType = TargetSelector.DamageType.Physical };
+            Q = new Spell(SpellSlot.Q, 1150f) { DamageType = TargetSelector.DamageType.Physical, MinHitChance = HitChance.High };
             W = new Spell(SpellSlot.W, 5200f);
             E = new Spell(SpellSlot.E, 950f);
             R = new Spell(SpellSlot.R, 1500f);
@@ -148,7 +148,7 @@ namespace SharpShooter.Plugins
                                 if (Q.isReadyPerfectly())
                                     if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Jungleclear.IfMana))
                                     {
-                                        var QTarget = MinionManager.GetMinions(Q.Range, MinionTypes.All, MinionTeam.Neutral).FirstOrDefault(x => x.IsValidTarget() && Q.GetPrediction(x).Hitchance >= HitChance.High);
+                                        var QTarget = MinionManager.GetMinions(Q.Range, MinionTypes.All, MinionTeam.Neutral).FirstOrDefault(x => x.IsValidTarget(Q.Range) && Q.GetPrediction(x).Hitchance >= HitChance.High);
 
                                         if (QTarget != null)
                                             Q.Cast(QTarget);
