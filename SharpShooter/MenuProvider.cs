@@ -23,16 +23,18 @@ namespace SharpShooter
         {
             if (PluginLoader.CanLoadPlugin(ObjectManager.Player.ChampionName))
             {
-                MenuInstance = new Menu("SharpShooter", "SharpShooter: " + ObjectManager.Player.ChampionName + "(X)", true);
+                MenuInstance = new Menu("SharpShooter: " + ObjectManager.Player.ChampionName, "SharpShooterCommon", true);
 
                 addSubMenu("Champion", ObjectManager.Player.ChampionName);
+
+                addItem("Work In Progress");
 
                 Champion.addOrbwalker();
                 Champion.addTargetSelector();
             }
             else
             {
-                MenuInstance = new Menu("SharpShooter", "SharpShooter: " + ObjectManager.Player.ChampionName, true);
+                MenuInstance = new Menu("SharpShooter: " + ObjectManager.Player.ChampionName + "(X)", "SharpShooterCommon", true);
 
                 addItem("txt1", "Sorry. " + ObjectManager.Player.ChampionName + "is not supported.", null);
                 addItem("txt2", " ");

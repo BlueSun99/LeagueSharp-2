@@ -14,7 +14,9 @@ namespace SharpShooter
 
             if(PluginLoader.LoadPlugin(ObjectManager.Player.ChampionName))
             {
-                //nothing yet
+                MenuProvider.Champion.Drawings.addItem(" ");
+                OrbwalkerTargetIndicator.Load();
+                LasthitIndicator.Load();
             }
         }
     }

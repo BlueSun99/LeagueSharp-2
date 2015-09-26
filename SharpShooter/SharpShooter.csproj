@@ -60,7 +60,9 @@
     <Compile Include="DynamicInitializer.cs" />
     <Compile Include="ExtraExtensions.cs" />
     <Compile Include="Initializer.cs" />
+    <Compile Include="LasthitIndicator.cs" />
     <Compile Include="MenuProvider.cs" />
+    <Compile Include="OrbwalkerTargetIndicator.cs" />
     <Compile Include="PluginLoader.cs" />
     <Compile Include="Plugins\Kalista.cs" />
     <Compile Include="Plugins\Vayne.cs" />
