@@ -36,7 +36,7 @@ namespace SharpShooter.Plugins
             MenuProvider.Champion.Misc.addUseAntiGapcloser();
             MenuProvider.Champion.Misc.addUseInterrupter();
             MenuProvider.Champion.Misc.addItem("Auto Q when using R", true);
-            MenuProvider.Champion.Misc.addItem("Q Stealth duration (ms)", new Slider(200, 0, 1000));
+            MenuProvider.Champion.Misc.addItem("Q Stealth duration (ms)", new Slider(1000, 0, 1000));
 
             MenuProvider.Champion.Drawings.addDrawErange(System.Drawing.Color.DeepSkyBlue, false);
             MenuProvider.Champion.Drawings.addDamageIndicator(GetComboDamage);
@@ -115,7 +115,8 @@ namespace SharpShooter.Plugins
                             {
                                 if (MenuProvider.Champion.Combo.UseQ)
                                     if (Q.isReadyPerfectly())
-                                        Q.Cast(Game.CursorPos);
+                                        if (ObjectManager.Player.Position.Extend(Game.CursorPos, 300).CountEnemiesInRange(800) <= 1)
+                                            Q.Cast(Game.CursorPos);
                                 break;
                             }
                         case Orbwalking.OrbwalkingMode.Mixed:
@@ -123,7 +124,8 @@ namespace SharpShooter.Plugins
                                 if (MenuProvider.Champion.Harass.UseQ)
                                     if (Q.isReadyPerfectly())
                                         if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Harass.IfMana))
-                                            Q.Cast(Game.CursorPos);
+                                            if (ObjectManager.Player.Position.Extend(Game.CursorPos, 300).CountEnemiesInRange(800) <= 1)
+                                                Q.Cast(Game.CursorPos);
                                 break;
                             }
                         case Orbwalking.OrbwalkingMode.LaneClear:
@@ -132,8 +134,9 @@ namespace SharpShooter.Plugins
                                 if (MenuProvider.Champion.Laneclear.UseQ)
                                     if (Q.isReadyPerfectly())
                                         if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Laneclear.IfMana))
-                                            if (MinionManager.GetMinions(Orbwalking.GetRealAutoAttackRange(ObjectManager.Player)).Any())
-                                                Q.Cast(Game.CursorPos);
+                                            if (ObjectManager.Player.Position.Extend(Game.CursorPos, 300).CountEnemiesInRange(800) <= 1)
+                                                if (MinionManager.GetMinions(Orbwalking.GetRealAutoAttackRange(ObjectManager.Player)).Any())
+                                                    Q.Cast(Game.CursorPos);
 
                                 //Jugnle
                                 if (MenuProvider.Champion.Jungleclear.UseQ)
