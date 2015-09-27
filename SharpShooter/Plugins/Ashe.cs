@@ -13,9 +13,9 @@ namespace SharpShooter.Plugins
         public Ashe()
         {
             Q = new Spell(SpellSlot.Q);
-            W = new Spell(SpellSlot.W, 1200f) { DamageType = TargetSelector.DamageType.Physical, MinHitChance = HitChance.High };
+            W = new Spell(SpellSlot.W, 1200f, TargetSelector.DamageType.Physical) { MinHitChance = HitChance.High };
             E = new Spell(SpellSlot.E);
-            R = new Spell(SpellSlot.R, 2500f) { DamageType = TargetSelector.DamageType.Magical, MinHitChance = HitChance.High };
+            R = new Spell(SpellSlot.R, 2500f, TargetSelector.DamageType.Magical) { MinHitChance = HitChance.High };
 
             W.SetSkillshot(0.25f, 40f, 902f, true, SkillshotType.SkillshotLine);
             R.SetSkillshot(0.25f, 130f, 1600f, false, SkillshotType.SkillshotLine);

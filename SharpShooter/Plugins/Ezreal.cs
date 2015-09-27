@@ -12,14 +12,14 @@ namespace SharpShooter.Plugins
 
         public Ezreal()
         {
-            Q = new Spell(SpellSlot.Q, 850f) { DamageType = TargetSelector.DamageType.Physical, MinHitChance = HitChance.High };
-            W = new Spell(SpellSlot.W, 850f);
-            E = new Spell(SpellSlot.E, 425f);
-            R = new Spell(SpellSlot.R, 1000f) { DamageType = TargetSelector.DamageType.Physical, MinHitChance = HitChance.High };
+            Q = new Spell(SpellSlot.Q, 1150f, TargetSelector.DamageType.Physical) { MinHitChance = HitChance.High };
+            W = new Spell(SpellSlot.W, 1000f, TargetSelector.DamageType.Magical) { MinHitChance = HitChance.High };
+            E = new Spell(SpellSlot.E, 475f, TargetSelector.DamageType.Magical);
+            R = new Spell(SpellSlot.R, 3000f, TargetSelector.DamageType.Magical) { MinHitChance = HitChance.High };
 
-            Q.SetSkillshot(0.25f, 30f, 2000f, true, SkillshotType.SkillshotCone);
-            W.SetSkillshot(0.25f, 250f, 1650f, false, SkillshotType.SkillshotCircle);
-            R.SetSkillshot(0.25f, 100f, 2100f, false, SkillshotType.SkillshotLine);
+            Q.SetSkillshot(0.25f, 60f, 2000f, true, SkillshotType.SkillshotLine);
+            W.SetSkillshot(0.25f, 80f, 1600f, false, SkillshotType.SkillshotLine);
+            R.SetSkillshot(1.0f, 160f, 2000f, false, SkillshotType.SkillshotLine);
 
             MenuProvider.Champion.Combo.addUseQ();
             MenuProvider.Champion.Combo.addUseW();

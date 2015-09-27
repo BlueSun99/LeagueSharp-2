@@ -16,7 +16,7 @@ namespace SharpShooter.Plugins
 
         public Kalista()
         {
-            Q = new Spell(SpellSlot.Q, 1150f) { DamageType = TargetSelector.DamageType.Physical, MinHitChance = HitChance.High };
+            Q = new Spell(SpellSlot.Q, 1150f, TargetSelector.DamageType.Physical) { MinHitChance = HitChance.High };
             W = new Spell(SpellSlot.W, 5200f);
             E = new Spell(SpellSlot.E, 950f);
             R = new Spell(SpellSlot.R, 1500f);

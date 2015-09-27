@@ -12,10 +12,10 @@ namespace SharpShooter.Plugins
 
         public Graves()
         {
-            Q = new Spell(SpellSlot.Q, 850f) { DamageType = TargetSelector.DamageType.Physical, MinHitChance = HitChance.High };
-            W = new Spell(SpellSlot.W, 850f);
+            Q = new Spell(SpellSlot.Q, 850f, TargetSelector.DamageType.Physical) { MinHitChance = HitChance.High };
+            W = new Spell(SpellSlot.W, 850f, TargetSelector.DamageType.Magical) { MinHitChance = HitChance.High};
             E = new Spell(SpellSlot.E, 425f);
-            R = new Spell(SpellSlot.R, 1000f) { DamageType = TargetSelector.DamageType.Physical, MinHitChance = HitChance.High };
+            R = new Spell(SpellSlot.R, 1000f, TargetSelector.DamageType.Physical) { MinHitChance = HitChance.High };
 
             Q.SetSkillshot(0.25f, 30f, 2000f, false, SkillshotType.SkillshotCone);
             W.SetSkillshot(0.25f, 250f, 1650f, false, SkillshotType.SkillshotCircle);
