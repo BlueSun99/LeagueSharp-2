@@ -43,7 +43,6 @@ namespace SharpShooter.Plugins
 
             Game.OnUpdate += Game_OnUpdate;
             Drawing.OnDraw += Drawing_OnDraw;
-            AntiGapcloser.OnEnemyGapcloser += AntiGapcloser_OnEnemyGapcloser;
 
             Console.WriteLine("Sharpshooter: Ezreal Loaded.");
         }
@@ -122,15 +121,6 @@ namespace SharpShooter.Plugins
                     }
                 }
             }
-        }
-
-        private void AntiGapcloser_OnEnemyGapcloser(ActiveGapcloser gapcloser)
-        {
-            if (MenuProvider.Champion.Misc.UseAntiGapcloser)
-                if (gapcloser.End.Distance(ObjectManager.Player.Position) <= 200)
-                    if (gapcloser.Sender.IsValidTarget())
-                        if (E.isReadyPerfectly())
-                            E.Cast(ObjectManager.Player.Position.Extend(gapcloser.Sender.Position, -E.Range));
         }
 
         private void Drawing_OnDraw(EventArgs args)
