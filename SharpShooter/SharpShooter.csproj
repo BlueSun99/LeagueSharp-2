@@ -65,6 +65,7 @@
     <Compile Include="OrbwalkerTargetIndicator.cs" />
     <Compile Include="PluginLoader.cs" />
     <Compile Include="Plugins\Ashe.cs" />
+    <Compile Include="Plugins\Ezreal.cs" />
     <Compile Include="Plugins\Graves.cs" />
     <Compile Include="Plugins\Kalista.cs" />
     <Compile Include="Plugins\Vayne.cs" />

@@ -44,6 +44,7 @@ namespace SharpShooter
                 addItem("Vayne");
                 addItem("Graves");
                 addItem("Ashe");
+                addItem("Ezreal");
             }
 
             MenuInstance.AddToMainMenu();
