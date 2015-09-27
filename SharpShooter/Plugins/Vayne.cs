@@ -24,8 +24,8 @@ namespace SharpShooter.Plugins
             MenuProvider.Champion.Combo.addUseQ();
             MenuProvider.Champion.Combo.addUseE();
 
-            MenuProvider.Champion.Harass.addUseQ();
-            MenuProvider.Champion.Harass.addIfMana();
+            MenuProvider.Champion.Harass.addUseQ(false);
+            MenuProvider.Champion.Harass.addIfMana(60);
 
             MenuProvider.Champion.Laneclear.addUseQ(false);
             MenuProvider.Champion.Laneclear.addIfMana(60);
