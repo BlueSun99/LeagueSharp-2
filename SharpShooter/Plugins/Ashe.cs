@@ -105,7 +105,7 @@ namespace SharpShooter.Plugins
                                         if (W.isReadyPerfectly())
                                         {
                                             var FarmLocation = W.GetLineFarmLocation(MinionManager.GetMinions(W.Range));
-                                            if (FarmLocation.MinionsHit >= 2)
+                                            if (FarmLocation.MinionsHit >= 1)
                                                 W.Cast(FarmLocation.Position);
                                         }
 
@@ -114,7 +114,7 @@ namespace SharpShooter.Plugins
                                     if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Jungleclear.IfMana))
                                         if (W.isReadyPerfectly())
                                         {
-                                            var Target = MinionManager.GetMinions(W.Range, MinionTypes.All, MinionTeam.Neutral).FirstOrDefault(x => x.IsValidTarget(W.Range));
+                                            var Target = MinionManager.GetMinions(W.Range, MinionTypes.All, MinionTeam.Neutral).FirstOrDefault(x => x.IsValidTarget(W.Range) && W.GetPrediction(x).Hitchance >= HitChance.High);
                                             if (Target != null)
                                                 W.Cast(Target);
                                         }
@@ -163,10 +163,11 @@ namespace SharpShooter.Plugins
                                     Q.Cast();
 
                     if (MenuProvider.Orbwalker.ActiveMode == Orbwalking.OrbwalkingMode.LaneClear)
+                        //Jungle
                         if (MenuProvider.Champion.Jungleclear.UseQ)
                             if (ObjectManager.Player.HasBuff("asheqcastready"))
                                 if (Q.isReadyPerfectly())
-                                    if (MinionManager.GetMinions(Orbwalking.GetRealAutoAttackRange(ObjectManager.Player), MinionTypes.All, MinionTeam.Neutral).Any(x => x.NetworkId == target.NetworkId))
+                                    if (MinionManager.GetMinions(Orbwalking.GetRealAutoAttackRange(ObjectManager.Player), MinionTypes.All, MinionTeam.Neutral).Any())
                                         Q.Cast();
                 }
         }
@@ -175,10 +176,10 @@ namespace SharpShooter.Plugins
         {
             if (!ObjectManager.Player.IsDead)
             {
-                if (MenuProvider.Champion.Drawings.DrawWrange.Active)
+                if (MenuProvider.Champion.Drawings.DrawWrange.Active && W.isReadyPerfectly())
                     Render.Circle.DrawCircle(ObjectManager.Player.Position, W.Range, MenuProvider.Champion.Drawings.DrawWrange.Color);
 
-                if (MenuProvider.Champion.Drawings.DrawRrange.Active)
+                if (MenuProvider.Champion.Drawings.DrawRrange.Active && R.isReadyPerfectly())
                     Render.Circle.DrawCircle(ObjectManager.Player.Position, R.Range, MenuProvider.Champion.Drawings.DrawRrange.Color);
             }
         }

@@ -145,19 +145,19 @@ namespace SharpShooter.Plugins
         {
             if (!ObjectManager.Player.IsDead)
             {
-                if (MenuProvider.Champion.Drawings.DrawQrange.Active)
+                if (MenuProvider.Champion.Drawings.DrawQrange.Active && Q.isReadyPerfectly())
                     if (MenuProvider.Orbwalker.ActiveMode == Orbwalking.OrbwalkingMode.Mixed)
                         Render.Circle.DrawCircle(ObjectManager.Player.Position, MenuProvider.Champion.Harass.getSliderValue("Q Range").Value, MenuProvider.Champion.Drawings.DrawQrange.Color);
                     else
                         Render.Circle.DrawCircle(ObjectManager.Player.Position, MenuProvider.Champion.Combo.getSliderValue("Q Range").Value, MenuProvider.Champion.Drawings.DrawQrange.Color);
 
-                if (MenuProvider.Champion.Drawings.DrawWrange.Active)
+                if (MenuProvider.Champion.Drawings.DrawWrange.Active && W.isReadyPerfectly())
                     Render.Circle.DrawCircle(ObjectManager.Player.Position, W.Range, MenuProvider.Champion.Drawings.DrawWrange.Color);
 
-                if (MenuProvider.Champion.Drawings.DrawErange.Active)
+                if (MenuProvider.Champion.Drawings.DrawErange.Active && E.isReadyPerfectly())
                     Render.Circle.DrawCircle(ObjectManager.Player.Position, E.Range, MenuProvider.Champion.Drawings.DrawErange.Color);
 
-                if (MenuProvider.Champion.Drawings.DrawRrange.Active)
+                if (MenuProvider.Champion.Drawings.DrawRrange.Active && R.isReadyPerfectly())
                     Render.Circle.DrawCircle(ObjectManager.Player.Position, R.Range, MenuProvider.Champion.Drawings.DrawRrange.Color);
             }
         }
