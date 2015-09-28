@@ -116,7 +116,7 @@ namespace SharpShooter.Plugins
                             var from = Drawing.WorldToScreen(ObjectManager.Player.Position);
                             var dis = (Orbwalking.GetRealAutoAttackRange(ObjectManager.Player) + 300) - ObjectManager.Player.Distance(Target, false);
                             var to = Drawing.WorldToScreen(dis > 0 ? Target.ServerPosition.Extend(ObjectManager.Player.Position, -dis) : Target.ServerPosition);
-                            Drawing.DrawLine(from[0], from[1], to[0], to[1], 10, System.Drawing.Color.FromArgb(100, 71, 200, 62));
+                            Drawing.DrawLine(from[0], from[1], to[0], to[1], 10, System.Drawing.Color.FromArgb(200, System.Drawing.Color.GreenYellow));
                         }
                     }
 
