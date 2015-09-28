@@ -105,7 +105,7 @@ namespace SharpShooter.Plugins
                                         if (!ObjectManager.Player.IsWindingUp)
                                             if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Laneclear.IfMana))
                                             {
-                                                foreach (var KillableMinion in MinionManager.GetMinions(Q.Range).Where(x => x.isKillableAndValidTarget(Damage.GetSpellDamage(ObjectManager.Player, x, SpellSlot.Q), Q.Range)))
+                                                foreach (var KillableMinion in MinionManager.GetMinions(Q.Range).Where(x => Q.GetPrediction(x).Hitchance >= Q.MinHitChance && x.isKillableAndValidTarget(Damage.GetSpellDamage(ObjectManager.Player, x, SpellSlot.Q), Q.Range)))
                                                 {
                                                     int killableNumber = 0;
 

@@ -135,14 +135,14 @@ namespace SharpShooter.Plugins
                                     if (Q.isReadyPerfectly())
                                         if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Laneclear.IfMana))
                                             if (ObjectManager.Player.Position.Extend(Game.CursorPos, 300).CountEnemiesInRange(800) <= 1)
-                                                if (MinionManager.GetMinions(Orbwalking.GetRealAutoAttackRange(ObjectManager.Player)).Any())
+                                                if (MinionManager.GetMinions(Orbwalking.GetRealAutoAttackRange(ObjectManager.Player)).Any(x=>x.NetworkId == args.Target.NetworkId))
                                                     Q.Cast(Game.CursorPos);
 
                                 //Jugnle
                                 if (MenuProvider.Champion.Jungleclear.UseQ)
                                     if (Q.isReadyPerfectly())
                                         if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Jungleclear.IfMana))
-                                            if (MinionManager.GetMinions(Orbwalking.GetRealAutoAttackRange(ObjectManager.Player), MinionTypes.All, MinionTeam.Neutral).Any())
+                                            if (MinionManager.GetMinions(Orbwalking.GetRealAutoAttackRange(ObjectManager.Player), MinionTypes.All, MinionTeam.Neutral).Any(x => x.NetworkId == args.Target.NetworkId))
                                                 Q.Cast(Game.CursorPos);
                                 break;
                             }

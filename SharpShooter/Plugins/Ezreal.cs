@@ -24,6 +24,7 @@ namespace SharpShooter.Plugins
             MenuProvider.Champion.Combo.addUseQ();
             MenuProvider.Champion.Combo.addUseW();
             MenuProvider.Champion.Combo.addUseR();
+            MenuProvider.Champion.Combo.addItem("Cast R if Will Hit >=", new Slider(3, 2, 5));
 
             MenuProvider.Champion.Harass.addUseQ();
             MenuProvider.Champion.Harass.addUseW(false);
@@ -72,7 +73,7 @@ namespace SharpShooter.Plugins
                                 if (MenuProvider.Champion.Combo.UseR)
                                     if (R.isReadyPerfectly())
                                     {
-                                        var KillableTarget = HeroManager.Enemies.FirstOrDefault(x => x.isKillableAndValidTarget(R.GetDamage(x), R.Range));
+                                        var KillableTarget = HeroManager.Enemies.FirstOrDefault(x => !Orbwalking.InAutoAttackRange(x) && x.isKillableAndValidTarget(R.GetDamage(x), R.Range));
                                         if (KillableTarget != null)
                                             R.Cast(KillableTarget);
                                         R.CastIfWillHit(TargetSelector.GetTarget(R.Range, R.DamageType), 3);
@@ -102,7 +103,7 @@ namespace SharpShooter.Plugins
                                     if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Laneclear.IfMana))
                                         if (Q.isReadyPerfectly())
                                         {
-                                            var Target = MinionManager.GetMinions(Q.Range).OrderByDescending(x => Q.GetDamage(x)).FirstOrDefault(x => x.IsValidTarget(Q.Range) && Q.GetPrediction(x).Hitchance >= Q.MinHitChance);
+                                            var Target = MinionManager.GetMinions(Q.Range).OrderBy(x => x.Health).FirstOrDefault(x => x.isKillableAndValidTarget(Q.GetDamage(x), Q.Range) && Q.GetPrediction(x).Hitchance >= Q.MinHitChance);
                                             if (Target != null)
                                                 Q.Cast(Target);
                                         }
