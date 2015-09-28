@@ -18,7 +18,7 @@ namespace SharpShooter.Plugins
 
             Recall = new Spell(SpellSlot.Recall);
 
-            W.SetSkillshot(0.25f, 250f, 1400f, false, SkillshotType.SkillshotCircle);
+            W.SetSkillshot(0.25f, 100f, 1400f, false, SkillshotType.SkillshotCircle);
 
             MenuProvider.Champion.Combo.addUseW();
             MenuProvider.Champion.Combo.addUseE();
