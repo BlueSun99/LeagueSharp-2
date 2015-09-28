@@ -23,7 +23,7 @@ namespace SharpShooter.Plugins
             MenuProvider.Champion.Combo.addUseW();
             MenuProvider.Champion.Combo.addUseE();
 
-            MenuProvider.Champion.Jungleclear.addUseW();
+            MenuProvider.Champion.Jungleclear.addUseW(false);
             MenuProvider.Champion.Jungleclear.addUseE();
             MenuProvider.Champion.Jungleclear.addIfMana(60);
 
