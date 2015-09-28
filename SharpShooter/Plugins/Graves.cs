@@ -26,6 +26,7 @@ namespace SharpShooter.Plugins
             MenuProvider.Champion.Combo.addUseW();
             MenuProvider.Champion.Combo.addUseE();
             MenuProvider.Champion.Combo.addUseR();
+            MenuProvider.Champion.Combo.addItem("Cast R if Will Hit >=", new Slider(3, 2, 5));
 
             MenuProvider.Champion.Harass.addUseQ();
             MenuProvider.Champion.Harass.addItem("Q Range", new Slider(425, 100, 850));
@@ -87,7 +88,7 @@ namespace SharpShooter.Plugins
                                         var RKillableTarget = HeroManager.Enemies.FirstOrDefault(x => x.isKillableAndValidTarget(R.GetDamage(x), R.Range));
                                         if (RKillableTarget != null)
                                             R.Cast(RKillableTarget);
-                                        R.CastIfWillHit(TargetSelector.GetTarget(R.Range, R.DamageType), 3);
+                                        R.CastIfWillHit(TargetSelector.GetTarget(R.Range, R.DamageType), MenuProvider.Champion.Combo.getSliderValue("Cast R if Will Hit >=").Value);
                                     }
                                 break;
                             }

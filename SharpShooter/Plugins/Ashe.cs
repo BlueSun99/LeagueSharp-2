@@ -46,9 +46,30 @@ namespace SharpShooter.Plugins
             Drawing.OnDraw += Drawing_OnDraw;
             AntiGapcloser.OnEnemyGapcloser += AntiGapcloser_OnEnemyGapcloser;
             Interrupter2.OnInterruptableTarget += Interrupter2_OnInterruptableTarget;
-            Orbwalking.OnAttack += Orbwalking_OnAttack;
+            Orbwalking.BeforeAttack += Orbwalking_BeforeAttack; ;
 
             Console.WriteLine("Sharpshooter: Ashe Loaded.");
+        }
+
+        private void Orbwalking_BeforeAttack(Orbwalking.BeforeAttackEventArgs args)
+        {
+            if (args.Unit.IsMe)
+                if (Orbwalking.InAutoAttackRange(args.Target))
+                {
+                    if (MenuProvider.Orbwalker.ActiveMode == Orbwalking.OrbwalkingMode.Combo)
+                        if (MenuProvider.Champion.Combo.UseQ)
+                            if (ObjectManager.Player.HasBuff("asheqcastready"))
+                                if (Q.isReadyPerfectly())
+                                    Q.Cast();
+
+                    if (MenuProvider.Orbwalker.ActiveMode == Orbwalking.OrbwalkingMode.LaneClear)
+                        //Jungle
+                        if (MenuProvider.Champion.Jungleclear.UseQ)
+                            if (ObjectManager.Player.HasBuff("asheqcastready"))
+                                if (Q.isReadyPerfectly())
+                                    if (MinionManager.GetMinions(Orbwalking.GetRealAutoAttackRange(ObjectManager.Player), MinionTypes.All, MinionTeam.Neutral).Any(x => x.NetworkId == args.Target.NetworkId))
+                                        Q.Cast();
+                }
         }
 
         private void Game_OnUpdate(EventArgs args)
@@ -153,23 +174,7 @@ namespace SharpShooter.Plugins
 
         private void Orbwalking_OnAttack(AttackableUnit unit, AttackableUnit target)
         {
-            if (unit.IsMe)
-                if (target.IsValidTarget(Orbwalking.GetRealAutoAttackRange(ObjectManager.Player)))
-                {
-                    if (MenuProvider.Orbwalker.ActiveMode == Orbwalking.OrbwalkingMode.Combo)
-                        if (MenuProvider.Champion.Combo.UseQ)
-                            if (ObjectManager.Player.HasBuff("asheqcastready"))
-                                if (Q.isReadyPerfectly())
-                                    Q.Cast();
 
-                    if (MenuProvider.Orbwalker.ActiveMode == Orbwalking.OrbwalkingMode.LaneClear)
-                        //Jungle
-                        if (MenuProvider.Champion.Jungleclear.UseQ)
-                            if (ObjectManager.Player.HasBuff("asheqcastready"))
-                                if (Q.isReadyPerfectly())
-                                    if (MinionManager.GetMinions(Orbwalking.GetRealAutoAttackRange(ObjectManager.Player), MinionTypes.All, MinionTeam.Neutral).Any())
-                                        Q.Cast();
-                }
         }
 
         private void Drawing_OnDraw(EventArgs args)

@@ -68,6 +68,7 @@
     <Compile Include="Plugins\Ezreal.cs" />
     <Compile Include="Plugins\Graves.cs" />
     <Compile Include="Plugins\Kalista.cs" />
+    <Compile Include="Plugins\Twitch.cs" />
     <Compile Include="Plugins\Vayne.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

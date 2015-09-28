@@ -24,7 +24,7 @@ namespace SharpShooter
             if (Target.HasBuff("FerociousHowl"))
                 CalculatedDamage *= 0.3;
 
-            return Target.Health + Target.HPRegenRate + Target.PhysicalShield <= CalculatedDamage;
+            return Target.Health + Target.HPRegenRate + Target.PhysicalShield < CalculatedDamage;
         }
 
         internal static bool isKillableAndValidTarget(this Obj_AI_Minion Target, double CalculatedDamage, float distance = float.MaxValue)
@@ -42,7 +42,7 @@ namespace SharpShooter
             if (Target.Name.ToLowerInvariant().Contains("baron") && ObjectManager.Player.HasBuff("barontarget"))
                 CalculatedDamage *= 0.5;
 
-            return Target.Health + Target.HPRegenRate + Target.PhysicalShield <= CalculatedDamage;
+            return Target.Health + Target.HPRegenRate + Target.PhysicalShield < CalculatedDamage;
         }
 
         internal static bool isKillableAndValidTarget(this Obj_AI_Base Target, double CalculatedDamage, float distance = float.MaxValue)
@@ -63,7 +63,7 @@ namespace SharpShooter
             if (Target.Name.ToLowerInvariant().Contains("baron") && ObjectManager.Player.HasBuff("barontarget"))
                 CalculatedDamage *= 0.5;
 
-            return Target.Health + Target.HPRegenRate + Target.PhysicalShield <= CalculatedDamage;
+            return Target.Health + Target.HPRegenRate + Target.PhysicalShield < CalculatedDamage;
         }
 
         internal static bool isManaPercentOkay(this Obj_AI_Hero hero, int ManaPercent)
