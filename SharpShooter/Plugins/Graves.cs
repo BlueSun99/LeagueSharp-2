@@ -13,7 +13,7 @@ namespace SharpShooter.Plugins
         public Graves()
         {
             Q = new Spell(SpellSlot.Q, 850f, TargetSelector.DamageType.Physical) { MinHitChance = HitChance.High };
-            W = new Spell(SpellSlot.W, 850f, TargetSelector.DamageType.Magical) { MinHitChance = HitChance.High};
+            W = new Spell(SpellSlot.W, 850f, TargetSelector.DamageType.Magical) { MinHitChance = HitChance.High };
             E = new Spell(SpellSlot.E, 425f);
             R = new Spell(SpellSlot.R, 1000f, TargetSelector.DamageType.Physical) { MinHitChance = HitChance.High };
 
@@ -47,8 +47,30 @@ namespace SharpShooter.Plugins
             Game.OnUpdate += Game_OnUpdate;
             Drawing.OnDraw += Drawing_OnDraw;
             AntiGapcloser.OnEnemyGapcloser += AntiGapcloser_OnEnemyGapcloser;
+            Obj_AI_Base.OnDoCast += Obj_AI_Base_OnDoCast;
 
             Console.WriteLine("Sharpshooter: Graves Loaded.");
+        }
+
+        private void Obj_AI_Base_OnDoCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
+        {
+            if (sender.IsMe)
+                if (args.SData.IsAutoAttack())
+                    switch (MenuProvider.Orbwalker.ActiveMode)
+                    {
+                        case Orbwalking.OrbwalkingMode.Combo:
+                            {
+                                if (MenuProvider.Champion.Combo.UseE)
+                                    if (E.isReadyPerfectly())
+                                        if (ObjectManager.Player.Position.Extend(Game.CursorPos, 450).CountEnemiesInRange(800) <= 1)
+                                            if (!Q.isReadyPerfectly())
+                                                E.Cast(ObjectManager.Player.Position.Extend(Game.CursorPos, 450));
+                                            else
+                                               if (ObjectManager.Player.Mana - E.ManaCost >= Q.ManaCost)
+                                                E.Cast(ObjectManager.Player.Position.Extend(Game.CursorPos, 450));
+                                break;
+                            }
+                    }
         }
 
         private void Game_OnUpdate(EventArgs args)
@@ -68,15 +90,6 @@ namespace SharpShooter.Plugins
                                         if (QTarget != null)
                                             Q.Cast(QTarget);
                                     }
-
-                                if (MenuProvider.Champion.Combo.UseE)
-                                    if (E.isReadyPerfectly())
-                                        if (ObjectManager.Player.Position.Extend(Game.CursorPos, 450).CountEnemiesInRange(800) <= 1)
-                                            if (!Q.isReadyPerfectly())
-                                                E.Cast(ObjectManager.Player.Position.Extend(Game.CursorPos, 450));
-                                            else
-                                               if (ObjectManager.Player.Mana - E.ManaCost >= Q.ManaCost)
-                                                E.Cast(ObjectManager.Player.Position.Extend(Game.CursorPos, 450));
 
                                 if (MenuProvider.Champion.Combo.UseW)
                                     if (W.isReadyPerfectly())
