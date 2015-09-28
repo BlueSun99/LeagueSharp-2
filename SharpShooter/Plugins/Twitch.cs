@@ -57,7 +57,7 @@ namespace SharpShooter.Plugins
 
                                 if (MenuProvider.Champion.Combo.UseE)
                                     if (E.isReadyPerfectly())
-                                        if (HeroManager.Enemies.Any(x => x.IsValidTarget(E.Range) && (x.GetBuffCount("TwitchHideInShadows") >= 6 || x.isKillableAndValidTarget(E.GetDamage(x)))))
+                                        if (HeroManager.Enemies.Any(x => x.IsValidTarget(E.Range) && (x.GetBuffCount("twitchdeadlyvenom") >= 6 || x.isKillableAndValidTarget(E.GetDamage(x)))))
                                             E.Cast();
                                 break;
                             }
