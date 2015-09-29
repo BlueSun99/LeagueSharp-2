@@ -82,5 +82,14 @@ namespace SharpShooter
                     .Aggregate(0d, (current, buff) => Math.Max(current, buff.EndTime));
             return (result - Game.Time);
         }
+
+        internal static bool isWillDeadByTristanaE(this Obj_AI_Base target)
+        {
+            if (ObjectManager.Player.ChampionName == "Tristana")
+                if (target.HasBuff("tristanaecharge"))
+                    if (target.isKillableAndValidTarget((float)(Damage.GetSpellDamage(ObjectManager.Player, target, SpellSlot.E) * (target.GetBuffCount("tristanaecharge") * 0.30)) + Damage.GetSpellDamage(ObjectManager.Player, target, SpellSlot.E)))
+                        return true;
+            return false;
+        }
     }
 }

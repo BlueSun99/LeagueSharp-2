@@ -56,19 +56,26 @@ namespace SharpShooter.Plugins
             if (args.Unit.IsMe)
                 if (Orbwalking.InAutoAttackRange(args.Target))
                 {
-                    if (MenuProvider.Orbwalker.ActiveMode == Orbwalking.OrbwalkingMode.Combo)
-                        if (MenuProvider.Champion.Combo.UseQ)
-                            if (ObjectManager.Player.HasBuff("asheqcastready"))
-                                if (Q.isReadyPerfectly())
-                                    Q.Cast();
-
-                    if (MenuProvider.Orbwalker.ActiveMode == Orbwalking.OrbwalkingMode.LaneClear)
-                        //Jungle
-                        if (MenuProvider.Champion.Jungleclear.UseQ)
-                            if (ObjectManager.Player.HasBuff("asheqcastready"))
-                                if (Q.isReadyPerfectly())
-                                    if (MinionManager.GetMinions(Orbwalking.GetRealAutoAttackRange(ObjectManager.Player), MinionTypes.All, MinionTeam.Neutral).Any(x => x.NetworkId == args.Target.NetworkId))
-                                        Q.Cast();
+                    switch (MenuProvider.Orbwalker.ActiveMode)
+                    {
+                        case Orbwalking.OrbwalkingMode.Combo:
+                            {
+                                if (MenuProvider.Champion.Combo.UseQ)
+                                    if (ObjectManager.Player.HasBuff("asheqcastready"))
+                                        if (Q.isReadyPerfectly())
+                                            Q.Cast();
+                                break;
+                            }
+                        case Orbwalking.OrbwalkingMode.LaneClear:
+                            {
+                                if (MenuProvider.Champion.Jungleclear.UseQ)
+                                    if (ObjectManager.Player.HasBuff("asheqcastready"))
+                                        if (Q.isReadyPerfectly())
+                                            if (MinionManager.GetMinions(Orbwalking.GetRealAutoAttackRange(ObjectManager.Player), MinionTypes.All, MinionTeam.Neutral).Any(x => x.NetworkId == args.Target.NetworkId))
+                                                Q.Cast();
+                                break;
+                            }
+                    }
                 }
         }
 
