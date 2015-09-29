@@ -36,7 +36,7 @@ namespace SharpShooter.Plugins
 
             MenuProvider.Champion.Misc.addUseAntiGapcloser();
             MenuProvider.Champion.Misc.addUseInterrupter();
-            MenuProvider.Champion.Misc.addItem("Auto R against immobile target", true);
+            MenuProvider.Champion.Misc.addItem("Auto R against immobile targets", true);
 
             MenuProvider.Champion.Drawings.addDrawWrange(System.Drawing.Color.DeepSkyBlue, true);
             MenuProvider.Champion.Drawings.addDrawRrange(System.Drawing.Color.DeepSkyBlue, true);
@@ -151,7 +151,7 @@ namespace SharpShooter.Plugins
                     }
                 }
 
-                if (MenuProvider.Champion.Misc.getBoolValue("Auto R against immobile target"))
+                if (MenuProvider.Champion.Misc.getBoolValue("Auto R against immobile targets"))
                     if (R.isReadyPerfectly())
                     {
                         var RTarget = HeroManager.Enemies.FirstOrDefault(x => R.GetPrediction(x).Hitchance >= HitChance.High && x.IsValidTarget(R.Range) && x.isImmobileUntil() > x.Distance(ObjectManager.Player.ServerPosition) / R.Speed);
