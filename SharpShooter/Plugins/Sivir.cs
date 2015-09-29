@@ -26,6 +26,7 @@ namespace SharpShooter.Plugins
             MenuProvider.Champion.Harass.addIfMana(60);
 
             MenuProvider.Champion.Laneclear.addUseQ();
+            MenuProvider.Champion.Laneclear.addUseW();
             MenuProvider.Champion.Laneclear.addIfMana(60);
 
             MenuProvider.Champion.Jungleclear.addUseQ();
@@ -49,14 +50,14 @@ namespace SharpShooter.Plugins
         private void Obj_AI_Base_OnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
         {
             if (MenuProvider.Champion.Misc.getBoolValue("Auto E against targeted spells"))
-                if (!ObjectManager.Player.IsDead)
-                    if (args.Target.IsMe)
-                        if (sender is Obj_AI_Hero)
-                            if (sender.IsEnemy)
-                                if (!args.SData.IsAutoAttack())
-                                    if (!args.SData.Name.Contains("summoner"))
-                                        if (!args.SData.Name.Contains("TormentedSoil"))
-                                            if (E.isReadyPerfectly())
+                if (E.isReadyPerfectly())
+                    if (!ObjectManager.Player.IsDead)
+                        if (args.Target.IsMe)
+                            if (sender is Obj_AI_Hero)
+                                if (sender.IsEnemy)
+                                    if (!args.SData.IsAutoAttack())
+                                        if (!args.SData.Name.Contains("summoner"))
+                                            if (!args.SData.Name.Contains("TormentedSoil"))
                                                 E.Cast();
         }
 
