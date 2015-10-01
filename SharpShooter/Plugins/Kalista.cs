@@ -42,7 +42,7 @@ namespace SharpShooter.Plugins
             MenuProvider.Champion.Misc.addUseKillsteal();
             MenuProvider.Champion.Misc.addItem("Use Mobsteal (With E)", true);
             MenuProvider.Champion.Misc.addItem("Use Lasthit Assist (With E)", true);
-            MenuProvider.Champion.Misc.addItem("Use Soulbound Saver (With R)");
+            MenuProvider.Champion.Misc.addItem("Use Soulbound Saver (With R)", true);
 
             MenuProvider.Champion.Drawings.addDrawQrange(System.Drawing.Color.DeepSkyBlue, true);
             MenuProvider.Champion.Drawings.addDrawWrange(System.Drawing.Color.DeepSkyBlue, false);
@@ -213,14 +213,15 @@ namespace SharpShooter.Plugins
         {
             if (sender.IsEnemy)
                 if (sender.Type == GameObjectType.obj_AI_Hero)
-                    if (R.isReadyPerfectly())
-                    {
-                        var soulbound = HeroManager.Allies.FirstOrDefault(x => x.HasBuff("kalistacoopstrikeally"));
-                        if (soulbound != null)
-                            if (args.Target.NetworkId == soulbound.NetworkId || args.End.Distance(soulbound.Position) <= 200)
-                                if (soulbound.HealthPercent < 20)
-                                    R.Cast();
-                    }
+                    if (MenuProvider.Champion.Misc.getBoolValue("Use Soulbound Saver (With R)"))
+                        if (R.isReadyPerfectly())
+                        {
+                            var soulbound = HeroManager.Allies.FirstOrDefault(x => x.HasBuff("kalistacoopstrikeally"));
+                            if (soulbound != null)
+                                if (args.Target.NetworkId == soulbound.NetworkId || args.End.Distance(soulbound.Position) <= 200)
+                                    if (soulbound.HealthPercent < 20)
+                                        R.Cast();
+                        }
         }
 
         private void Drawing_OnDraw(EventArgs args)
