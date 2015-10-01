@@ -47,6 +47,7 @@ namespace SharpShooter
                 addItem("Ezreal");
                 addItem("Twitch");
                 addItem("Tristana");
+                addItem("Jinx");
             }
 
             MenuInstance.AddToMainMenu();

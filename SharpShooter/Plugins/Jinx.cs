@@ -16,11 +16,11 @@ namespace SharpShooter.Plugins
         {
             Q = new Spell(SpellSlot.Q);
             W = new Spell(SpellSlot.W, 1450f, TargetSelector.DamageType.Physical) { MinHitChance = HitChance.High };
-            E = new Spell(SpellSlot.E, 900f);
+            E = new Spell(SpellSlot.E, 900f, TargetSelector.DamageType.Physical) { MinHitChance = HitChance.High };
             R = new Spell(SpellSlot.R, 2500f, TargetSelector.DamageType.Physical) { MinHitChance = HitChance.High };
 
             W.SetSkillshot(0.6f, 60f, 3300f, true, SkillshotType.SkillshotLine);
-            E.SetSkillshot(1.2f, 1f, 1750f, false, SkillshotType.SkillshotCircle);
+            E.SetSkillshot(1.0f, 100f, 1750f, false, SkillshotType.SkillshotCircle);
             R.SetSkillshot(0.5f, 140f, 1700f, false, SkillshotType.SkillshotLine);
 
             MenuProvider.Champion.Combo.addUseQ();
@@ -80,13 +80,18 @@ namespace SharpShooter.Plugins
                                             W.Cast(Target);
                                     }
 
+                                if (MenuProvider.Champion.Combo.UseE)
+                                    if (E.isReadyPerfectly())
+                                        E.CastOnBestTarget();
+
                                 if (MenuProvider.Champion.Combo.UseR)
                                     if (R.isReadyPerfectly())
-                                    {
-                                        var KillableTarget = HeroManager.Enemies.FirstOrDefault(x => !Orbwalking.InAutoAttackRange(x) && x.isKillableAndValidTarget(R.GetDamage(x), R.Range));
-                                        if (KillableTarget != null)
-                                            R.Cast(KillableTarget);
-                                    }
+                                        foreach (var Target in HeroManager.Enemies.Where(x => !Orbwalking.InAutoAttackRange(x) && x.isKillableAndValidTarget(GetRDamage(x), R.Range) && R.GetPrediction(x).Hitchance >= HitChance.High))
+                                        {
+                                            var RPrediction = Prediction.GetPrediction(Target, Q.Delay, Q.Width, Q.Speed, new CollisionableObjects[] { CollisionableObjects.Heroes, CollisionableObjects.YasuoWall });
+                                            if (RPrediction.CollisionObjects.Count == 0)
+                                                R.Cast(Target);
+                                        }
 
                                 break;
                             }
@@ -128,7 +133,7 @@ namespace SharpShooter.Plugins
                                     if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Jungleclear.IfMana))
                                         if (Q.isReadyPerfectly())
                                         {
-                                          
+
                                         }
 
                                 if (MenuProvider.Champion.Jungleclear.UseW)
@@ -180,7 +185,7 @@ namespace SharpShooter.Plugins
 
         private float GetComboDamage(Obj_AI_Base enemy)
         {
-            return R.isReadyPerfectly() ? R.GetDamage(enemy) : 0;
+            return R.isReadyPerfectly() ? (float)GetRDamage(enemy) : 0;
         }
 
         private void QSwitch(bool activate)
@@ -215,6 +220,11 @@ namespace SharpShooter.Plugins
             }
 
             QSwitch(!Unit.IsValidTarget(590));
+        }
+
+        private double GetRDamage(Obj_AI_Base Target)
+        {
+            return ObjectManager.Player.CalcDamage(Target, Damage.DamageType.Physical, new double[] { 0, 25, 30, 35 }[R.Level] / 100 * (Target.MaxHealth - Target.Health) + ((new double[] { 0, 25, 35, 45 }[R.Level] + 0.1 * ObjectManager.Player.FlatPhysicalDamageMod) * Math.Min((1 + ObjectManager.Player.Distance(Target.ServerPosition) / 15 * 0.09d), 10)));
         }
     }
 }
