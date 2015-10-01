@@ -33,7 +33,7 @@ namespace SharpShooter.Plugins
             MenuProvider.Champion.Harass.addIfMana(60);
 
             MenuProvider.Champion.Laneclear.addUseQ();
-            MenuProvider.Champion.Laneclear.addItem("Switch to FISHBONES If Will hit minion Number >=", new Slider(3, 2, 7));
+            MenuProvider.Champion.Laneclear.addItem("Switch to FISHBONES If will hit minion Number >=", new Slider(3, 2, 7));
             MenuProvider.Champion.Laneclear.addIfMana(60);
 
             MenuProvider.Champion.Jungleclear.addUseQ();
@@ -42,7 +42,7 @@ namespace SharpShooter.Plugins
 
             MenuProvider.Champion.Misc.addUseAntiGapcloser();
             MenuProvider.Champion.Misc.addUseInterrupter();
-            MenuProvider.Champion.Misc.addItem("Switch to FISHBONES If Will hit enemy Number >=", new Slider(3, 2, 6));
+            MenuProvider.Champion.Misc.addItem("Switch to FISHBONES If will hit enemy Number >=", new Slider(3, 2, 6));
 
             MenuProvider.Champion.Drawings.addDrawQrange(System.Drawing.Color.DeepSkyBlue, false);
             MenuProvider.Champion.Drawings.addDrawWrange(System.Drawing.Color.DeepSkyBlue, true);
@@ -118,7 +118,7 @@ namespace SharpShooter.Plugins
                                         {
                                             var Target = MenuProvider.Orbwalker.GetTarget();
                                             if (Target != null)
-                                                QSwitch(MinionManager.GetMinions(Target.Position, 200).Count() >= MenuProvider.Champion.Laneclear.getSliderValue("Switch to FISHBONES if Will hit minion Number >=").Value);
+                                                QSwitch(MinionManager.GetMinions(Target.Position, 200).Count() >= MenuProvider.Champion.Laneclear.getSliderValue("Switch to FISHBONES If will hit minion Number >=").Value);
                                         }
                                         else
                                             QSwitch(false);
@@ -208,7 +208,7 @@ namespace SharpShooter.Plugins
                 return;
             }
 
-            if (Utility.CountEnemiesInRange(Unit.Position, 200) >= MenuProvider.Champion.Misc.getSliderValue("Switch to FISHBONES If Will hit enemy Number >=").Value)
+            if (Utility.CountEnemiesInRange(Unit.Position, 200) >= MenuProvider.Champion.Misc.getSliderValue("Switch to FISHBONES If will hit enemy Number >=").Value)
             {
                 QSwitch(true);
                 return;
