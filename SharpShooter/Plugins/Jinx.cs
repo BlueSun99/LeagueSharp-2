@@ -33,6 +33,7 @@ namespace SharpShooter.Plugins
             MenuProvider.Champion.Harass.addIfMana(60);
 
             MenuProvider.Champion.Laneclear.addUseQ();
+            MenuProvider.Champion.Laneclear.addItem("Switch to FISHBONES If Will hit minion Number >=", new Slider(3, 2, 7));
             MenuProvider.Champion.Laneclear.addIfMana(60);
 
             MenuProvider.Champion.Jungleclear.addUseQ();
@@ -41,7 +42,7 @@ namespace SharpShooter.Plugins
 
             MenuProvider.Champion.Misc.addUseAntiGapcloser();
             MenuProvider.Champion.Misc.addUseInterrupter();
-            MenuProvider.Champion.Misc.addItem("Switch to FISHBONES If Will Hit Enemy Number >=", new Slider(2, 1, 6));
+            MenuProvider.Champion.Misc.addItem("Switch to FISHBONES If Will hit enemy Number >=", new Slider(3, 2, 6));
 
             MenuProvider.Champion.Drawings.addDrawQrange(System.Drawing.Color.DeepSkyBlue, false);
             MenuProvider.Champion.Drawings.addDrawWrange(System.Drawing.Color.DeepSkyBlue, true);
@@ -117,8 +118,7 @@ namespace SharpShooter.Plugins
                                         {
                                             var Target = MenuProvider.Orbwalker.GetTarget();
                                             if (Target != null)
-                                                if (MinionManager.GetMinions(Target.Position, 200).Count() >= MenuProvider.Champion.Laneclear.getSliderValue("Will hit minion Number >=").Value)
-                                                    QSwitch(true);
+                                                QSwitch(MinionManager.GetMinions(Target.Position, 200).Count() >= MenuProvider.Champion.Laneclear.getSliderValue("Switch to FISHBONES if Will hit minion Number >=").Value);
                                         }
                                         else
                                             QSwitch(false);
@@ -128,16 +128,14 @@ namespace SharpShooter.Plugins
                                     if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Jungleclear.IfMana))
                                         if (Q.isReadyPerfectly())
                                         {
-                                            var Target = MinionManager.GetMinions(Q.Range, MinionTypes.All, MinionTeam.Neutral).OrderByDescending(x => Q.GetDamage(x)).FirstOrDefault(x => x.IsValidTarget(Q.Range) && Q.GetPrediction(x).Hitchance >= Q.MinHitChance);
-                                            if (Target != null)
-                                                Q.Cast(Target);
+                                          
                                         }
 
                                 if (MenuProvider.Champion.Jungleclear.UseW)
                                     if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Jungleclear.IfMana))
                                         if (W.isReadyPerfectly())
                                         {
-                                            var Target = MinionManager.GetMinions(Q.Range, MinionTypes.All, MinionTeam.Neutral).FirstOrDefault(x => x.IsValidTarget(Q.Range) && Q.GetPrediction(x).Hitchance >= Q.MinHitChance);
+                                            var Target = MinionManager.GetMinions(W.Range, MinionTypes.All, MinionTeam.Neutral).FirstOrDefault(x => x.IsValidTarget(W.Range) && W.GetPrediction(x).Hitchance >= W.MinHitChance);
                                             if (Target != null)
                                                 W.Cast(Target);
                                         }
@@ -210,7 +208,7 @@ namespace SharpShooter.Plugins
                 return;
             }
 
-            if (Utility.CountEnemiesInRange(Unit.Position, 200) >= MenuProvider.Champion.Misc.getSliderValue("Switch to FISHBONES If Will Hit Enemy Number >=").Value)
+            if (Utility.CountEnemiesInRange(Unit.Position, 200) >= MenuProvider.Champion.Misc.getSliderValue("Switch to FISHBONES If Will hit enemy Number >=").Value)
             {
                 QSwitch(true);
                 return;
