@@ -179,11 +179,6 @@ namespace SharpShooter.Plugins
                             R.Cast(sender);
         }
 
-        private void Orbwalking_OnAttack(AttackableUnit unit, AttackableUnit target)
-        {
-
-        }
-
         private void Drawing_OnDraw(EventArgs args)
         {
             if (!ObjectManager.Player.IsDead)

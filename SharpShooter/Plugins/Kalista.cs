@@ -71,11 +71,15 @@ namespace SharpShooter.Plugins
                                 if (Q.isReadyPerfectly())
                                     if (!ObjectManager.Player.IsDashing())
                                         if (!ObjectManager.Player.IsWindingUp)
-                                            if (!E.isReadyPerfectly())
-                                                Q.CastOnBestTarget();
-                                            else
-                                               if (ObjectManager.Player.Mana - Q.ManaCost >= E.ManaCost)
-                                                Q.CastOnBestTarget();
+                                        {
+                                            var Target = TargetSelector.GetTargetNoCollision(Q);
+                                            if (Target != null)
+                                                if (!E.isReadyPerfectly())
+                                                    Q.Cast(Target);
+                                                else
+                                            if (ObjectManager.Player.Mana - Q.ManaCost >= E.ManaCost)
+                                                    Q.Cast(Target);
+                                        }
 
                             if (MenuProvider.Champion.Combo.UseE)
                                 if (E.isReadyPerfectly())
