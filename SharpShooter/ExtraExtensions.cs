@@ -91,5 +91,10 @@ namespace SharpShooter
                         return true;
             return false;
         }
+
+        internal static int CountEnemyMinionsInRange(this SharpDX.Vector3 point, float range)
+        {
+            return ObjectManager.Get<Obj_AI_Minion>().Count(h => h.IsValidTarget(range, true, point));
+        }
     }
 }

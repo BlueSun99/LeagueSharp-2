@@ -208,7 +208,7 @@ namespace SharpShooter.Plugins
         private void Obj_AI_Base_OnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
         {
             if (sender.IsEnemy)
-                if (sender.IsChampion())
+                if (sender.Type == GameObjectType.obj_AI_Hero)
                     if (R.isReadyPerfectly())
                     {
                         var soulbound = HeroManager.Allies.FirstOrDefault(x => x.HasBuff("kalistacoopstrikeally"));
