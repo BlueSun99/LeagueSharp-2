@@ -87,11 +87,8 @@ namespace SharpShooter.Plugins
                                 if (MenuProvider.Champion.Combo.UseR)
                                     if (R.isReadyPerfectly())
                                         foreach (var Target in HeroManager.Enemies.Where(x => !Orbwalking.InAutoAttackRange(x) && x.isKillableAndValidTarget(GetRDamage(x), R.Range) && R.GetPrediction(x).Hitchance >= HitChance.High))
-                                        {
-                                            var RPrediction = Prediction.GetPrediction(Target, Q.Delay, Q.Width, Q.Speed, new CollisionableObjects[] { CollisionableObjects.Heroes, CollisionableObjects.YasuoWall });
-                                            if (RPrediction.CollisionObjects.Count == 0)
+                                            if (Prediction.GetPrediction(Target, Q.Delay, Q.Width, Q.Speed, new CollisionableObjects[] { CollisionableObjects.Heroes, CollisionableObjects.YasuoWall }).CollisionObjects.Count == 0)
                                                 R.Cast(Target);
-                                        }
 
                                 break;
                             }
