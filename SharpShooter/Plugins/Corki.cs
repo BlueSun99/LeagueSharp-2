@@ -26,14 +26,12 @@ namespace SharpShooter.Plugins
             MenuProvider.Champion.Combo.addUseR();
 
             MenuProvider.Champion.Harass.addUseQ();
-            MenuProvider.Champion.Harass.addUseR();
             MenuProvider.Champion.Harass.addIfMana(60);
 
             MenuProvider.Champion.Laneclear.addUseQ(false);
             MenuProvider.Champion.Laneclear.addIfMana(60);
 
             MenuProvider.Champion.Jungleclear.addUseQ();
-            MenuProvider.Champion.Jungleclear.addUseR();
             MenuProvider.Champion.Jungleclear.addIfMana(60);
 
             MenuProvider.Champion.Misc.addUseAntiGapcloser();
@@ -84,15 +82,6 @@ namespace SharpShooter.Plugins
                                     if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Harass.IfMana))
                                         if (Q.isReadyPerfectly())
                                             Q.CastOnBestTarget();
-
-                                if (MenuProvider.Champion.Harass.UseR)
-                                    if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Harass.IfMana))
-                                        if (R.isReadyPerfectly())
-                                        {
-                                            var Target = TargetSelector.GetTargetNoCollision(R);
-                                            if (Target != null)
-                                                R.Cast(Target);
-                                        }
                                 break;
                             }
                         case Orbwalking.OrbwalkingMode.LaneClear:
@@ -115,15 +104,6 @@ namespace SharpShooter.Plugins
                                             var Target = MinionManager.GetMinions(Q.Range, MinionTypes.All, MinionTeam.Neutral).FirstOrDefault(x => x.IsValidTarget(Q.Range));
                                             if (Target != null)
                                                 Q.Cast(Target);
-                                        }
-
-                                if (MenuProvider.Champion.Jungleclear.UseR)
-                                    if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Jungleclear.IfMana))
-                                        if (R.isReadyPerfectly())
-                                        {
-                                            var Target = MinionManager.GetMinions(R.Range, MinionTypes.All, MinionTeam.Neutral).FirstOrDefault(x => x.IsValidTarget(R.Range));
-                                            if (Target != null)
-                                                R.Cast(Target);
                                         }
                                 break;
                             }
