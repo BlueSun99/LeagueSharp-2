@@ -24,7 +24,7 @@ namespace SharpShooter
                     var OrbwalkerTarget = MenuProvider.Orbwalker.GetTarget();
 
                     if (OrbwalkerTarget.IsValidTarget())
-                        Render.Circle.DrawCircle(OrbwalkerTarget.Position, OrbwalkerTarget.BoundingRadius, MenuProvider.Champion.Drawings.getCircleValue("Draw AutoAttack Target", false).Color, 3);
+                        Render.Circle.DrawCircle(OrbwalkerTarget.Position, OrbwalkerTarget.BoundingRadius, MenuProvider.Champion.Drawings.getCircleValue("Draw AutoAttack Target", false).Color);
                 }
         }
     }

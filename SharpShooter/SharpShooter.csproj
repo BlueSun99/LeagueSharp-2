@@ -66,6 +66,7 @@
     <Compile Include="PluginLoader.cs" />
     <Compile Include="Plugins\Ashe.cs" />
     <Compile Include="Plugins\Caitlyn.cs" />
+    <Compile Include="Plugins\Corki.cs" />
     <Compile Include="Plugins\Ezreal.cs" />
     <Compile Include="Plugins\Graves.cs" />
     <Compile Include="Plugins\Jinx.cs" />
