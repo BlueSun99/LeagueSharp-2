@@ -19,7 +19,7 @@ namespace SharpShooter.Plugins
             E = new Spell(SpellSlot.E, 650f) { Width = 1f };
             R = new Spell(SpellSlot.R);
 
-            E.SetTargetted(0.14f, 1600f);//I don't know exactly. fuck it. not bad
+            E.SetTargetted(0.14f, 1600f);
 
             MenuProvider.Champion.Combo.addUseQ();
             MenuProvider.Champion.Combo.addUseE();
@@ -31,7 +31,7 @@ namespace SharpShooter.Plugins
             MenuProvider.Champion.Laneclear.addIfMana(60);
 
             MenuProvider.Champion.Jungleclear.addUseQ();
-            MenuProvider.Champion.Jungleclear.addIfMana(60);
+            MenuProvider.Champion.Jungleclear.addIfMana(20);
 
             MenuProvider.Champion.Misc.addUseAntiGapcloser();
             MenuProvider.Champion.Misc.addUseInterrupter();

@@ -28,7 +28,7 @@ namespace SharpShooter.Plugins
 
             MenuProvider.Champion.Jungleclear.addUseQ();
             MenuProvider.Champion.Jungleclear.addUseE();
-            MenuProvider.Champion.Jungleclear.addIfMana(60);
+            MenuProvider.Champion.Jungleclear.addIfMana(20);
 
             MenuProvider.Champion.Misc.addUseKillsteal();
             MenuProvider.Champion.Misc.addUseAntiGapcloser();

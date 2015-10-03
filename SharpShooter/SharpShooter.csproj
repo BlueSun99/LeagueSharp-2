@@ -71,6 +71,7 @@
     <Compile Include="Plugins\Graves.cs" />
     <Compile Include="Plugins\Jinx.cs" />
     <Compile Include="Plugins\Kalista.cs" />
+    <Compile Include="Plugins\Lucian.cs" />
     <Compile Include="Plugins\Sivir.cs" />
     <Compile Include="Plugins\Tristana.cs" />
     <Compile Include="Plugins\Twitch.cs" />

@@ -32,7 +32,7 @@ namespace SharpShooter.Plugins
             MenuProvider.Champion.Laneclear.addIfMana(60);
 
             MenuProvider.Champion.Jungleclear.addUseQ();
-            MenuProvider.Champion.Jungleclear.addIfMana(60);
+            MenuProvider.Champion.Jungleclear.addIfMana(20);
 
             MenuProvider.Champion.Misc.addUseAntiGapcloser();
             MenuProvider.Champion.Misc.addUseInterrupter();
