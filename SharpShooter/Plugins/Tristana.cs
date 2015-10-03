@@ -138,7 +138,7 @@ namespace SharpShooter.Plugins
         {
             if (MenuProvider.Champion.Misc.UseAntiGapcloser)
                 if (gapcloser.End.Distance(ObjectManager.Player.Position) <= 200)
-                    if (gapcloser.Sender.IsValidTarget())
+                    if (gapcloser.Sender.IsValidTarget(R.Range))
                         if (R.isReadyPerfectly())
                             R.CastOnUnit(gapcloser.Sender);
         }
