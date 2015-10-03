@@ -15,13 +15,13 @@ namespace SharpShooter.Plugins
 
         public Lucian()
         {
-            Q = new Spell(SpellSlot.Q, 1150f, TargetSelector.DamageType.Physical) { MinHitChance = HitChance.High };
-            W = new Spell(SpellSlot.W, 5200f);
-            E = new Spell(SpellSlot.E, 950f);
-            R = new Spell(SpellSlot.R, 1500f);
+            Q = new Spell(SpellSlot.Q, 675f);
+            W = new Spell(SpellSlot.W, 1000f);
+            E = new Spell(SpellSlot.E, 475f);
 
-            Q.SetSkillshot(0.25f, 40f, 1200f, true, SkillshotType.SkillshotLine);
-
+            Q.SetSkillshot(0.25f, 65f, 1100f, false, SkillshotType.SkillshotLine);
+            W.SetSkillshot(0.30f, 80f, 1600f, true, SkillshotType.SkillshotLine);
+            
             MenuProvider.Champion.Combo.addUseQ();
             MenuProvider.Champion.Combo.addUseW();
             MenuProvider.Champion.Combo.addUseE();

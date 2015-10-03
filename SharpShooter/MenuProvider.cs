@@ -38,19 +38,21 @@ namespace SharpShooter
 
                 addItem("txt1", "Sorry. " + ObjectManager.Player.ChampionName + " is not supported.", null);
                 addItem("txt2", " ");
-                addItem("txt3", "---Supported---");
+                addItem("txt3", "---Supported Champions---");
 
-                addItem("Kalista");
-                addItem("Vayne");
-                addItem("Graves");
                 addItem("Ashe");
-                addItem("Ezreal");
-                addItem("Twitch");
-                addItem("Tristana");
-                addItem("Jinx");
                 addItem("Caitlyn");
                 addItem("Corki");
+                addItem("Ezreal");
+                addItem("Graves");
+                addItem("Jinx");
+                addItem("Kalista");
+                addItem("Lucian");
+                addItem("Sivir");
+                addItem("Tristana");
+                addItem("Twitch");
                 addItem("Varus");
+                addItem("Vayne");
             }
 
             MenuInstance.AddToMainMenu();
