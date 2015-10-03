@@ -109,26 +109,26 @@ namespace SharpShooter.Plugins
 
                                 if (MenuProvider.Champion.Combo.UseR)
                                     if (R.isReadyPerfectly())
-                                    {
-                                        R.CastOnBestTarget(-700);
-                                    }
+                                        R.CastOnBestTarget(-500);
+
                                 break;
                             }
                         case Orbwalking.OrbwalkingMode.Mixed:
                             {
                                 if (MenuProvider.Champion.Harass.UseQ)
-                                    if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Harass.IfMana))
-                                        if (Q.isReadyPerfectly())
-                                        {
-                                            if (Q.IsCharging)
-                                            {
-                                                if (Q.Range >= Q.ChargedMaxRange)
-                                                    Q.CastOnBestTarget();
-                                            }
-                                            else
-                                            if (TargetSelector.GetTarget(Q.Range, Q.DamageType) != null)
-                                                Q.StartCharging();
-                                        }
+                                {
+                                    if (Q.isReadyPerfectly())
+                                    {
+                                        if (Q.IsCharging)
+                                            if (Q.Range >= Q.ChargedMaxRange)
+                                                Q.CastOnBestTarget();
+
+                                        if (!Q.IsCharging)
+                                            if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Harass.IfMana))
+                                                if (TargetSelector.GetTarget(Q.Range, Q.DamageType) != null)
+                                                    Q.StartCharging();
+                                    }
+                                }
 
                                 if (MenuProvider.Champion.Harass.UseE)
                                     if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Harass.IfMana))
@@ -140,19 +140,18 @@ namespace SharpShooter.Plugins
                             {
                                 //Laneclear
                                 if (MenuProvider.Champion.Laneclear.UseQ)
-                                    if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Laneclear.IfMana))
-                                        if (Q.isReadyPerfectly())
-                                        {
-                                            var FarmLocation = Q.GetLineFarmLocation(MinionManager.GetMinions(Q.Range));
-                                            if (FarmLocation.MinionsHit >= 4)
+                                    if (Q.isReadyPerfectly())
+                                    {
+                                        var FarmLocation = Q.GetLineFarmLocation(MinionManager.GetMinions(Q.Range));
+
+                                        if (Q.Range >= Q.ChargedMaxRange)
+                                            Q.Cast(FarmLocation.Position);
+
+                                        if (FarmLocation.MinionsHit >= 4)
+                                            if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Laneclear.IfMana))
                                                 if (Q.IsCharging)
-                                                {
-                                                    if (Q.Range >= Q.ChargedMaxRange)
-                                                        Q.Cast(FarmLocation.Position);
-                                                }
-                                                else
                                                     Q.StartCharging();
-                                        }
+                                    }
 
                                 if (MenuProvider.Champion.Laneclear.UseE)
                                     if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Laneclear.IfMana))
@@ -165,19 +164,19 @@ namespace SharpShooter.Plugins
 
                                 //Jungleclear
                                 if (MenuProvider.Champion.Jungleclear.UseQ)
-                                    if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Jungleclear.IfMana))
-                                        if (Q.isReadyPerfectly())
-                                        {
-                                            var Target = MinionManager.GetMinions(Q.Range, MinionTypes.All, MinionTeam.Neutral).FirstOrDefault(x => x.IsValidTarget(Q.Range));
-                                            if (Target != null)
-                                                if (Q.IsCharging)
-                                                {
-                                                    if (Q.Range >= Q.ChargedMaxRange)
-                                                        Q.Cast(Target);
-                                                }
-                                                else
-                                                    Q.StartCharging();
-                                        }
+                                    if (Q.isReadyPerfectly())
+                                    {
+                                        var Target = MinionManager.GetMinions(Q.Range, MinionTypes.All, MinionTeam.Neutral).FirstOrDefault(x => x.IsValidTarget(Q.Range));
+                                        if (Target != null)
+                                            if (Q.IsCharging)
+                                            {
+                                                if (Q.Range >= Q.ChargedMaxRange)
+                                                    Q.Cast(Target);
+                                            }
+                                            else
+                                            if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Jungleclear.IfMana))
+                                                Q.StartCharging();
+                                    }
 
                                 if (MenuProvider.Champion.Jungleclear.UseE)
                                     if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Jungleclear.IfMana))

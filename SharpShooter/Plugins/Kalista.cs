@@ -29,7 +29,7 @@ namespace SharpShooter.Plugins
             MenuProvider.Champion.Harass.addUseQ();
             MenuProvider.Champion.Harass.addIfMana();
 
-            MenuProvider.Champion.Laneclear.addUseQ();
+            MenuProvider.Champion.Laneclear.addUseQ(false);
             MenuProvider.Champion.Laneclear.addItem("Cast Q if Killable Minion Number >=", new Slider(3, 1, 7));
             MenuProvider.Champion.Laneclear.addUseE();
             MenuProvider.Champion.Laneclear.addItem("Cast E if Killable Minion Number >=", new Slider(2, 1, 5));
