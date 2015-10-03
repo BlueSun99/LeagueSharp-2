@@ -110,7 +110,7 @@ namespace SharpShooter.Plugins
                                 if (MenuProvider.Champion.Combo.UseR)
                                     if (R.isReadyPerfectly())
                                     {
-                                        R.CastOnBestTarget();
+                                        R.CastOnBestTarget(-700);
                                     }
                                 break;
                             }
