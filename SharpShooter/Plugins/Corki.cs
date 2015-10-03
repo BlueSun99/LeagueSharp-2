@@ -15,11 +15,11 @@ namespace SharpShooter.Plugins
             Q = new Spell(SpellSlot.Q, 825f, TargetSelector.DamageType.Magical) { MinHitChance = HitChance.High };
             W = new Spell(SpellSlot.W, 800f, TargetSelector.DamageType.Magical);
             E = new Spell(SpellSlot.E, 600f, TargetSelector.DamageType.Physical);
-            R = new Spell(SpellSlot.R, 1225f, TargetSelector.DamageType.Magical) { MinHitChance = HitChance.High };
+            R = new Spell(SpellSlot.R, 1250f, TargetSelector.DamageType.Magical) { MinHitChance = HitChance.High };
 
-            Q.SetSkillshot(0.3f, 100f, 1000f, false, SkillshotType.SkillshotCircle);
+            Q.SetSkillshot(0.3f, 250f, 1000f, false, SkillshotType.SkillshotCircle);
             E.SetSkillshot(0f, 45f, float.MaxValue, false, SkillshotType.SkillshotCone);
-            R.SetSkillshot(0.25f, 60f, 2000f, true, SkillshotType.SkillshotLine);
+            R.SetSkillshot(0.20f, 40f, 2000f, true, SkillshotType.SkillshotLine);
 
             MenuProvider.Champion.Combo.addUseQ();
             MenuProvider.Champion.Combo.addUseE();
@@ -35,9 +35,6 @@ namespace SharpShooter.Plugins
             MenuProvider.Champion.Jungleclear.addUseQ();
             MenuProvider.Champion.Jungleclear.addUseR();
             MenuProvider.Champion.Jungleclear.addIfMana(60);
-
-            MenuProvider.Champion.Misc.addUseAntiGapcloser();
-            MenuProvider.Champion.Misc.addUseInterrupter();
 
             MenuProvider.Champion.Drawings.addDrawQrange(System.Drawing.Color.DeepSkyBlue, true);
             MenuProvider.Champion.Drawings.addDrawWrange(System.Drawing.Color.DeepSkyBlue, false);

@@ -13,7 +13,7 @@ namespace SharpShooter.Plugins
         public Twitch()
         {
             Q = new Spell(SpellSlot.Q);
-            W = new Spell(SpellSlot.W, 950f, TargetSelector.DamageType.True) { MinHitChance = HitChance.High };
+            W = new Spell(SpellSlot.W, 900f, TargetSelector.DamageType.True) { MinHitChance = HitChance.High };
             E = new Spell(SpellSlot.E, 1200f);
 
             Recall = new Spell(SpellSlot.Recall);

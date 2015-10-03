@@ -12,16 +12,16 @@ namespace SharpShooter.Plugins
 
         public Varus()
         {
-            Q = new Spell(SpellSlot.Q, 1600f, TargetSelector.DamageType.Physical) { MinHitChance = HitChance.High };
+            Q = new Spell(SpellSlot.Q, 1800f, TargetSelector.DamageType.Physical) { MinHitChance = HitChance.High };
             W = new Spell(SpellSlot.W);
             E = new Spell(SpellSlot.E, 925f, TargetSelector.DamageType.Physical) { MinHitChance = HitChance.High };
             R = new Spell(SpellSlot.R, 1200f, TargetSelector.DamageType.Magical) { MinHitChance = HitChance.High };
 
-            Q.SetSkillshot(0.25f, 70f, 1650f, false, SkillshotType.SkillshotLine);
-            E.SetSkillshot(0.50f, 250f, 1400f, false, SkillshotType.SkillshotCircle);
+            Q.SetSkillshot(0.25f, 70f, 1900f, false, SkillshotType.SkillshotLine);
+            E.SetSkillshot(1.00f, 235f, 1500f, false, SkillshotType.SkillshotCircle);
             R.SetSkillshot(0.25f, 120f, 1950f, false, SkillshotType.SkillshotLine);
 
-            Q.SetCharged("VarusQ", "VarusQ", 250, 1600, 1.2f);
+            Q.SetCharged("VarusQ", "VarusQ", 250, 1800, 1.2f);
 
             MenuProvider.Champion.Combo.addUseQ();
             MenuProvider.Champion.Combo.addUseE();

@@ -12,14 +12,14 @@ namespace SharpShooter.Plugins
 
         public Caitlyn()
         {
-            Q = new Spell(SpellSlot.Q, 1240f, TargetSelector.DamageType.Physical) { MinHitChance = HitChance.High };
+            Q = new Spell(SpellSlot.Q, 1250f, TargetSelector.DamageType.Physical) { MinHitChance = HitChance.High };
             W = new Spell(SpellSlot.W, 820f, TargetSelector.DamageType.Physical) { MinHitChance = HitChance.High };
             E = new Spell(SpellSlot.E, 800f, TargetSelector.DamageType.Physical) { MinHitChance = HitChance.High };
             R = new Spell(SpellSlot.R, 2000f);
 
-            Q.SetSkillshot(0.25f, 60f, 2000f, false, SkillshotType.SkillshotLine);
+            Q.SetSkillshot(0.625f, 90f, 2200f, false, SkillshotType.SkillshotLine);
             W.SetSkillshot(1.00f, 100f, float.MaxValue, false, SkillshotType.SkillshotCircle);
-            E.SetSkillshot(0.25f, 80f, 1600f, true, SkillshotType.SkillshotLine);
+            E.SetSkillshot(0.125f, 80f, 2000f, true, SkillshotType.SkillshotLine);
 
             MenuProvider.Champion.Combo.addUseQ();
             MenuProvider.Champion.Combo.addUseW();

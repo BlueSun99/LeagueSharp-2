@@ -21,7 +21,7 @@ namespace SharpShooter.Plugins
 
             W.SetSkillshot(0.6f, 60f, 3300f, true, SkillshotType.SkillshotLine);
             E.SetSkillshot(1.0f, 100f, 1750f, false, SkillshotType.SkillshotCircle);
-            R.SetSkillshot(0.5f, 140f, 1700f, false, SkillshotType.SkillshotLine);
+            R.SetSkillshot(0.6f, 140f, 1700f, false, SkillshotType.SkillshotLine);
 
             MenuProvider.Champion.Combo.addUseQ();
             MenuProvider.Champion.Combo.addUseW();
