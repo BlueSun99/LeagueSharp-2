@@ -188,14 +188,16 @@ namespace SharpShooter.Plugins
         private void Orbwalking_OnNonKillableMinion(AttackableUnit minion)
         {
             if (!ObjectManager.Player.IsDead)
-            {
-                Obj_AI_Minion Minion = minion as Obj_AI_Minion;
+                if (MenuProvider.Orbwalker.ActiveMode != Orbwalking.OrbwalkingMode.Combo)
+                    if (MenuProvider.Orbwalker.ActiveMode != Orbwalking.OrbwalkingMode.Mixed)
+                    {
+                        Obj_AI_Minion Minion = minion as Obj_AI_Minion;
 
-                if (MenuProvider.Champion.Misc.getBoolValue("Use Lasthit Assist (With E)"))
-                    if (E.isReadyPerfectly())
-                        if (Minion.isKillableAndValidTarget(E.GetDamage(Minion)))
-                            E.Cast();
-            }
+                        if (MenuProvider.Champion.Misc.getBoolValue("Use Lasthit Assist (With E)"))
+                            if (E.isReadyPerfectly())
+                                if (Minion.isKillableAndValidTarget(E.GetDamage(Minion)))
+                                    E.Cast();
+                    }
         }
 
         private void Spellbook_OnCastSpell(Spellbook sender, SpellbookCastSpellEventArgs args)
