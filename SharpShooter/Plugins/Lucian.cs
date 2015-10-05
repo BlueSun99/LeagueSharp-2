@@ -11,7 +11,7 @@ namespace SharpShooter.Plugins
 {
     public class Lucian
     {
-        private Spell Q, QExtended, W, E, R;
+        private Spell Q, QExtended, W, WNoCollision, E, R;
         private bool HasPassive;
 
         public Lucian()
@@ -19,10 +19,13 @@ namespace SharpShooter.Plugins
             Q = new Spell(SpellSlot.Q, 675f, TargetSelector.DamageType.Physical);
             W = new Spell(SpellSlot.W, 1000f, TargetSelector.DamageType.Physical);
             E = new Spell(SpellSlot.E, 475f);
+            R = new Spell(SpellSlot.R, 1400f);
             QExtended = new Spell(SpellSlot.Q, 1100f, TargetSelector.DamageType.Physical);
+            WNoCollision = new Spell(SpellSlot.W, 1000f, TargetSelector.DamageType.Physical);
 
             QExtended.SetSkillshot(0.5f, 65f, float.MaxValue, false, SkillshotType.SkillshotLine);
             W.SetSkillshot(0.30f, 55f, 1600f, true, SkillshotType.SkillshotLine);
+            WNoCollision.SetSkillshot(0.30f, 55f, 1600f, false, SkillshotType.SkillshotLine);
 
             MenuProvider.Champion.Combo.addUseQ();
             MenuProvider.Champion.Combo.addUseW();
@@ -47,20 +50,11 @@ namespace SharpShooter.Plugins
 
             Game.OnUpdate += Game_OnUpdate;
             Drawing.OnDraw += Drawing_OnDraw;
+            Obj_AI_Base.OnProcessSpellCast += Obj_AI_Base_OnProcessSpellCast;
             Obj_AI_Base.OnDoCast += Obj_AI_Base_OnDoCast;
-            Spellbook.OnCastSpell += Spellbook_OnCastSpell;
+            Orbwalking.BeforeAttack += Orbwalking_BeforeAttack;
 
             Console.WriteLine("Sharpshooter: Lucian Loaded.");
-        }
-
-        private void Spellbook_OnCastSpell(Spellbook sender, SpellbookCastSpellEventArgs args)
-        {
-            if (!sender.Owner.IsDead)
-                if (sender.Owner.IsMe)
-                {
-                    if (args.Slot == SpellSlot.Q || args.Slot == SpellSlot.W || args.Slot == SpellSlot.E || args.Slot == SpellSlot.R)
-                        HasPassive = true;
-                }
         }
 
         private void Game_OnUpdate(EventArgs args)
@@ -100,9 +94,14 @@ namespace SharpShooter.Plugins
                                 if (MenuProvider.Champion.Combo.UseW)
                                     if (W.isReadyPerfectly())
                                     {
-                                        var Target = TargetSelector.GetTargetNoCollision(W);
-                                        if (Target != null)
-                                            W.Cast(Target);
+                                        if (HeroManager.Enemies.Any(x => Orbwalking.InAutoAttackRange(x)))
+                                            WNoCollision.CastOnBestTarget();
+                                        else
+                                        {
+                                            var Target = TargetSelector.GetTargetNoCollision(W);
+                                            if (Target != null)
+                                                W.Cast(Target);
+                                        }
                                     }
 
                                 break;
@@ -192,6 +191,7 @@ namespace SharpShooter.Plugins
         private void Obj_AI_Base_OnDoCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
         {
             if (sender.IsMe)
+            {
                 if (args.SData.IsAutoAttack())
                 {
                     HasPassive = false;
@@ -208,6 +208,31 @@ namespace SharpShooter.Plugins
                             }
                     }
                 }
+
+                if (args.Slot == SpellSlot.Q || args.Slot == SpellSlot.W || args.Slot == SpellSlot.E)
+                    Utility.DelayAction.Add(Game.Ping + 10, Orbwalking.ResetAutoAttackTimer);
+            }
+        }
+
+
+        private void Obj_AI_Base_OnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
+        {
+            if (!sender.IsDead)
+                if (sender.IsMe)
+                {
+                    if (args.Slot == SpellSlot.Q || args.Slot == SpellSlot.W || args.Slot == SpellSlot.E || args.Slot == SpellSlot.R)
+                        HasPassive = true;
+
+                    if (args.Slot == SpellSlot.Q)
+                        Utility.DelayAction.Add(480 + Game.Ping, Orbwalking.ResetAutoAttackTimer);
+                }
+        }
+
+        private void Orbwalking_BeforeAttack(Orbwalking.BeforeAttackEventArgs args)
+        {
+            if (args.Unit.IsMe)
+                if (ObjectManager.Player.HasBuff("LucianR"))
+                    args.Process = false;
         }
 
         private void Drawing_OnDraw(EventArgs args)
