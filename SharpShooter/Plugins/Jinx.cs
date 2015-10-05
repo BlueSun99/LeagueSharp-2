@@ -9,7 +9,7 @@ namespace SharpShooter.Plugins
     public class Jinx
     {
         private Spell Q, W, E, R;
-        private float GetQRange { get { return 590 + ((25 * Q.Level) + 50) + 50; } }
+        private float GetQRange { get { return 590 + ((25 * Q.Level) + 50) + 65; } }
         private bool isQActive { get { return ObjectManager.Player.HasBuff("JinxQ"); } }
 
         public Jinx()

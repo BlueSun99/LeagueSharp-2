@@ -157,8 +157,9 @@ namespace SharpShooter.Plugins
                 {
                     case Orbwalking.OrbwalkingMode.Combo:
                         if (W.isReadyPerfectly())
-                            if (args.Target.IsValidTarget(W.Range))
-                                W.Cast();
+                            if (MenuProvider.Champion.Combo.UseW)
+                                if (args.Target.IsValidTarget(W.Range))
+                                    W.Cast();
                         break;
                 }
         }
