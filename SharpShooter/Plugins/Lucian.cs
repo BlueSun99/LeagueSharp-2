@@ -12,6 +12,7 @@ namespace SharpShooter.Plugins
     public class Lucian
     {
         private Spell Q, QExtended, W, E, R;
+        private bool HasPassive;
 
         public Lucian()
         {
@@ -31,13 +32,12 @@ namespace SharpShooter.Plugins
             MenuProvider.Champion.Harass.addUseW();
             MenuProvider.Champion.Harass.addIfMana();
 
-            //MenuProvider.Champion.Laneclear.addUseQ(false);
-            //MenuProvider.Champion.Laneclear.addUseW(false);
-            //MenuProvider.Champion.Laneclear.addIfMana(60);
+            MenuProvider.Champion.Laneclear.addUseQ(false);
+            MenuProvider.Champion.Laneclear.addIfMana(60);
 
-            //MenuProvider.Champion.Jungleclear.addUseQ();
-            //MenuProvider.Champion.Jungleclear.addUseW();
-            //MenuProvider.Champion.Jungleclear.addIfMana(20);
+            MenuProvider.Champion.Jungleclear.addUseQ();
+            MenuProvider.Champion.Jungleclear.addUseW();
+            MenuProvider.Champion.Jungleclear.addIfMana(20);
 
             MenuProvider.Champion.Drawings.addDrawQrange(System.Drawing.Color.DeepSkyBlue, true);
             MenuProvider.Champion.Drawings.addDrawWrange(System.Drawing.Color.DeepSkyBlue, false);
@@ -48,47 +48,32 @@ namespace SharpShooter.Plugins
             Game.OnUpdate += Game_OnUpdate;
             Drawing.OnDraw += Drawing_OnDraw;
             Obj_AI_Base.OnDoCast += Obj_AI_Base_OnDoCast;
+            Spellbook.OnCastSpell += Spellbook_OnCastSpell;
 
             Console.WriteLine("Sharpshooter: Lucian Loaded.");
+        }
+
+        private void Spellbook_OnCastSpell(Spellbook sender, SpellbookCastSpellEventArgs args)
+        {
+            if (!sender.Owner.IsDead)
+                if (sender.Owner.IsMe)
+                {
+                    if (args.Slot == SpellSlot.Q || args.Slot == SpellSlot.W || args.Slot == SpellSlot.E || args.Slot == SpellSlot.R)
+                        HasPassive = true;
+                }
         }
 
         private void Game_OnUpdate(EventArgs args)
         {
             if (!ObjectManager.Player.IsDead)
             {
-                switch (MenuProvider.Orbwalker.ActiveMode)
-                {
-                    case Orbwalking.OrbwalkingMode.Combo:
-                        {
-                            if (MenuProvider.Champion.Combo.UseQ)
-                                if (Q.isReadyPerfectly())
-                                {
-                                    var Target = TargetSelector.GetTarget(Q.Range, Q.DamageType);
-                                    if (Target != null)
-                                        Q.CastOnUnit(Target);
-                                    else
-                                    {
-                                        var ExtendedTarget = TargetSelector.GetTarget(QExtended.Range, Q.DamageType);
-                                        if (ExtendedTarget != null)
-                                        {
-                                            var Minion = Prediction.GetPrediction(ExtendedTarget, QExtended.Delay, QExtended.Width, QExtended.Speed, new CollisionableObjects[] { CollisionableObjects.Minions }).CollisionObjects.FirstOrDefault(x => x.IsValidTarget(Q.Range));
-                                            if (Minion != null)
-                                                Q.CastOnUnit(Minion);
-                                        }
-                                    }
-                                }
-
-                            if (MenuProvider.Champion.Combo.UseW)
-                                if (W.isReadyPerfectly())
-                                    W.CastOnBestTarget();
-
-                            break;
-                        }
-                    case Orbwalking.OrbwalkingMode.Mixed:
-                        {
-                            if (MenuProvider.Champion.Harass.UseQ)
-                                if (Q.isReadyPerfectly())
-                                    if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Harass.IfMana))
+                if (HasPassive == false)
+                    switch (MenuProvider.Orbwalker.ActiveMode)
+                    {
+                        case Orbwalking.OrbwalkingMode.Combo:
+                            {
+                                if (MenuProvider.Champion.Combo.UseQ)
+                                    if (Q.isReadyPerfectly())
                                     {
                                         var Target = TargetSelector.GetTarget(Q.Range, Q.DamageType);
                                         if (Target != null)
@@ -98,31 +83,109 @@ namespace SharpShooter.Plugins
                                             var ExtendedTarget = TargetSelector.GetTarget(QExtended.Range, Q.DamageType);
                                             if (ExtendedTarget != null)
                                             {
-                                                var Minion = Prediction.GetPrediction(ExtendedTarget, QExtended.Delay, QExtended.Width, QExtended.Speed, new CollisionableObjects[] { CollisionableObjects.Minions }).CollisionObjects.FirstOrDefault(x => x.IsValidTarget(Q.Range));
-                                                if (Minion != null)
-                                                    Q.CastOnUnit(Minion);
+                                                var Minions = MinionManager.GetMinions(ObjectManager.Player.ServerPosition, Q.Range, MinionTypes.All, MinionTeam.NotAlly);
+                                                foreach (var Minion in Minions)
+                                                {
+                                                    var BOX = new Geometry.Polygon.Rectangle(ObjectManager.Player.ServerPosition, ObjectManager.Player.ServerPosition.Extend(Minion.ServerPosition, QExtended.Range), QExtended.Width);
+                                                    if (BOX.IsInside(QExtended.GetPrediction(ExtendedTarget).UnitPosition))
+                                                    {
+                                                        Q.CastOnUnit(Minion);
+                                                        break;
+                                                    }
+                                                }
                                             }
                                         }
                                     }
 
-                            if (MenuProvider.Champion.Harass.UseW)
-                                if (W.isReadyPerfectly())
-                                    if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Harass.IfMana))
-                                        W.CastOnBestTarget();
+                                if (MenuProvider.Champion.Combo.UseW)
+                                    if (W.isReadyPerfectly())
+                                    {
+                                        var Target = TargetSelector.GetTargetNoCollision(W);
+                                        if (Target != null)
+                                            W.Cast(Target);
+                                    }
 
-                            break;
-                        }
-                    case Orbwalking.OrbwalkingMode.LaneClear:
-                        {
-                            //Lane
+                                break;
+                            }
+                        case Orbwalking.OrbwalkingMode.Mixed:
+                            {
+                                if (MenuProvider.Champion.Harass.UseQ)
+                                    if (Q.isReadyPerfectly())
+                                        if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Harass.IfMana))
+                                        {
+                                            var Target = TargetSelector.GetTarget(Q.Range, Q.DamageType);
+                                            if (Target != null)
+                                                Q.CastOnUnit(Target);
+                                            else
+                                            {
+                                                var ExtendedTarget = TargetSelector.GetTarget(QExtended.Range, Q.DamageType);
+                                                if (ExtendedTarget != null)
+                                                {
+                                                    var Minions = MinionManager.GetMinions(ObjectManager.Player.ServerPosition, Q.Range, MinionTypes.All, MinionTeam.NotAlly);
+                                                    foreach (var Minion in Minions)
+                                                    {
+                                                        var BOX = new Geometry.Polygon.Rectangle(ObjectManager.Player.ServerPosition, ObjectManager.Player.ServerPosition.Extend(Minion.ServerPosition, QExtended.Range), QExtended.Width);
+                                                        if (BOX.IsInside(QExtended.GetPrediction(ExtendedTarget).UnitPosition))
+                                                        {
+                                                            Q.CastOnUnit(Minion);
+                                                            break;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
 
+                                if (MenuProvider.Champion.Harass.UseW)
+                                    if (W.isReadyPerfectly())
+                                        if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Harass.IfMana))
+                                        {
+                                            var Target = TargetSelector.GetTargetNoCollision(W);
+                                            if (Target != null)
+                                                W.Cast(Target);
+                                        }
 
-                            //Jugnle
+                                break;
+                            }
+                        case Orbwalking.OrbwalkingMode.LaneClear:
+                            {
+                                //Laneclear
+                                if (MenuProvider.Champion.Laneclear.UseQ)
+                                    if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Laneclear.IfMana))
+                                        if (Q.isReadyPerfectly())
+                                        {
+                                            var Minions = MinionManager.GetMinions(ObjectManager.Player.ServerPosition, Q.Range);
+                                            foreach (var Minion in Minions)
+                                            {
+                                                var BOX = new Geometry.Polygon.Rectangle(ObjectManager.Player.ServerPosition, ObjectManager.Player.ServerPosition.Extend(Minion.ServerPosition, QExtended.Range), QExtended.Width);
+                                                if (Minions.Count(x => BOX.IsInside(x.ServerPosition)) >= 4)
+                                                {
+                                                    Q.CastOnUnit(Minion);
+                                                    break;
+                                                }
+                                            }
+                                        }
 
+                                //Jungleclear
+                                if (MenuProvider.Champion.Jungleclear.UseQ)
+                                    if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Jungleclear.IfMana))
+                                        if (Q.isReadyPerfectly())
+                                        {
+                                            var Target = MinionManager.GetMinions(Q.Range, MinionTypes.All, MinionTeam.Neutral).FirstOrDefault(x => x.IsValidTarget(Q.Range));
+                                            if (Target != null)
+                                                Q.CastOnUnit(Target);
+                                        }
 
-                            break;
-                        }
-                }
+                                if (MenuProvider.Champion.Jungleclear.UseW)
+                                    if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Jungleclear.IfMana))
+                                        if (W.isReadyPerfectly())
+                                        {
+                                            var Target = MinionManager.GetMinions(W.Range, MinionTypes.All, MinionTeam.Neutral).FirstOrDefault(x => x.IsValidTarget(W.Range));
+                                            if (Target != null)
+                                                W.Cast(Target);
+                                        }
+                                break;
+                            }
+                    }
             }
         }
 
@@ -130,6 +193,9 @@ namespace SharpShooter.Plugins
         {
             if (sender.IsMe)
                 if (args.SData.IsAutoAttack())
+                {
+                    HasPassive = false;
+
                     switch (MenuProvider.Orbwalker.ActiveMode)
                     {
                         case Orbwalking.OrbwalkingMode.Combo:
@@ -138,10 +204,10 @@ namespace SharpShooter.Plugins
                                     if (E.isReadyPerfectly())
                                         if (ObjectManager.Player.Position.Extend(Game.CursorPos, 450).CountEnemiesInRange(800) <= 1)
                                             E.Cast(ObjectManager.Player.Position.Extend(Game.CursorPos, 450));
-
                                 break;
                             }
                     }
+                }
         }
 
         private void Drawing_OnDraw(EventArgs args)
