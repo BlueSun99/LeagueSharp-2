@@ -93,16 +93,17 @@ namespace SharpShooter.Plugins
 
                                 if (MenuProvider.Champion.Combo.UseW)
                                     if (W.isReadyPerfectly())
-                                    {
-                                        if (HeroManager.Enemies.Any(x => Orbwalking.InAutoAttackRange(x)))
-                                            WNoCollision.CastOnBestTarget();
-                                        else
+                                        if (!ObjectManager.Player.IsDashing())
                                         {
-                                            var Target = TargetSelector.GetTargetNoCollision(W);
-                                            if (Target != null)
-                                                W.Cast(Target);
+                                            if (HeroManager.Enemies.Any(x => Orbwalking.InAutoAttackRange(x)))
+                                                WNoCollision.CastOnBestTarget();
+                                            else
+                                            {
+                                                var Target = TargetSelector.GetTargetNoCollision(W);
+                                                if (Target != null)
+                                                    W.Cast(Target);
+                                            }
                                         }
-                                    }
 
                                 break;
                             }
@@ -136,12 +137,13 @@ namespace SharpShooter.Plugins
 
                                 if (MenuProvider.Champion.Harass.UseW)
                                     if (W.isReadyPerfectly())
-                                        if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Harass.IfMana))
-                                        {
-                                            var Target = TargetSelector.GetTargetNoCollision(W);
-                                            if (Target != null)
-                                                W.Cast(Target);
-                                        }
+                                        if (!ObjectManager.Player.IsDashing())
+                                            if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Harass.IfMana))
+                                            {
+                                                var Target = TargetSelector.GetTargetNoCollision(W);
+                                                if (Target != null)
+                                                    W.Cast(Target);
+                                            }
 
                                 break;
                             }
@@ -177,11 +179,12 @@ namespace SharpShooter.Plugins
                                 if (MenuProvider.Champion.Jungleclear.UseW)
                                     if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Jungleclear.IfMana))
                                         if (W.isReadyPerfectly())
-                                        {
-                                            var Target = MinionManager.GetMinions(W.Range, MinionTypes.All, MinionTeam.Neutral).FirstOrDefault(x => x.IsValidTarget(W.Range));
-                                            if (Target != null)
-                                                W.Cast(Target);
-                                        }
+                                            if (!ObjectManager.Player.IsDashing())
+                                            {
+                                                var Target = MinionManager.GetMinions(W.Range, MinionTypes.All, MinionTeam.Neutral).FirstOrDefault(x => x.IsValidTarget(W.Range));
+                                                if (Target != null)
+                                                    W.Cast(Target);
+                                            }
                                 break;
                             }
                     }
