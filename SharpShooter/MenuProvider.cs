@@ -27,7 +27,8 @@ namespace SharpShooter
 
                 addSubMenu("Champion", ObjectManager.Player.ChampionName);
 
-                addItem("Work In Progress");
+                addItem("Developer: xcsoft");
+                addItem("Skype: lsxcsoft");
 
                 Champion.addOrbwalker();
                 Champion.addTargetSelector();
