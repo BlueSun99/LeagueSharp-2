@@ -16,7 +16,7 @@ namespace SharpShooter.Plugins
         {
             Q = new Spell(SpellSlot.Q);
             W = new Spell(SpellSlot.W, 1450f, TargetSelector.DamageType.Physical) { MinHitChance = HitChance.High };
-            E = new Spell(SpellSlot.E, 900f, TargetSelector.DamageType.Physical) { MinHitChance = HitChance.High };
+            E = new Spell(SpellSlot.E, 900f, TargetSelector.DamageType.Physical) { MinHitChance = HitChance.VeryHigh };
             R = new Spell(SpellSlot.R, 2500f, TargetSelector.DamageType.Physical) { MinHitChance = HitChance.High };
 
             W.SetSkillshot(0.6f, 60f, 3300f, true, SkillshotType.SkillshotLine);
@@ -36,7 +36,6 @@ namespace SharpShooter.Plugins
             MenuProvider.Champion.Laneclear.addItem("Switch to FISHBONES If will hit minion Number >=", new Slider(3, 2, 7));
             MenuProvider.Champion.Laneclear.addIfMana(60);
 
-            MenuProvider.Champion.Jungleclear.addUseQ();
             MenuProvider.Champion.Jungleclear.addUseW();
             MenuProvider.Champion.Jungleclear.addIfMana(20);
 
@@ -126,13 +125,6 @@ namespace SharpShooter.Plugins
                                             QSwitch(false);
 
                                 //Jungleclear
-                                if (MenuProvider.Champion.Jungleclear.UseQ)
-                                    if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Jungleclear.IfMana))
-                                        if (Q.isReadyPerfectly())
-                                        {
-
-                                        }
-
                                 if (MenuProvider.Champion.Jungleclear.UseW)
                                     if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Jungleclear.IfMana))
                                         if (W.isReadyPerfectly())

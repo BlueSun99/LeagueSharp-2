@@ -11,17 +11,18 @@ namespace SharpShooter.Plugins
 {
     public class Lucian
     {
-        private Spell Q, W, E, R;
+        private Spell Q, QExtended, W, E, R;
 
         public Lucian()
         {
             Q = new Spell(SpellSlot.Q, 675f, TargetSelector.DamageType.Physical);
             W = new Spell(SpellSlot.W, 1000f, TargetSelector.DamageType.Physical);
             E = new Spell(SpellSlot.E, 475f);
+            QExtended = new Spell(SpellSlot.Q, 1100f, TargetSelector.DamageType.Physical);
 
-            Q.SetSkillshot(0.25f, 65f, 1100f, false, SkillshotType.SkillshotLine);
-            W.SetSkillshot(0.30f, 80f, 1600f, true, SkillshotType.SkillshotLine);
-            
+            QExtended.SetSkillshot(0.5f, 65f, float.MaxValue, false, SkillshotType.SkillshotLine);
+            W.SetSkillshot(0.30f, 55f, 1600f, true, SkillshotType.SkillshotLine);
+
             MenuProvider.Champion.Combo.addUseQ();
             MenuProvider.Champion.Combo.addUseW();
             MenuProvider.Champion.Combo.addUseE();
@@ -30,13 +31,13 @@ namespace SharpShooter.Plugins
             MenuProvider.Champion.Harass.addUseW();
             MenuProvider.Champion.Harass.addIfMana();
 
-            MenuProvider.Champion.Laneclear.addUseQ(false);
-            MenuProvider.Champion.Laneclear.addUseW(false);
-            MenuProvider.Champion.Laneclear.addIfMana(60);
+            //MenuProvider.Champion.Laneclear.addUseQ(false);
+            //MenuProvider.Champion.Laneclear.addUseW(false);
+            //MenuProvider.Champion.Laneclear.addIfMana(60);
 
-            MenuProvider.Champion.Jungleclear.addUseQ();
-            MenuProvider.Champion.Jungleclear.addUseE();
-            MenuProvider.Champion.Jungleclear.addIfMana(20);
+            //MenuProvider.Champion.Jungleclear.addUseQ();
+            //MenuProvider.Champion.Jungleclear.addUseW();
+            //MenuProvider.Champion.Jungleclear.addIfMana(20);
 
             MenuProvider.Champion.Drawings.addDrawQrange(System.Drawing.Color.DeepSkyBlue, true);
             MenuProvider.Champion.Drawings.addDrawWrange(System.Drawing.Color.DeepSkyBlue, false);
@@ -46,6 +47,7 @@ namespace SharpShooter.Plugins
 
             Game.OnUpdate += Game_OnUpdate;
             Drawing.OnDraw += Drawing_OnDraw;
+            Obj_AI_Base.OnDoCast += Obj_AI_Base_OnDoCast;
 
             Console.WriteLine("Sharpshooter: Lucian Loaded.");
         }
@@ -58,28 +60,88 @@ namespace SharpShooter.Plugins
                 {
                     case Orbwalking.OrbwalkingMode.Combo:
                         {
+                            if (MenuProvider.Champion.Combo.UseQ)
+                                if (Q.isReadyPerfectly())
+                                {
+                                    var Target = TargetSelector.GetTarget(Q.Range, Q.DamageType);
+                                    if (Target != null)
+                                        Q.CastOnUnit(Target);
+                                    else
+                                    {
+                                        var ExtendedTarget = TargetSelector.GetTarget(QExtended.Range, Q.DamageType);
+                                        if (ExtendedTarget != null)
+                                        {
+                                            var Minion = Prediction.GetPrediction(ExtendedTarget, QExtended.Delay, QExtended.Width, QExtended.Speed, new CollisionableObjects[] { CollisionableObjects.Minions }).CollisionObjects.FirstOrDefault(x => x.IsValidTarget(Q.Range));
+                                            if (Minion != null)
+                                                Q.CastOnUnit(Minion);
+                                        }
+                                    }
+                                }
+
+                            if (MenuProvider.Champion.Combo.UseW)
+                                if (W.isReadyPerfectly())
+                                    W.CastOnBestTarget();
 
                             break;
-
                         }
                     case Orbwalking.OrbwalkingMode.Mixed:
                         {
-                            
+                            if (MenuProvider.Champion.Harass.UseQ)
+                                if (Q.isReadyPerfectly())
+                                    if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Harass.IfMana))
+                                    {
+                                        var Target = TargetSelector.GetTarget(Q.Range, Q.DamageType);
+                                        if (Target != null)
+                                            Q.CastOnUnit(Target);
+                                        else
+                                        {
+                                            var ExtendedTarget = TargetSelector.GetTarget(QExtended.Range, Q.DamageType);
+                                            if (ExtendedTarget != null)
+                                            {
+                                                var Minion = Prediction.GetPrediction(ExtendedTarget, QExtended.Delay, QExtended.Width, QExtended.Speed, new CollisionableObjects[] { CollisionableObjects.Minions }).CollisionObjects.FirstOrDefault(x => x.IsValidTarget(Q.Range));
+                                                if (Minion != null)
+                                                    Q.CastOnUnit(Minion);
+                                            }
+                                        }
+                                    }
+
+                            if (MenuProvider.Champion.Harass.UseW)
+                                if (W.isReadyPerfectly())
+                                    if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Harass.IfMana))
+                                        W.CastOnBestTarget();
 
                             break;
                         }
                     case Orbwalking.OrbwalkingMode.LaneClear:
                         {
                             //Lane
-                            
+
 
                             //Jugnle
-                            
+
 
                             break;
                         }
                 }
             }
+        }
+
+        private void Obj_AI_Base_OnDoCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
+        {
+            if (sender.IsMe)
+                if (args.SData.IsAutoAttack())
+                    switch (MenuProvider.Orbwalker.ActiveMode)
+                    {
+                        case Orbwalking.OrbwalkingMode.Combo:
+                            {
+                                if (MenuProvider.Champion.Combo.UseE)
+                                    if (E.isReadyPerfectly())
+                                        if (ObjectManager.Player.Position.Extend(Game.CursorPos, 450).CountEnemiesInRange(800) <= 1)
+                                            E.Cast(ObjectManager.Player.Position.Extend(Game.CursorPos, 450));
+
+                                break;
+                            }
+                    }
         }
 
         private void Drawing_OnDraw(EventArgs args)
