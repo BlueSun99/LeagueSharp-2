@@ -54,13 +54,6 @@ namespace SharpShooter.Plugins
             Console.WriteLine("Sharpshooter: Lucian Loaded.");
         }
 
-        private void Obj_AI_Base_OnIssueOrder(Obj_AI_Base sender, GameObjectIssueOrderEventArgs args)
-        {
-            if (sender.IsMe)
-                if (args.Order == GameObjectOrder.MoveTo)
-                    Hud.ShowClick(ClickType.Move, args.TargetPosition);
-        }
-
         private void Game_OnUpdate(EventArgs args)
         {
             if (!ObjectManager.Player.IsDead)
@@ -165,7 +158,7 @@ namespace SharpShooter.Plugins
                                                 foreach (var Minion in Minions)
                                                 {
                                                     var BOX = new Geometry.Polygon.Rectangle(ObjectManager.Player.ServerPosition, ObjectManager.Player.ServerPosition.Extend(Minion.ServerPosition, QExtended.Range), QExtended.Width);
-                                                    if (Minions.Count(x => BOX.IsInside(x.ServerPosition)) >= 4)
+                                                    if (Minions.Count(x => BOX.IsInside(x.ServerPosition)) >= 3)
                                                     {
                                                         Q.CastOnUnit(Minion);
                                                         break;
@@ -220,7 +213,7 @@ namespace SharpShooter.Plugins
                     }
                 }
 
-                if (args.Slot == SpellSlot.Q || args.Slot == SpellSlot.W || args.Slot == SpellSlot.E)
+                if (args.Slot == SpellSlot.Q || args.Slot == SpellSlot.E)
                 {
                     //do you know it? lucian can do autoattack cancel like riven
                     ObjectManager.Player.IssueOrder(GameObjectOrder.MoveTo, Game.CursorPos);

@@ -12,7 +12,7 @@ namespace SharpShooter.Plugins
 
         public Varus()
         {
-            Q = new Spell(SpellSlot.Q, 1800f, TargetSelector.DamageType.Physical) { MinHitChance = HitChance.High };
+            Q = new Spell(SpellSlot.Q, 1600f, TargetSelector.DamageType.Physical) { MinHitChance = HitChance.High };
             W = new Spell(SpellSlot.W);
             E = new Spell(SpellSlot.E, 925f, TargetSelector.DamageType.Physical) { MinHitChance = HitChance.High };
             R = new Spell(SpellSlot.R, 1200f, TargetSelector.DamageType.Magical) { MinHitChance = HitChance.High };
@@ -21,7 +21,7 @@ namespace SharpShooter.Plugins
             E.SetSkillshot(1.00f, 235f, 1500f, false, SkillshotType.SkillshotCircle);
             R.SetSkillshot(0.25f, 120f, 1950f, false, SkillshotType.SkillshotLine);
 
-            Q.SetCharged("VarusQ", "VarusQ", 250, 1800, 1.2f);
+            Q.SetCharged("VarusQ", "VarusQ", 250, 1600, 1.2f);
 
             MenuProvider.Champion.Combo.addUseQ();
             MenuProvider.Champion.Combo.addUseE();
@@ -99,7 +99,7 @@ namespace SharpShooter.Plugins
                                                 Q.CastOnBestTarget();
                                         }
                                         else
-                                        if (TargetSelector.GetTarget(Q.Range, Q.DamageType) != null)
+                                        if (TargetSelector.GetTarget(Q.ChargedMaxRange, Q.DamageType) != null)
                                             Q.StartCharging();
                                     }
 
@@ -120,13 +120,14 @@ namespace SharpShooter.Plugins
                                     if (Q.isReadyPerfectly())
                                     {
                                         if (Q.IsCharging)
+                                        {
                                             if (Q.Range >= Q.ChargedMaxRange)
                                                 Q.CastOnBestTarget();
-
-                                        if (!Q.IsCharging)
-                                            if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Harass.IfMana))
-                                                if (TargetSelector.GetTarget(Q.Range, Q.DamageType) != null)
-                                                    Q.StartCharging();
+                                        }
+                                        else
+                                        if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Harass.IfMana))
+                                            if (TargetSelector.GetTarget(Q.ChargedMaxRange, Q.DamageType) != null)
+                                                Q.StartCharging();
                                     }
                                 }
 
@@ -142,22 +143,23 @@ namespace SharpShooter.Plugins
                                 if (MenuProvider.Champion.Laneclear.UseQ)
                                     if (Q.isReadyPerfectly())
                                     {
-                                        var FarmLocation = Q.GetLineFarmLocation(MinionManager.GetMinions(Q.Range));
-
-                                        if (Q.Range >= Q.ChargedMaxRange)
-                                            Q.Cast(FarmLocation.Position);
-
+                                        var FarmLocation = Q.GetLineFarmLocation(MinionManager.GetMinions(Q.ChargedMaxRange));
+                                        if (Q.IsCharging)
+                                        {
+                                            if (Q.Range >= Q.ChargedMaxRange)
+                                                Q.Cast(FarmLocation.Position);
+                                        }
+                                        else
                                         if (FarmLocation.MinionsHit >= 4)
                                             if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Laneclear.IfMana))
-                                                if (Q.IsCharging)
-                                                    Q.StartCharging();
+                                                Q.StartCharging();
                                     }
 
                                 if (MenuProvider.Champion.Laneclear.UseE)
                                     if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Laneclear.IfMana))
                                         if (E.isReadyPerfectly())
                                         {
-                                            var FarmLocation = E.GetCircularFarmLocation(MinionManager.GetMinions(Q.Range));
+                                            var FarmLocation = E.GetCircularFarmLocation(MinionManager.GetMinions(E.Range));
                                             if (FarmLocation.MinionsHit >= 4)
                                                 E.Cast(FarmLocation.Position);
                                         }
@@ -166,7 +168,7 @@ namespace SharpShooter.Plugins
                                 if (MenuProvider.Champion.Jungleclear.UseQ)
                                     if (Q.isReadyPerfectly())
                                     {
-                                        var Target = MinionManager.GetMinions(Q.Range, MinionTypes.All, MinionTeam.Neutral).FirstOrDefault(x => x.IsValidTarget(Q.Range));
+                                        var Target = MinionManager.GetMinions(Q.ChargedMaxRange, MinionTypes.All, MinionTeam.Neutral).FirstOrDefault(x => x.IsValidTarget(Q.ChargedMaxRange));
                                         if (Target != null)
                                             if (Q.IsCharging)
                                             {
