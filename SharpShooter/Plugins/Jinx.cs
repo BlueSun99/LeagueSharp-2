@@ -91,9 +91,16 @@ namespace SharpShooter.Plugins
 
                                 if (MenuProvider.Champion.Combo.UseR)
                                     if (R.isReadyPerfectly())
-                                        foreach (var Target in HeroManager.Enemies.Where(x => !Orbwalking.InAutoAttackRange(x) && x.isKillableAndValidTarget(GetRDamage(x), R.Range) && R.GetPrediction(x).Hitchance >= HitChance.High))
-                                            if (Prediction.GetPrediction(Target, Q.Delay, 200f, Q.Speed, new CollisionableObjects[] { CollisionableObjects.Heroes, CollisionableObjects.YasuoWall }).CollisionObjects.Count == 0)
+                                    {
+                                        var Target = HeroManager.Enemies.FirstOrDefault(x => !Orbwalking.InAutoAttackRange(x) && x.isKillableAndValidTarget(GetRDamage(x), R.Range) && R.GetPrediction(x).Hitchance >= HitChance.High);
+                                        if (Target != null)
+                                        {
+                                            var prediction = R.GetPrediction(Target);
+                                            var collision = LeagueSharp.Common.Collision.GetCollision(new System.Collections.Generic.List<SharpDX.Vector3> { prediction.UnitPosition }, new PredictionInput { Unit = ObjectManager.Player, Delay = R.Delay, Speed = R.Speed, Radius = R.Width, CollisionObjects = new CollisionableObjects[] { CollisionableObjects.Heroes } }).Any(x => x.NetworkId != Target.NetworkId);
+                                            if (!collision)
                                                 R.Cast(Target);
+                                        }
+                                    }
 
                                 break;
                             }

@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Linq;
-using System.Collections.Generic;
 
 using LeagueSharp;
 using LeagueSharp.Common;
-
-using SharpDX;
 
 namespace SharpShooter.Plugins
 {

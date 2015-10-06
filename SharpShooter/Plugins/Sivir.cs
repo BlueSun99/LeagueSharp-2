@@ -49,16 +49,15 @@ namespace SharpShooter.Plugins
 
         private void Obj_AI_Base_OnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
         {
-            if (MenuProvider.Champion.Misc.getBoolValue("Auto E against targeted spells"))
-                if (E.isReadyPerfectly())
-                    if (!ObjectManager.Player.IsDead)
-                        if (args.Target.IsMe)
-                            if (sender is Obj_AI_Hero)
-                                if (sender.IsEnemy)
-                                    if (!args.SData.IsAutoAttack())
-                                        if (!args.SData.Name.Contains("summoner"))
-                                            if (!args.SData.Name.Contains("TormentedSoil"))
-                                                E.Cast();
+            if (args.Target.IsMe)
+                if (MenuProvider.Champion.Misc.getBoolValue("Auto E against targeted spells"))
+                    if (E.isReadyPerfectly())
+                        if (sender is Obj_AI_Hero)
+                            if (sender.IsEnemy)
+                                if (!args.SData.IsAutoAttack())
+                                    if (!args.SData.Name.Contains("summoner"))
+                                        if (!args.SData.Name.Contains("TormentedSoil"))
+                                            E.Cast();
         }
 
         private void Obj_AI_Base_OnDoCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
