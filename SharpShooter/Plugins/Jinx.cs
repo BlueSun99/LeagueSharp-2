@@ -16,11 +16,11 @@ namespace SharpShooter.Plugins
         {
             Q = new Spell(SpellSlot.Q);
             W = new Spell(SpellSlot.W, 1450f, TargetSelector.DamageType.Physical) { MinHitChance = HitChance.High };
-            E = new Spell(SpellSlot.E, 900f, TargetSelector.DamageType.Physical) { MinHitChance = HitChance.VeryHigh };
+            E = new Spell(SpellSlot.E, 900f, TargetSelector.DamageType.Physical) { MinHitChance = HitChance.High };
             R = new Spell(SpellSlot.R, 2500f, TargetSelector.DamageType.Physical) { MinHitChance = HitChance.High };
 
             W.SetSkillshot(0.6f, 60f, 3300f, true, SkillshotType.SkillshotLine);
-            E.SetSkillshot(1.2f, 1f, 1750f, false, SkillshotType.SkillshotCircle);
+            E.SetSkillshot(1.1f, 1f, 1750f, false, SkillshotType.SkillshotCircle);
             R.SetSkillshot(0.6f, 140f, 1700f, false, SkillshotType.SkillshotLine);
 
             MenuProvider.Champion.Combo.addUseQ();
@@ -83,7 +83,7 @@ namespace SharpShooter.Plugins
                                 if (MenuProvider.Champion.Combo.UseE)
                                     if (E.isReadyPerfectly())
                                     {
-                                        var Target = HeroManager.Enemies.Where(x => x.IsValidTarget(600) && E.GetPrediction(x).Hitchance >= HitChance.VeryHigh && !x.IsFacing(ObjectManager.Player) && x.IsMoving).OrderBy(x => x.Distance(ObjectManager.Player)).FirstOrDefault();
+                                        var Target = HeroManager.Enemies.Where(x => x.IsValidTarget(600) && E.GetPrediction(x).Hitchance >= E.MinHitChance && !x.IsFacing(ObjectManager.Player) && x.IsMoving).OrderBy(x => x.Distance(ObjectManager.Player)).FirstOrDefault();
                                         if (Target != null)
                                             if (E.Cast(Target) != Spell.CastStates.SuccessfullyCasted)
                                                 E.CastWithExtraTrapLogic();
@@ -184,11 +184,12 @@ namespace SharpShooter.Plugins
                 Render.Circle.DrawCircle(ObjectManager.Player.Position, R.Range, MenuProvider.Champion.Drawings.DrawRrange.Color);
 
             if (MenuProvider.Champion.Drawings.getBoolValue("Draw Rocket explosion range on Orbwalker Target"))
-            {
-                var AATarget = MenuProvider.Orbwalker.GetTarget();
-                if (AATarget != null)
-                    Render.Circle.DrawCircle(AATarget.Position, 200, System.Drawing.Color.Red, 4, true);
-            }
+                if (isQActive)
+                {
+                    var AATarget = MenuProvider.Orbwalker.GetTarget();
+                    if (AATarget != null)
+                        Render.Circle.DrawCircle(AATarget.Position, 200, System.Drawing.Color.Red, 4, true);
+                }
         }
 
         private float GetComboDamage(Obj_AI_Base enemy)
