@@ -54,6 +54,13 @@ namespace SharpShooter.Plugins
             Console.WriteLine("Sharpshooter: Lucian Loaded.");
         }
 
+        private void Obj_AI_Base_OnIssueOrder(Obj_AI_Base sender, GameObjectIssueOrderEventArgs args)
+        {
+            if (sender.IsMe)
+                if (args.Order == GameObjectOrder.MoveTo)
+                    Hud.ShowClick(ClickType.Move, args.TargetPosition);
+        }
+
         private void Game_OnUpdate(EventArgs args)
         {
             if (!ObjectManager.Player.IsDead)
@@ -65,50 +72,7 @@ namespace SharpShooter.Plugins
                             {
                                 if (MenuProvider.Champion.Combo.UseQ)
                                     if (Q.isReadyPerfectly())
-                                    {
-                                        var Target = TargetSelector.GetTarget(Q.Range, Q.DamageType);
-                                        if (Target != null)
-                                            Q.CastOnUnit(Target);
-                                        else
-                                        {
-                                            var ExtendedTarget = TargetSelector.GetTarget(QExtended.Range, Q.DamageType);
-                                            if (ExtendedTarget != null)
-                                            {
-                                                var Minions = MinionManager.GetMinions(ObjectManager.Player.ServerPosition, Q.Range, MinionTypes.All, MinionTeam.NotAlly);
-                                                foreach (var Minion in Minions)
-                                                {
-                                                    var BOX = new Geometry.Polygon.Rectangle(ObjectManager.Player.ServerPosition, ObjectManager.Player.ServerPosition.Extend(Minion.ServerPosition, QExtended.Range), QExtended.Width);
-                                                    if (BOX.IsInside(QExtended.GetPrediction(ExtendedTarget).UnitPosition))
-                                                    {
-                                                        Q.CastOnUnit(Minion);
-                                                        break;
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-
-                                if (MenuProvider.Champion.Combo.UseW)
-                                    if (W.isReadyPerfectly())
                                         if (!ObjectManager.Player.IsDashing())
-                                        {
-                                            if (HeroManager.Enemies.Any(x => Orbwalking.InAutoAttackRange(x)))
-                                                WNoCollision.CastOnBestTarget();
-                                            else
-                                            {
-                                                var Target = TargetSelector.GetTargetNoCollision(W);
-                                                if (Target != null)
-                                                    W.Cast(Target);
-                                            }
-                                        }
-
-                                break;
-                            }
-                        case Orbwalking.OrbwalkingMode.Mixed:
-                            {
-                                if (MenuProvider.Champion.Harass.UseQ)
-                                    if (Q.isReadyPerfectly())
-                                        if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Harass.IfMana))
                                         {
                                             var Target = TargetSelector.GetTarget(Q.Range, Q.DamageType);
                                             if (Target != null)
@@ -132,6 +96,51 @@ namespace SharpShooter.Plugins
                                             }
                                         }
 
+                                if (MenuProvider.Champion.Combo.UseW)
+                                    if (W.isReadyPerfectly())
+                                        if (!ObjectManager.Player.IsDashing())
+                                        {
+                                            if (HeroManager.Enemies.Any(x => Orbwalking.InAutoAttackRange(x)))
+                                                WNoCollision.CastOnBestTarget();
+                                            else
+                                            {
+                                                var Target = TargetSelector.GetTargetNoCollision(W);
+                                                if (Target != null)
+                                                    W.Cast(Target);
+                                            }
+                                        }
+
+                                break;
+                            }
+                        case Orbwalking.OrbwalkingMode.Mixed:
+                            {
+                                if (MenuProvider.Champion.Harass.UseQ)
+                                    if (Q.isReadyPerfectly())
+                                        if (!ObjectManager.Player.IsDashing())
+                                            if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Harass.IfMana))
+                                            {
+                                                var Target = TargetSelector.GetTarget(Q.Range, Q.DamageType);
+                                                if (Target != null)
+                                                    Q.CastOnUnit(Target);
+                                                else
+                                                {
+                                                    var ExtendedTarget = TargetSelector.GetTarget(QExtended.Range, Q.DamageType);
+                                                    if (ExtendedTarget != null)
+                                                    {
+                                                        var Minions = MinionManager.GetMinions(ObjectManager.Player.ServerPosition, Q.Range, MinionTypes.All, MinionTeam.NotAlly);
+                                                        foreach (var Minion in Minions)
+                                                        {
+                                                            var BOX = new Geometry.Polygon.Rectangle(ObjectManager.Player.ServerPosition, ObjectManager.Player.ServerPosition.Extend(Minion.ServerPosition, QExtended.Range), QExtended.Width);
+                                                            if (BOX.IsInside(QExtended.GetPrediction(ExtendedTarget).UnitPosition))
+                                                            {
+                                                                Q.CastOnUnit(Minion);
+                                                                break;
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+
                                 if (MenuProvider.Champion.Harass.UseW)
                                     if (W.isReadyPerfectly())
                                         if (!ObjectManager.Player.IsDashing())
@@ -150,28 +159,30 @@ namespace SharpShooter.Plugins
                                 if (MenuProvider.Champion.Laneclear.UseQ)
                                     if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Laneclear.IfMana))
                                         if (Q.isReadyPerfectly())
-                                        {
-                                            var Minions = MinionManager.GetMinions(ObjectManager.Player.ServerPosition, Q.Range);
-                                            foreach (var Minion in Minions)
+                                            if (!ObjectManager.Player.IsDashing())
                                             {
-                                                var BOX = new Geometry.Polygon.Rectangle(ObjectManager.Player.ServerPosition, ObjectManager.Player.ServerPosition.Extend(Minion.ServerPosition, QExtended.Range), QExtended.Width);
-                                                if (Minions.Count(x => BOX.IsInside(x.ServerPosition)) >= 4)
+                                                var Minions = MinionManager.GetMinions(ObjectManager.Player.ServerPosition, Q.Range);
+                                                foreach (var Minion in Minions)
                                                 {
-                                                    Q.CastOnUnit(Minion);
-                                                    break;
+                                                    var BOX = new Geometry.Polygon.Rectangle(ObjectManager.Player.ServerPosition, ObjectManager.Player.ServerPosition.Extend(Minion.ServerPosition, QExtended.Range), QExtended.Width);
+                                                    if (Minions.Count(x => BOX.IsInside(x.ServerPosition)) >= 4)
+                                                    {
+                                                        Q.CastOnUnit(Minion);
+                                                        break;
+                                                    }
                                                 }
                                             }
-                                        }
 
                                 //Jungleclear
                                 if (MenuProvider.Champion.Jungleclear.UseQ)
                                     if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Jungleclear.IfMana))
                                         if (Q.isReadyPerfectly())
-                                        {
-                                            var Target = MinionManager.GetMinions(Q.Range, MinionTypes.All, MinionTeam.Neutral).FirstOrDefault(x => x.IsValidTarget(Q.Range));
-                                            if (Target != null)
-                                                Q.CastOnUnit(Target);
-                                        }
+                                            if (!ObjectManager.Player.IsDashing())
+                                            {
+                                                var Target = MinionManager.GetMinions(Q.Range, MinionTypes.All, MinionTeam.Neutral).FirstOrDefault(x => x.IsValidTarget(Q.Range));
+                                                if (Target != null)
+                                                    Q.CastOnUnit(Target);
+                                            }
 
                                 if (MenuProvider.Champion.Jungleclear.UseW)
                                     if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Jungleclear.IfMana))
@@ -212,7 +223,7 @@ namespace SharpShooter.Plugins
                 if (args.Slot == SpellSlot.Q || args.Slot == SpellSlot.W || args.Slot == SpellSlot.E)
                 {
                     //do you know it? lucian can do autoattack cancel like riven
-                    Utility.DelayAction.Add(Game.Ping + 10, () => ObjectManager.Player.IssueOrder(GameObjectOrder.MoveTo, Game.CursorPos));
+                    ObjectManager.Player.IssueOrder(GameObjectOrder.MoveTo, Game.CursorPos);
                     Utility.DelayAction.Add(Game.Ping + 10, Orbwalking.ResetAutoAttackTimer);
                 }
             }
@@ -226,9 +237,6 @@ namespace SharpShooter.Plugins
                 {
                     if (args.Slot == SpellSlot.Q || args.Slot == SpellSlot.W || args.Slot == SpellSlot.E || args.Slot == SpellSlot.R)
                         HasPassive = true;
-
-                    if (args.Slot == SpellSlot.Q)
-                        Utility.DelayAction.Add(480 + Game.Ping, Orbwalking.ResetAutoAttackTimer);
                 }
         }
 
