@@ -20,7 +20,7 @@ namespace SharpShooter.Plugins
             R = new Spell(SpellSlot.R, 2500f, TargetSelector.DamageType.Physical) { MinHitChance = HitChance.High };
 
             W.SetSkillshot(0.6f, 60f, 3300f, true, SkillshotType.SkillshotLine);
-            E.SetSkillshot(1.0f, 100f, 1750f, false, SkillshotType.SkillshotCircle);
+            E.SetSkillshot(1.2f, 1f, 1750f, false, SkillshotType.SkillshotCircle);
             R.SetSkillshot(0.6f, 140f, 1700f, false, SkillshotType.SkillshotLine);
 
             MenuProvider.Champion.Combo.addUseQ();
@@ -83,14 +83,16 @@ namespace SharpShooter.Plugins
                                 if (MenuProvider.Champion.Combo.UseE)
                                     if (E.isReadyPerfectly())
                                     {
-                                        if (E.CastOnBestTarget() != Spell.CastStates.SuccessfullyCasted)
-                                            E.CastWithExtraTrapLogic();
+                                        var Target = HeroManager.Enemies.Where(x => x.IsValidTarget(600) && E.GetPrediction(x).Hitchance >= HitChance.VeryHigh && !x.IsFacing(ObjectManager.Player) && x.IsMoving).OrderBy(x => x.Distance(ObjectManager.Player)).FirstOrDefault();
+                                        if (Target != null)
+                                            if (E.Cast(Target) != Spell.CastStates.SuccessfullyCasted)
+                                                E.CastWithExtraTrapLogic();
                                     }
 
                                 if (MenuProvider.Champion.Combo.UseR)
                                     if (R.isReadyPerfectly())
                                         foreach (var Target in HeroManager.Enemies.Where(x => !Orbwalking.InAutoAttackRange(x) && x.isKillableAndValidTarget(GetRDamage(x), R.Range) && R.GetPrediction(x).Hitchance >= HitChance.High))
-                                            if (Prediction.GetPrediction(Target, Q.Delay, Q.Width, Q.Speed, new CollisionableObjects[] { CollisionableObjects.Heroes, CollisionableObjects.YasuoWall }).CollisionObjects.Count == 0)
+                                            if (Prediction.GetPrediction(Target, Q.Delay, 200f, Q.Speed, new CollisionableObjects[] { CollisionableObjects.Heroes, CollisionableObjects.YasuoWall }).CollisionObjects.Count == 0)
                                                 R.Cast(Target);
 
                                 break;
