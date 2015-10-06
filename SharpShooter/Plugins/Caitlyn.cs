@@ -70,7 +70,10 @@ namespace SharpShooter.Plugins
 
                                 if (MenuProvider.Champion.Combo.UseW)
                                     if (W.isReadyPerfectly())
-                                        W.CastOnBestTarget();
+                                    {
+                                        if (W.CastOnBestTarget() != Spell.CastStates.SuccessfullyCasted)
+                                            W.CastWithExtraTrapLogic();
+                                    }
 
                                 if (MenuProvider.Champion.Combo.UseR)
                                     if (R.isReadyPerfectly())

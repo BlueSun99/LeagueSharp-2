@@ -96,5 +96,22 @@ namespace SharpShooter
         {
             return ObjectManager.Get<Obj_AI_Minion>().Count(h => h.IsValidTarget(range, true, point));
         }
+
+        internal static Spell.CastStates CastWithExtraTrapLogic(this Spell spell)
+        {
+            if (spell.isReadyPerfectly())
+            {
+                var Teleport = MinionManager.GetMinions(spell.Range).FirstOrDefault(x => x.HasBuff("teleport_target"));
+                var Zhonya = HeroManager.Enemies.FirstOrDefault(x => ObjectManager.Player.Distance(x) <= spell.Range && x.HasBuff("zhonyasringshield"));
+
+                if (Teleport != null)
+                    return spell.Cast(Teleport);
+
+                if (Zhonya != null)
+                    return spell.Cast(Zhonya);
+
+            }
+            return Spell.CastStates.NotCasted;
+        }
     }
 }
