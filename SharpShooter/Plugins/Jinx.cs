@@ -47,6 +47,7 @@ namespace SharpShooter.Plugins
             MenuProvider.Champion.Drawings.addDrawWrange(System.Drawing.Color.DeepSkyBlue, true);
             MenuProvider.Champion.Drawings.addDrawErange(System.Drawing.Color.DeepSkyBlue, false);
             MenuProvider.Champion.Drawings.addDrawRrange(System.Drawing.Color.DeepSkyBlue, true);
+            MenuProvider.Champion.Drawings.addItem("Draw Rocket explosion range on Orbwalker Target", true);
             MenuProvider.Champion.Drawings.addDamageIndicator(GetComboDamage);
 
             Game.OnUpdate += Game_OnUpdate;
@@ -176,6 +177,13 @@ namespace SharpShooter.Plugins
 
             if (MenuProvider.Champion.Drawings.DrawRrange.Active && R.isReadyPerfectly())
                 Render.Circle.DrawCircle(ObjectManager.Player.Position, R.Range, MenuProvider.Champion.Drawings.DrawRrange.Color);
+
+            if (MenuProvider.Champion.Drawings.getBoolValue("Draw Rocket explosion range on Orbwalker Target"))
+            {
+                var AATarget = MenuProvider.Orbwalker.GetTarget();
+                if (AATarget != null)
+                    Render.Circle.DrawCircle(AATarget.Position, 200, System.Drawing.Color.Red, 4, true);
+            }
         }
 
         private float GetComboDamage(Obj_AI_Base enemy)
