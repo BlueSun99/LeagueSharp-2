@@ -58,6 +58,10 @@ namespace SharpShooter.Plugins
                                     if (!args.SData.Name.Contains("summoner"))
                                         if (!args.SData.Name.Contains("TormentedSoil"))
                                             E.Cast();
+
+            if (sender.IsMe)
+                if (args.Slot == SpellSlot.W)
+                    Utility.DelayAction.Add(Game.Ping + 10, Orbwalking.ResetAutoAttackTimer);
         }
 
         private void Obj_AI_Base_OnDoCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)

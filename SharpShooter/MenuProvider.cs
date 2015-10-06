@@ -48,7 +48,9 @@ namespace SharpShooter
                 addItem("Graves");
                 addItem("Jinx");
                 addItem("Kalista");
+                addItem("KogMaw");
                 addItem("Lucian");
+                addItem("MissFortune");
                 addItem("Sivir");
                 addItem("Tristana");
                 addItem("Twitch");
