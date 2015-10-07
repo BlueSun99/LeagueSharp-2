@@ -23,6 +23,7 @@ namespace SharpShooter.Plugins
 
             MenuProvider.Champion.Combo.addUseQ();
             MenuProvider.Champion.Combo.addUseW();
+            MenuProvider.Champion.Combo.addUseE();
             MenuProvider.Champion.Combo.addUseR();
 
             MenuProvider.Champion.Harass.addUseQ();
@@ -76,6 +77,14 @@ namespace SharpShooter.Plugins
                                     {
                                         if (W.CastOnBestTarget() != Spell.CastStates.SuccessfullyCasted)
                                             W.CastWithExtraTrapLogic();
+                                    }
+
+                                if (MenuProvider.Champion.Combo.UseE)
+                                    if (E.isReadyPerfectly())
+                                    {
+                                        var Target = HeroManager.Enemies.FirstOrDefault(x => x.isKillableAndValidTarget(E.GetDamage(x), E.Range) && E.GetPrediction(x).Hitchance >= HitChance.High);
+                                        if (Target != null)
+                                            E.Cast(Target);
                                     }
 
                                 if (MenuProvider.Champion.Combo.UseR)
