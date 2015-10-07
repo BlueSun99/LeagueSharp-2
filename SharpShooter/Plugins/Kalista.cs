@@ -61,6 +61,9 @@ namespace SharpShooter.Plugins
 
         private void Game_OnUpdate(EventArgs args)
         {
+            if (ExtraExtensions.DownClocked())
+                return;
+
             if (!ObjectManager.Player.IsDead)
             {
                 switch (MenuProvider.Orbwalker.ActiveMode)

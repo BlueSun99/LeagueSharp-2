@@ -47,6 +47,59 @@ namespace SharpShooter.Plugins
             Console.WriteLine("Sharpshooter: Sivir Loaded.");
         }
 
+        private void Game_OnUpdate(EventArgs args)
+        {
+            if (ExtraExtensions.DownClocked())
+                return;
+
+            if (!ObjectManager.Player.IsDead)
+            {
+                if (Orbwalking.CanMove(10))
+                {
+                    switch (MenuProvider.Orbwalker.ActiveMode)
+                    {
+                        case Orbwalking.OrbwalkingMode.Combo:
+                            {
+                                if (MenuProvider.Champion.Combo.UseQ)
+                                    if (Q.isReadyPerfectly())
+                                        Q.CastOnBestTarget();
+                                break;
+                            }
+                        case Orbwalking.OrbwalkingMode.Mixed:
+                            {
+                                if (MenuProvider.Champion.Harass.UseQ)
+                                    if (Q.isReadyPerfectly())
+                                        Q.CastOnBestTarget();
+                                break;
+                            }
+                        case Orbwalking.OrbwalkingMode.LaneClear:
+                            {
+                                //Laneclear
+                                if (MenuProvider.Champion.Laneclear.UseQ)
+                                    if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Laneclear.IfMana))
+                                        if (Q.isReadyPerfectly())
+                                        {
+                                            var FarmLocation = Q.GetLineFarmLocation(MinionManager.GetMinions(Q.Range));
+                                            if (FarmLocation.MinionsHit >= 4)
+                                                Q.Cast(FarmLocation.Position);
+                                        }
+
+                                //Jungleclear
+                                if (MenuProvider.Champion.Jungleclear.UseQ)
+                                    if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Jungleclear.IfMana))
+                                        if (Q.isReadyPerfectly())
+                                        {
+                                            var Target = MinionManager.GetMinions(Q.Range, MinionTypes.All, MinionTeam.Neutral).FirstOrDefault(x => x.IsValidTarget(Q.Range));
+                                            if (Target != null)
+                                                Q.Cast(Target);
+                                        }
+                                break;
+                            }
+                    }
+                }
+            }
+        }
+
         private void Obj_AI_Base_OnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
         {
             if (args.Target.IsMe)
@@ -94,56 +147,6 @@ namespace SharpShooter.Plugins
                                     break;
                                 }
                         }
-        }
-
-        private void Game_OnUpdate(EventArgs args)
-        {
-            if (!ObjectManager.Player.IsDead)
-            {
-                if (Orbwalking.CanMove(10))
-                {
-                    switch (MenuProvider.Orbwalker.ActiveMode)
-                    {
-                        case Orbwalking.OrbwalkingMode.Combo:
-                            {
-                                if (MenuProvider.Champion.Combo.UseQ)
-                                    if (Q.isReadyPerfectly())
-                                        Q.CastOnBestTarget();
-                                break;
-                            }
-                        case Orbwalking.OrbwalkingMode.Mixed:
-                            {
-                                if (MenuProvider.Champion.Harass.UseQ)
-                                    if (Q.isReadyPerfectly())
-                                        Q.CastOnBestTarget();
-                                break;
-                            }
-                        case Orbwalking.OrbwalkingMode.LaneClear:
-                            {
-                                //Laneclear
-                                if (MenuProvider.Champion.Laneclear.UseQ)
-                                    if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Laneclear.IfMana))
-                                        if (Q.isReadyPerfectly())
-                                        {
-                                            var FarmLocation = Q.GetLineFarmLocation(MinionManager.GetMinions(Q.Range));
-                                            if (FarmLocation.MinionsHit >= 4)
-                                                Q.Cast(FarmLocation.Position);
-                                        }
-
-                                //Jungleclear
-                                if (MenuProvider.Champion.Jungleclear.UseQ)
-                                    if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Jungleclear.IfMana))
-                                        if (Q.isReadyPerfectly())
-                                        {
-                                            var Target = MinionManager.GetMinions(Q.Range, MinionTypes.All, MinionTeam.Neutral).FirstOrDefault(x => x.IsValidTarget(Q.Range));
-                                            if (Target != null)
-                                                Q.Cast(Target);
-                                        }
-                                break;
-                            }
-                    }
-                }
-            }
         }
 
         private void Drawing_OnDraw(EventArgs args)

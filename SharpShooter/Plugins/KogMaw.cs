@@ -12,10 +12,10 @@ namespace SharpShooter.Plugins
 
         public KogMaw()
         {
-            Q = new Spell(SpellSlot.Q, 950f);
+            Q = new Spell(SpellSlot.Q, 950f) { MinHitChance = HitChance.High };
             W = new Spell(SpellSlot.W);
-            E = new Spell(SpellSlot.E, 1260f);
-            R = new Spell(SpellSlot.R);
+            E = new Spell(SpellSlot.E, 1260f) { MinHitChance = HitChance.High };
+            R = new Spell(SpellSlot.R) { MinHitChance = HitChance.High };
 
             Q.SetSkillshot(0.25f, 70f, 1650f, true, SkillshotType.SkillshotLine);
             E.SetSkillshot(0.50f, 120f, 1400f, false, SkillshotType.SkillshotLine);
@@ -41,8 +41,10 @@ namespace SharpShooter.Plugins
             MenuProvider.Champion.Jungleclear.addUseR();
             MenuProvider.Champion.Jungleclear.addIfMana(20);
 
-            MenuProvider.Champion.Drawings.addDrawQrange(System.Drawing.Color.DeepSkyBlue, true);
-            MenuProvider.Champion.Drawings.addDrawRrange(System.Drawing.Color.DeepSkyBlue, false);
+            MenuProvider.Champion.Drawings.addDrawQrange(System.Drawing.Color.DeepSkyBlue, false);
+            MenuProvider.Champion.Drawings.addDrawWrange(System.Drawing.Color.DeepSkyBlue, true);
+            MenuProvider.Champion.Drawings.addDrawErange(System.Drawing.Color.DeepSkyBlue, false);
+            MenuProvider.Champion.Drawings.addDrawRrange(System.Drawing.Color.DeepSkyBlue, true);
             MenuProvider.Champion.Drawings.addDamageIndicator(GetComboDamage);
 
             Game.OnUpdate += Game_OnUpdate;
@@ -54,6 +56,9 @@ namespace SharpShooter.Plugins
 
         private void Game_OnUpdate(EventArgs args)
         {
+            if (ExtraExtensions.DownClocked())
+                return;
+
             W.Range = 565 + 110 + W.Level * 20;
             R.Range = 900 + R.Level * 300;
 
@@ -72,6 +77,11 @@ namespace SharpShooter.Plugins
                                         if (Target != null)
                                             Q.Cast(Target);
                                     }
+
+                                if (MenuProvider.Champion.Combo.UseW)
+                                    if (W.isReadyPerfectly())
+                                        if (HeroManager.Enemies.Any(x => x.IsValidTarget(W.Range)))
+                                            W.Cast();
 
                                 if (MenuProvider.Champion.Combo.UseE)
                                     if (E.isReadyPerfectly())
@@ -171,10 +181,10 @@ namespace SharpShooter.Plugins
                 if (MenuProvider.Champion.Drawings.DrawQrange.Active && Q.isReadyPerfectly())
                     Render.Circle.DrawCircle(ObjectManager.Player.Position, Q.Range, MenuProvider.Champion.Drawings.DrawQrange.Color);
 
-                if (MenuProvider.Champion.Drawings.DrawQrange.Active && W.isReadyPerfectly())
+                if (MenuProvider.Champion.Drawings.DrawWrange.Active && W.isReadyPerfectly())
                     Render.Circle.DrawCircle(ObjectManager.Player.Position, W.Range, MenuProvider.Champion.Drawings.DrawWrange.Color);
 
-                if (MenuProvider.Champion.Drawings.DrawQrange.Active && E.isReadyPerfectly())
+                if (MenuProvider.Champion.Drawings.DrawErange.Active && E.isReadyPerfectly())
                     Render.Circle.DrawCircle(ObjectManager.Player.Position, E.Range, MenuProvider.Champion.Drawings.DrawErange.Color);
 
                 if (MenuProvider.Champion.Drawings.DrawRrange.Active && R.isReadyPerfectly())

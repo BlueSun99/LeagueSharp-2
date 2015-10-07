@@ -52,29 +52,11 @@ namespace SharpShooter.Plugins
             Console.WriteLine("Sharpshooter: Graves Loaded.");
         }
 
-        private void Obj_AI_Base_OnDoCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
-        {
-            if (sender.IsMe)
-                if (args.SData.IsAutoAttack())
-                    switch (MenuProvider.Orbwalker.ActiveMode)
-                    {
-                        case Orbwalking.OrbwalkingMode.Combo:
-                            {
-                                if (MenuProvider.Champion.Combo.UseE)
-                                    if (E.isReadyPerfectly())
-                                        if (ObjectManager.Player.Position.Extend(Game.CursorPos, 450).CountEnemiesInRange(500) <= 1)
-                                            if (!Q.isReadyPerfectly())
-                                                E.Cast(ObjectManager.Player.Position.Extend(Game.CursorPos, 450));
-                                            else
-                                               if (ObjectManager.Player.Mana - E.ManaCost >= Q.ManaCost)
-                                                E.Cast(ObjectManager.Player.Position.Extend(Game.CursorPos, 450));
-                                break;
-                            }
-                    }
-        }
-
         private void Game_OnUpdate(EventArgs args)
         {
+            if (ExtraExtensions.DownClocked())
+                return;
+
             if (!ObjectManager.Player.IsDead)
             {
                 if (Orbwalking.CanMove(10))
@@ -144,6 +126,27 @@ namespace SharpShooter.Plugins
                         R.Cast(RTarget);
                 }
             }
+        }
+
+        private void Obj_AI_Base_OnDoCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
+        {
+            if (sender.IsMe)
+                if (args.SData.IsAutoAttack())
+                    switch (MenuProvider.Orbwalker.ActiveMode)
+                    {
+                        case Orbwalking.OrbwalkingMode.Combo:
+                            {
+                                if (MenuProvider.Champion.Combo.UseE)
+                                    if (E.isReadyPerfectly())
+                                        if (ObjectManager.Player.Position.Extend(Game.CursorPos, 450).CountEnemiesInRange(500) <= 1)
+                                            if (!Q.isReadyPerfectly())
+                                                E.Cast(ObjectManager.Player.Position.Extend(Game.CursorPos, 450));
+                                            else
+                                               if (ObjectManager.Player.Mana - E.ManaCost >= Q.ManaCost)
+                                                E.Cast(ObjectManager.Player.Position.Extend(Game.CursorPos, 450));
+                                break;
+                            }
+                    }
         }
 
         private void AntiGapcloser_OnEnemyGapcloser(ActiveGapcloser gapcloser)

@@ -54,6 +54,9 @@ namespace SharpShooter.Plugins
 
         private void Game_OnUpdate(EventArgs args)
         {
+            if (ExtraExtensions.DownClocked())
+                return;
+
             R.Range = 1500 + (500 * R.Level);
 
             if (!ObjectManager.Player.IsDead)

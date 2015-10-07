@@ -51,36 +51,11 @@ namespace SharpShooter.Plugins
             Console.WriteLine("Sharpshooter: Ashe Loaded.");
         }
 
-        private void Orbwalking_BeforeAttack(Orbwalking.BeforeAttackEventArgs args)
-        {
-            if (args.Unit.IsMe)
-                if (Orbwalking.InAutoAttackRange(args.Target))
-                {
-                    switch (MenuProvider.Orbwalker.ActiveMode)
-                    {
-                        case Orbwalking.OrbwalkingMode.Combo:
-                            {
-                                if (MenuProvider.Champion.Combo.UseQ)
-                                    if (ObjectManager.Player.HasBuff("asheqcastready"))
-                                        if (Q.isReadyPerfectly())
-                                            Q.Cast();
-                                break;
-                            }
-                        case Orbwalking.OrbwalkingMode.LaneClear:
-                            {
-                                if (MenuProvider.Champion.Jungleclear.UseQ)
-                                    if (ObjectManager.Player.HasBuff("asheqcastready"))
-                                        if (Q.isReadyPerfectly())
-                                            if (MinionManager.GetMinions(Orbwalking.GetRealAutoAttackRange(ObjectManager.Player), MinionTypes.All, MinionTeam.Neutral).Any(x => x.NetworkId == args.Target.NetworkId))
-                                                Q.Cast();
-                                break;
-                            }
-                    }
-                }
-        }
-
         private void Game_OnUpdate(EventArgs args)
         {
+            if (ExtraExtensions.DownClocked())
+                return;
+
             if (!ObjectManager.Player.IsDead)
             {
                 if (Orbwalking.CanMove(10))
@@ -159,6 +134,34 @@ namespace SharpShooter.Plugins
                             R.Cast(RTarget);
                     }
             }
+        }
+
+        private void Orbwalking_BeforeAttack(Orbwalking.BeforeAttackEventArgs args)
+        {
+            if (args.Unit.IsMe)
+                if (Orbwalking.InAutoAttackRange(args.Target))
+                {
+                    switch (MenuProvider.Orbwalker.ActiveMode)
+                    {
+                        case Orbwalking.OrbwalkingMode.Combo:
+                            {
+                                if (MenuProvider.Champion.Combo.UseQ)
+                                    if (ObjectManager.Player.HasBuff("asheqcastready"))
+                                        if (Q.isReadyPerfectly())
+                                            Q.Cast();
+                                break;
+                            }
+                        case Orbwalking.OrbwalkingMode.LaneClear:
+                            {
+                                if (MenuProvider.Champion.Jungleclear.UseQ)
+                                    if (ObjectManager.Player.HasBuff("asheqcastready"))
+                                        if (Q.isReadyPerfectly())
+                                            if (MinionManager.GetMinions(Orbwalking.GetRealAutoAttackRange(ObjectManager.Player), MinionTypes.All, MinionTeam.Neutral).Any(x => x.NetworkId == args.Target.NetworkId))
+                                                Q.Cast();
+                                break;
+                            }
+                    }
+                }
         }
 
         private void AntiGapcloser_OnEnemyGapcloser(ActiveGapcloser gapcloser)

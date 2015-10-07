@@ -52,20 +52,11 @@ namespace SharpShooter.Plugins
             Console.WriteLine("Sharpshooter: Vayne Loaded.");
         }
 
-        private void Orbwalking_BeforeAttack(Orbwalking.BeforeAttackEventArgs args)
-        {
-            if (args.Unit.IsMe)
-            {
-                var buff = ObjectManager.Player.GetBuff("vaynetumblefade");
-                if (buff != null)
-                    if (buff.IsValidBuff())
-                        if (buff.EndTime - Game.Time > (buff.EndTime - buff.StartTime) - (MenuProvider.Champion.Misc.getSliderValue("Q Stealth duration (ms)").Value / 1000))
-                            args.Process = false;
-            }
-        }
-
         private void Game_OnUpdate(EventArgs args)
         {
+            if (ExtraExtensions.DownClocked())
+                return;
+
             if (!ObjectManager.Player.IsDead)
                 if (Orbwalking.CanMove(10))
                     switch (MenuProvider.Orbwalker.ActiveMode)
@@ -147,6 +138,18 @@ namespace SharpShooter.Plugins
                                 break;
                             }
                     }
+        }
+
+        private void Orbwalking_BeforeAttack(Orbwalking.BeforeAttackEventArgs args)
+        {
+            if (args.Unit.IsMe)
+            {
+                var buff = ObjectManager.Player.GetBuff("vaynetumblefade");
+                if (buff != null)
+                    if (buff.IsValidBuff())
+                        if (buff.EndTime - Game.Time > (buff.EndTime - buff.StartTime) - (MenuProvider.Champion.Misc.getSliderValue("Q Stealth duration (ms)").Value / 1000))
+                            args.Process = false;
+            }
         }
 
         private void AntiGapcloser_OnEnemyGapcloser(ActiveGapcloser gapcloser)

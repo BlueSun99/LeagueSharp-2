@@ -113,5 +113,10 @@ namespace SharpShooter
             }
             return Spell.CastStates.NotCasted;
         }
+
+        internal static bool DownClocked()
+        {
+            return Environment.TickCount % 2 == 0;
+        }
     }
 }

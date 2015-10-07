@@ -50,6 +50,9 @@ namespace SharpShooter.Plugins
 
         private void Game_OnUpdate(EventArgs args)
         {
+            if (ExtraExtensions.DownClocked())
+                return;
+
             E.Range = Orbwalking.GetRealAutoAttackRange(ObjectManager.Player);
             R.Range = Orbwalking.GetRealAutoAttackRange(ObjectManager.Player);
 

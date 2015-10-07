@@ -48,22 +48,11 @@ namespace SharpShooter.Plugins
             Console.WriteLine("Sharpshooter: MissFortune Loaded.");
         }
 
-        private void Orbwalking_BeforeAttack(Orbwalking.BeforeAttackEventArgs args)
-        {
-            if (args.Unit.IsMe)
-                switch (MenuProvider.Orbwalker.ActiveMode)
-                {
-                    case Orbwalking.OrbwalkingMode.Combo:
-                        if (W.isReadyPerfectly())
-                            if (MenuProvider.Champion.Combo.UseW)
-                                if (Orbwalking.InAutoAttackRange(args.Target))
-                                    W.Cast();
-                        break;
-                }
-        }
-
         private void Game_OnUpdate(EventArgs args)
         {
+            if (ExtraExtensions.DownClocked())
+                return;
+
             if (!ObjectManager.Player.IsDead)
             {
                 if (Orbwalking.CanMove(10))
@@ -130,6 +119,20 @@ namespace SharpShooter.Plugins
                     }
                 }
             }
+        }
+
+        private void Orbwalking_BeforeAttack(Orbwalking.BeforeAttackEventArgs args)
+        {
+            if (args.Unit.IsMe)
+                switch (MenuProvider.Orbwalker.ActiveMode)
+                {
+                    case Orbwalking.OrbwalkingMode.Combo:
+                        if (W.isReadyPerfectly())
+                            if (MenuProvider.Champion.Combo.UseW)
+                                if (Orbwalking.InAutoAttackRange(args.Target))
+                                    W.Cast();
+                        break;
+                }
         }
 
         private void Drawing_OnDraw(EventArgs args)

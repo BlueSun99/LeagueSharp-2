@@ -56,32 +56,11 @@ namespace SharpShooter.Plugins
             Console.WriteLine("Sharpshooter: Varus Loaded.");
         }
 
-        private void Orbwalking_BeforeAttack(Orbwalking.BeforeAttackEventArgs args)
-        {
-            if (args.Unit.IsMe)
-                args.Process = !Q.IsCharging;
-        }
-
-        private void AntiGapcloser_OnEnemyGapcloser(ActiveGapcloser gapcloser)
-        {
-            if (MenuProvider.Champion.Misc.UseAntiGapcloser)
-                if (gapcloser.End.Distance(ObjectManager.Player.Position) <= 200)
-                    if (gapcloser.Sender.IsValidTarget(R.Range))
-                        if (R.isReadyPerfectly())
-                            R.Cast(gapcloser.Sender);
-        }
-
-        private void Interrupter2_OnInterruptableTarget(Obj_AI_Hero sender, Interrupter2.InterruptableTargetEventArgs args)
-        {
-            if (MenuProvider.Champion.Misc.UseInterrupter)
-                if (args.DangerLevel >= Interrupter2.DangerLevel.Medium)
-                    if (sender.IsValidTarget(R.Range))
-                        if (R.isReadyPerfectly())
-                            R.CastOnUnit(sender);
-        }
-
         private void Game_OnUpdate(EventArgs args)
         {
+            if (ExtraExtensions.DownClocked())
+                return;
+
             if (!ObjectManager.Player.IsDead)
             {
                 if (Orbwalking.CanMove(10))
@@ -193,6 +172,30 @@ namespace SharpShooter.Plugins
                     }
                 }
             }
+        }
+
+        private void Orbwalking_BeforeAttack(Orbwalking.BeforeAttackEventArgs args)
+        {
+            if (args.Unit.IsMe)
+                args.Process = !Q.IsCharging;
+        }
+
+        private void AntiGapcloser_OnEnemyGapcloser(ActiveGapcloser gapcloser)
+        {
+            if (MenuProvider.Champion.Misc.UseAntiGapcloser)
+                if (gapcloser.End.Distance(ObjectManager.Player.Position) <= 200)
+                    if (gapcloser.Sender.IsValidTarget(R.Range))
+                        if (R.isReadyPerfectly())
+                            R.Cast(gapcloser.Sender);
+        }
+
+        private void Interrupter2_OnInterruptableTarget(Obj_AI_Hero sender, Interrupter2.InterruptableTargetEventArgs args)
+        {
+            if (MenuProvider.Champion.Misc.UseInterrupter)
+                if (args.DangerLevel >= Interrupter2.DangerLevel.Medium)
+                    if (sender.IsValidTarget(R.Range))
+                        if (R.isReadyPerfectly())
+                            R.CastOnUnit(sender);
         }
 
         private void Drawing_OnDraw(EventArgs args)
