@@ -115,7 +115,7 @@ namespace SharpShooter.Plugins
                             {
                                 if (MenuProvider.Champion.Combo.UseQ)
                                     if (Q.isReadyPerfectly())
-                                        if (ObjectManager.Player.Position.Extend(Game.CursorPos, 300).CountEnemiesInRange(800) <= 1)
+                                        if (ObjectManager.Player.Position.Extend(Game.CursorPos, 300).CountEnemiesInRange(500) <= 1)
                                             Q.Cast(Game.CursorPos);
                                 break;
                             }
@@ -124,7 +124,7 @@ namespace SharpShooter.Plugins
                                 if (MenuProvider.Champion.Harass.UseQ)
                                     if (Q.isReadyPerfectly())
                                         if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Harass.IfMana))
-                                            if (ObjectManager.Player.Position.Extend(Game.CursorPos, 300).CountEnemiesInRange(800) <= 1)
+                                            if (ObjectManager.Player.Position.Extend(Game.CursorPos, 300).CountEnemiesInRange(500) <= 1)
                                                 Q.Cast(Game.CursorPos);
                                 break;
                             }
@@ -134,7 +134,7 @@ namespace SharpShooter.Plugins
                                 if (MenuProvider.Champion.Laneclear.UseQ)
                                     if (Q.isReadyPerfectly())
                                         if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Laneclear.IfMana))
-                                            if (ObjectManager.Player.Position.Extend(Game.CursorPos, 300).CountEnemiesInRange(800) <= 1)
+                                            if (ObjectManager.Player.Position.Extend(Game.CursorPos, 300).CountEnemiesInRange(500) <= 1)
                                                 if (MinionManager.GetMinions(Orbwalking.GetRealAutoAttackRange(ObjectManager.Player)).Any(x=>x.NetworkId == args.Target.NetworkId))
                                                     Q.Cast(Game.CursorPos);
 
