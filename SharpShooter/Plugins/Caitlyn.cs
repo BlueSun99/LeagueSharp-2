@@ -82,7 +82,7 @@ namespace SharpShooter.Plugins
                                 if (MenuProvider.Champion.Combo.UseE)
                                     if (E.isReadyPerfectly())
                                     {
-                                        var Target = HeroManager.Enemies.FirstOrDefault(x => x.isKillableAndValidTarget(E.GetDamage(x), E.Range) && E.GetPrediction(x).Hitchance >= HitChance.High);
+                                        var Target = HeroManager.Enemies.FirstOrDefault(x => !Orbwalking.InAutoAttackRange(x) && x.isKillableAndValidTarget(E.GetDamage(x), E.Range) && E.GetPrediction(x).Hitchance >= HitChance.High);
                                         if (Target != null)
                                             E.Cast(Target);
                                     }
