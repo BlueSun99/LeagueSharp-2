@@ -102,11 +102,12 @@ namespace SharpShooter.Plugins
                             }
                         case Orbwalking.OrbwalkingMode.LaneClear:
                             {
+                                //Laneclear
                                 if (MenuProvider.Champion.Laneclear.UseQ)
                                     if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Laneclear.IfMana))
                                         if (Q.isReadyPerfectly())
                                         {
-                                            var Target = MinionManager.GetMinions(Q.Range).OrderBy(x => x.Health).FirstOrDefault(x => x.isKillableAndValidTarget(Q.GetDamage(x), Q.Range) && Q.GetPrediction(x).Hitchance >= Q.MinHitChance);
+                                            var Target = MinionManager.GetMinions(Q.Range).OrderBy(x => x.Health).FirstOrDefault(x => !Orbwalking.InAutoAttackRange(x) && x.isKillableAndValidTarget(Q.GetDamage(x), Q.Range) && Q.GetPrediction(x).Hitchance >= Q.MinHitChance);
                                             if (Target != null)
                                                 Q.Cast(Target);
                                         }
