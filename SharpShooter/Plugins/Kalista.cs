@@ -188,9 +188,15 @@ namespace SharpShooter.Plugins
                             E.Cast();
 
                 if (MenuProvider.Champion.Misc.getBoolValue("Use Mobsteal (With E)"))
+                {
                     if (E.isReadyPerfectly())
                         if (MinionManager.GetMinions(E.Range, MinionTypes.All, MinionTeam.Neutral).Any(x => x.isKillableAndValidTarget(E.GetDamage(x))))
                             E.Cast();
+
+                    if (E.isReadyPerfectly())
+                        if (MinionManager.GetMinions(E.Range).Any(x => x.isKillableAndValidTarget(E.GetDamage(x)) && (x.SkinName.ToLower().Contains("siege") || x.SkinName.ToLower().Contains("super"))))
+                            E.Cast();
+                }
 
                 if (MenuProvider.Champion.Misc.getBoolValue("Auto W"))
                     if (ObjectManager.Player.Position.CountEnemiesInRange(1500f) <= 0)

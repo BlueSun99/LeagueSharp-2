@@ -14,7 +14,7 @@ namespace SharpShooter.Plugins
         public Lucian()
         {
             Q = new Spell(SpellSlot.Q, 675f, TargetSelector.DamageType.Physical);
-            W = new Spell(SpellSlot.W, 1000f, TargetSelector.DamageType.Physical);
+            W = new Spell(SpellSlot.W, 1000f, TargetSelector.DamageType.Physical) { MinHitChance = HitChance.High };
             E = new Spell(SpellSlot.E, 475f);
             R = new Spell(SpellSlot.R, 1400f);
             QExtended = new Spell(SpellSlot.Q, 1100f, TargetSelector.DamageType.Physical);
@@ -61,14 +61,14 @@ namespace SharpShooter.Plugins
 
             if (!ObjectManager.Player.IsDead)
             {
-                if (HasPassive == false)
-                    switch (MenuProvider.Orbwalker.ActiveMode)
-                    {
-                        case Orbwalking.OrbwalkingMode.Combo:
-                            {
-                                if (MenuProvider.Champion.Combo.UseQ)
-                                    if (Q.isReadyPerfectly())
-                                        if (!ObjectManager.Player.IsDashing())
+                switch (MenuProvider.Orbwalker.ActiveMode)
+                {
+                    case Orbwalking.OrbwalkingMode.Combo:
+                        {
+                            if (MenuProvider.Champion.Combo.UseQ)
+                                if (Q.isReadyPerfectly())
+                                    if (!ObjectManager.Player.IsDashing())
+                                        if (!ObjectManager.Player.HasBuff("lucianpassivebuff"))
                                         {
                                             var Target = TargetSelector.GetTarget(Q.Range, Q.DamageType);
                                             if (Target != null)
@@ -91,10 +91,17 @@ namespace SharpShooter.Plugins
                                                 }
                                             }
                                         }
+                                        else
+                                        {
+                                            var killableTarget = HeroManager.Enemies.FirstOrDefault(x => x.isKillableAndValidTarget(Q.GetDamage(x), Q.Range));
+                                            if (killableTarget != null)
+                                                Q.CastOnUnit(killableTarget);
+                                        }
 
-                                if (MenuProvider.Champion.Combo.UseW)
-                                    if (W.isReadyPerfectly())
-                                        if (!ObjectManager.Player.IsDashing())
+                            if (MenuProvider.Champion.Combo.UseW)
+                                if (W.isReadyPerfectly())
+                                    if (!ObjectManager.Player.IsDashing())
+                                        if (!ObjectManager.Player.HasBuff("lucianpassivebuff"))
                                         {
                                             if (HeroManager.Enemies.Any(x => Orbwalking.InAutoAttackRange(x)))
                                                 WNoCollision.CastOnBestTarget();
@@ -105,12 +112,19 @@ namespace SharpShooter.Plugins
                                                     W.Cast(Target);
                                             }
                                         }
+                                        else
+                                        {
+                                            var killableTarget = HeroManager.Enemies.FirstOrDefault(x => x.isKillableAndValidTarget(W.GetDamage(x), W.Range) && W.GetPrediction(x).Hitchance >= HitChance.High);
+                                            if (killableTarget != null)
+                                                W.Cast(killableTarget);
+                                        }
 
-                                break;
-                            }
-                        case Orbwalking.OrbwalkingMode.Mixed:
-                            {
-                                if (MenuProvider.Champion.Harass.UseQ)
+                            break;
+                        }
+                    case Orbwalking.OrbwalkingMode.Mixed:
+                        {
+                            if (MenuProvider.Champion.Harass.UseQ)
+                                if (!ObjectManager.Player.HasBuff("lucianpassivebuff"))
                                     if (Q.isReadyPerfectly())
                                         if (!ObjectManager.Player.IsDashing())
                                             if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Harass.IfMana))
@@ -137,22 +151,35 @@ namespace SharpShooter.Plugins
                                                 }
                                             }
 
-                                if (MenuProvider.Champion.Harass.UseW)
-                                    if (W.isReadyPerfectly())
-                                        if (!ObjectManager.Player.IsDashing())
-                                            if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Harass.IfMana))
+                            if (MenuProvider.Champion.Harass.UseW)
+                                if (W.isReadyPerfectly())
+                                    if (!ObjectManager.Player.IsDashing())
+                                        if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Harass.IfMana))
+                                            if (!ObjectManager.Player.HasBuff("lucianpassivebuff"))
                                             {
-                                                var Target = TargetSelector.GetTargetNoCollision(W);
-                                                if (Target != null)
-                                                    W.Cast(Target);
+                                                if (HeroManager.Enemies.Any(x => Orbwalking.InAutoAttackRange(x)))
+                                                    WNoCollision.CastOnBestTarget();
+                                                else
+                                                {
+                                                    var Target = TargetSelector.GetTargetNoCollision(W);
+                                                    if (Target != null)
+                                                        W.Cast(Target);
+                                                }
+                                            }
+                                            else
+                                            {
+                                                var killableTarget = HeroManager.Enemies.FirstOrDefault(x => x.isKillableAndValidTarget(W.GetDamage(x), W.Range) && W.GetPrediction(x).Hitchance >= HitChance.High);
+                                                if (killableTarget != null)
+                                                    W.Cast(killableTarget);
                                             }
 
-                                break;
-                            }
-                        case Orbwalking.OrbwalkingMode.LaneClear:
-                            {
-                                //Laneclear
-                                if (MenuProvider.Champion.Laneclear.UseQ)
+                            break;
+                        }
+                    case Orbwalking.OrbwalkingMode.LaneClear:
+                        {
+                            //Laneclear
+                            if (MenuProvider.Champion.Laneclear.UseQ)
+                                if (!ObjectManager.Player.HasBuff("lucianpassivebuff"))
                                     if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Laneclear.IfMana))
                                         if (Q.isReadyPerfectly())
                                             if (!ObjectManager.Player.IsDashing())
@@ -169,8 +196,9 @@ namespace SharpShooter.Plugins
                                                 }
                                             }
 
-                                //Jungleclear
-                                if (MenuProvider.Champion.Jungleclear.UseQ)
+                            //Jungleclear
+                            if (MenuProvider.Champion.Jungleclear.UseQ)
+                                if (!ObjectManager.Player.HasBuff("lucianpassivebuff"))
                                     if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Jungleclear.IfMana))
                                         if (Q.isReadyPerfectly())
                                             if (!ObjectManager.Player.IsDashing())
@@ -180,7 +208,8 @@ namespace SharpShooter.Plugins
                                                     Q.CastOnUnit(Target);
                                             }
 
-                                if (MenuProvider.Champion.Jungleclear.UseW)
+                            if (MenuProvider.Champion.Jungleclear.UseW)
+                                if (!ObjectManager.Player.HasBuff("lucianpassivebuff"))
                                     if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Jungleclear.IfMana))
                                         if (W.isReadyPerfectly())
                                             if (!ObjectManager.Player.IsDashing())
@@ -189,9 +218,9 @@ namespace SharpShooter.Plugins
                                                 if (Target != null)
                                                     W.Cast(Target);
                                             }
-                                break;
-                            }
-                    }
+                            break;
+                        }
+                }
             }
         }
 
@@ -201,8 +230,6 @@ namespace SharpShooter.Plugins
             {
                 if (args.SData.IsAutoAttack())
                 {
-                    HasPassive = false;
-
                     switch (MenuProvider.Orbwalker.ActiveMode)
                     {
                         case Orbwalking.OrbwalkingMode.Combo:
@@ -220,7 +247,7 @@ namespace SharpShooter.Plugins
                 {
                     //do you know it? lucian can do autoattack cancel like riven
                     ObjectManager.Player.IssueOrder(GameObjectOrder.MoveTo, Game.CursorPos);
-                    Utility.DelayAction.Add(Game.Ping + 10, Orbwalking.ResetAutoAttackTimer);
+                    Utility.DelayAction.Add(Game.Ping * 2 + 10, Orbwalking.ResetAutoAttackTimer);
                 }
             }
         }
