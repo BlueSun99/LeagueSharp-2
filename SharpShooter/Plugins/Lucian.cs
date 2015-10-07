@@ -56,7 +56,7 @@ namespace SharpShooter.Plugins
 
         private void Game_OnUpdate(EventArgs args)
         {
-            if (ExtraExtensions.DownClocked())
+            if (UnderClocking.NeedtoUnderClocking())
                 return;
 
             if (!ObjectManager.Player.IsDead)
@@ -209,8 +209,8 @@ namespace SharpShooter.Plugins
                             {
                                 if (MenuProvider.Champion.Combo.UseE)
                                     if (E.isReadyPerfectly())
-                                        if (ObjectManager.Player.Position.Extend(Game.CursorPos, 450).CountEnemiesInRange(500) <= 1)
-                                            E.Cast(ObjectManager.Player.Position.Extend(Game.CursorPos, 450));
+                                        if (ObjectManager.Player.Position.Extend(Game.CursorPos, 700).CountEnemiesInRange(700) <= 1)
+                                            E.Cast(ObjectManager.Player.Position.Extend(Game.CursorPos, 700));
                                 break;
                             }
                     }

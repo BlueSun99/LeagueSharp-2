@@ -57,6 +57,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DamageIndicator.cs" />
+    <Compile Include="UnderClocking.cs" />
     <Compile Include="DynamicInitializer.cs" />
     <Compile Include="ExtraExtensions.cs" />
     <Compile Include="Initializer.cs" />

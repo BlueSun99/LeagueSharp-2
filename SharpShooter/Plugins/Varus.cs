@@ -58,7 +58,7 @@ namespace SharpShooter.Plugins
 
         private void Game_OnUpdate(EventArgs args)
         {
-            if (ExtraExtensions.DownClocked())
+            if (UnderClocking.NeedtoUnderClocking())
                 return;
 
             if (!ObjectManager.Player.IsDead)
@@ -76,6 +76,13 @@ namespace SharpShooter.Plugins
                                         {
                                             if (Q.Range >= Q.ChargedMaxRange)
                                                 Q.CastOnBestTarget();
+                                            else
+                                            {
+                                                var killableTarget = HeroManager.Enemies.FirstOrDefault(x => x.isKillableAndValidTarget(Q.GetDamage(x), Q.Range));
+                                                if (killableTarget != null)
+                                                    Q.Cast(killableTarget);
+                                            }
+
                                         }
                                         else
                                         if (TargetSelector.GetTarget(Q.ChargedMaxRange, Q.DamageType) != null)
@@ -102,6 +109,12 @@ namespace SharpShooter.Plugins
                                         {
                                             if (Q.Range >= Q.ChargedMaxRange)
                                                 Q.CastOnBestTarget();
+                                            else
+                                            {
+                                                var killableTarget = HeroManager.Enemies.FirstOrDefault(x => x.isKillableAndValidTarget(Q.GetDamage(x), Q.Range));
+                                                if (killableTarget != null)
+                                                    Q.Cast(killableTarget);
+                                            }
                                         }
                                         else
                                         if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Harass.IfMana))

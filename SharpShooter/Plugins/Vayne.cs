@@ -19,7 +19,7 @@ namespace SharpShooter.Plugins
             E = new Spell(SpellSlot.E, 650f) { Width = 1f };
             R = new Spell(SpellSlot.R);
 
-            E.SetTargetted(0.14f, 1600f);
+            E.SetTargetted(0.14f, 1700f);
 
             MenuProvider.Champion.Combo.addUseQ();
             MenuProvider.Champion.Combo.addUseE();
@@ -54,7 +54,7 @@ namespace SharpShooter.Plugins
 
         private void Game_OnUpdate(EventArgs args)
         {
-            if (ExtraExtensions.DownClocked())
+            if (UnderClocking.NeedtoUnderClocking())
                 return;
 
             if (!ObjectManager.Player.IsDead)
@@ -106,7 +106,7 @@ namespace SharpShooter.Plugins
                             {
                                 if (MenuProvider.Champion.Combo.UseQ)
                                     if (Q.isReadyPerfectly())
-                                        if (ObjectManager.Player.Position.Extend(Game.CursorPos, 300).CountEnemiesInRange(500) <= 1)
+                                        if (ObjectManager.Player.Position.Extend(Game.CursorPos, 700).CountEnemiesInRange(700) <= 1)
                                             Q.Cast(Game.CursorPos);
                                 break;
                             }
@@ -115,7 +115,7 @@ namespace SharpShooter.Plugins
                                 if (MenuProvider.Champion.Harass.UseQ)
                                     if (Q.isReadyPerfectly())
                                         if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Harass.IfMana))
-                                            if (ObjectManager.Player.Position.Extend(Game.CursorPos, 300).CountEnemiesInRange(500) <= 1)
+                                            if (ObjectManager.Player.Position.Extend(Game.CursorPos, 700).CountEnemiesInRange(700) <= 1)
                                                 Q.Cast(Game.CursorPos);
                                 break;
                             }
@@ -125,7 +125,7 @@ namespace SharpShooter.Plugins
                                 if (MenuProvider.Champion.Laneclear.UseQ)
                                     if (Q.isReadyPerfectly())
                                         if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Laneclear.IfMana))
-                                            if (ObjectManager.Player.Position.Extend(Game.CursorPos, 300).CountEnemiesInRange(500) <= 1)
+                                            if (ObjectManager.Player.Position.Extend(Game.CursorPos, 700).CountEnemiesInRange(700) <= 1)
                                                 if (MinionManager.GetMinions(Orbwalking.GetRealAutoAttackRange(ObjectManager.Player)).Any(x=>x.NetworkId == args.Target.NetworkId))
                                                     Q.Cast(Game.CursorPos);
 
@@ -173,8 +173,10 @@ namespace SharpShooter.Plugins
         private void Drawing_OnDraw(EventArgs args)
         {
             if (!ObjectManager.Player.IsDead)
+            {
                 if (MenuProvider.Champion.Drawings.DrawErange.Active && E.isReadyPerfectly())
                     Render.Circle.DrawCircle(ObjectManager.Player.Position, E.Range, MenuProvider.Champion.Drawings.DrawErange.Color);
+            }
         }
 
         private float GetComboDamage(Obj_AI_Base enemy)

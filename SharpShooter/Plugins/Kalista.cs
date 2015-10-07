@@ -13,6 +13,8 @@ namespace SharpShooter.Plugins
     {
         private Spell Q, W, E, R;
         private int ELastCastTime;
+        private Vector3 BaronLocation = new Vector3(4553f, 9909f, -68f);
+        private Vector3 DragonLocation = new Vector3(10424f, 5093f, -62f);
 
         public Kalista()
         {
@@ -43,6 +45,7 @@ namespace SharpShooter.Plugins
             MenuProvider.Champion.Misc.addItem("Use Mobsteal (With E)", true);
             MenuProvider.Champion.Misc.addItem("Use Lasthit Assist (With E)", true);
             MenuProvider.Champion.Misc.addItem("Use Soulbound Saver (With R)", true);
+            MenuProvider.Champion.Misc.addItem("Auto W", true);
 
             MenuProvider.Champion.Drawings.addDrawQrange(System.Drawing.Color.DeepSkyBlue, true);
             MenuProvider.Champion.Drawings.addDrawWrange(System.Drawing.Color.DeepSkyBlue, false);
@@ -56,12 +59,15 @@ namespace SharpShooter.Plugins
             Spellbook.OnCastSpell += Spellbook_OnCastSpell;
             Obj_AI_Base.OnProcessSpellCast += Obj_AI_Base_OnProcessSpellCast;
 
+            BaronLocation = new Vector3(4553f, 9909f, -68f);
+            DragonLocation = new Vector3(10424f, 5093f, -62f);
+
             Console.WriteLine("Sharpshooter: Kalista Loaded.");
         }
 
         private void Game_OnUpdate(EventArgs args)
         {
-            if (ExtraExtensions.DownClocked())
+            if (UnderClocking.NeedtoUnderClocking())
                 return;
 
             if (!ObjectManager.Player.IsDead)
@@ -86,7 +92,7 @@ namespace SharpShooter.Plugins
 
                             if (MenuProvider.Champion.Combo.UseE)
                                 if (E.isReadyPerfectly())
-                                    if (HeroManager.Enemies.Any(x => x.isKillableAndValidTarget(E.GetDamage(x))))
+                                    if (HeroManager.Enemies.Any(x => x.isKillableAndValidTarget(E.GetDamage(x), E.Range)))
                                         E.Cast();
 
                             break;
@@ -152,7 +158,7 @@ namespace SharpShooter.Plugins
                             if (MenuProvider.Champion.Laneclear.UseE)
                                 if (E.isReadyPerfectly())
                                     if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Laneclear.IfMana))
-                                        if (MinionManager.GetMinions(float.MaxValue).Count(x => x.isKillableAndValidTarget(E.GetDamage(x))) >= MenuProvider.Champion.Laneclear.getSliderValue("Cast E if Killable Minion Number >=").Value)
+                                        if (MinionManager.GetMinions(E.Range).Count(x => x.isKillableAndValidTarget(E.GetDamage(x))) >= MenuProvider.Champion.Laneclear.getSliderValue("Cast E if Killable Minion Number >=").Value)
                                             E.Cast();
 
                             //Jugnle
@@ -169,7 +175,7 @@ namespace SharpShooter.Plugins
                             if (MenuProvider.Champion.Jungleclear.UseE)
                                 if (E.isReadyPerfectly())
                                     if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Jungleclear.IfMana))
-                                        if (MinionManager.GetMinions(float.MaxValue, MinionTypes.All, MinionTeam.Neutral).Any(x => x.isKillableAndValidTarget(E.GetDamage(x))))
+                                        if (MinionManager.GetMinions(E.Range, MinionTypes.All, MinionTeam.Neutral).Any(x => x.isKillableAndValidTarget(E.GetDamage(x))))
                                             E.Cast();
 
                             break;
@@ -178,29 +184,41 @@ namespace SharpShooter.Plugins
 
                 if (MenuProvider.Champion.Misc.UseKillsteal)
                     if (E.isReadyPerfectly())
-                        if (HeroManager.Enemies.Any(x => x.isKillableAndValidTarget(E.GetDamage(x))))
+                        if (HeroManager.Enemies.Any(x => x.isKillableAndValidTarget(E.GetDamage(x), E.Range)))
                             E.Cast();
 
                 if (MenuProvider.Champion.Misc.getBoolValue("Use Mobsteal (With E)"))
                     if (E.isReadyPerfectly())
-                        if (MinionManager.GetMinions(float.MaxValue, MinionTypes.All, MinionTeam.Neutral).Any(x => x.isKillableAndValidTarget(E.GetDamage(x))))
+                        if (MinionManager.GetMinions(E.Range, MinionTypes.All, MinionTeam.Neutral).Any(x => x.isKillableAndValidTarget(E.GetDamage(x))))
                             E.Cast();
+
+                if (MenuProvider.Champion.Misc.getBoolValue("Auto W"))
+                    if (ObjectManager.Player.Position.CountEnemiesInRange(1500f) <= 0)
+                        if (MenuProvider.Orbwalker.GetTarget() == null)
+                        {
+                            if (W.isReadyPerfectly())
+                                if (ObjectManager.Player.Distance(BaronLocation) <= W.Range)
+                                    W.Cast(BaronLocation);
+
+                            if (W.isReadyPerfectly())
+                                if (ObjectManager.Player.Distance(DragonLocation) <= W.Range)
+                                    W.Cast(DragonLocation);
+                        }
             }
         }
 
         private void Orbwalking_OnNonKillableMinion(AttackableUnit minion)
         {
             if (!ObjectManager.Player.IsDead)
-                if (MenuProvider.Orbwalker.ActiveMode != Orbwalking.OrbwalkingMode.Combo)
-                    if (MenuProvider.Orbwalker.ActiveMode != Orbwalking.OrbwalkingMode.Mixed)
-                    {
-                        Obj_AI_Minion Minion = minion as Obj_AI_Minion;
-
-                        if (MenuProvider.Champion.Misc.getBoolValue("Use Lasthit Assist (With E)"))
-                            if (E.isReadyPerfectly())
-                                if (Minion.isKillableAndValidTarget(E.GetDamage(Minion)))
+            {
+                Obj_AI_Minion Minion = minion as Obj_AI_Minion;
+                if (MenuProvider.Champion.Misc.getBoolValue("Use Lasthit Assist (With E)"))
+                    if (E.isReadyPerfectly())
+                        if (Minion.isKillableAndValidTarget(E.GetDamage(Minion)))
+                            if (HealthPrediction.GetHealthPrediction(Minion, 100) < 0)
+                                if (!HeroManager.Enemies.Any(x => Orbwalking.InAutoAttackRange(x)))
                                     E.Cast();
-                    }
+            }
         }
 
         private void Spellbook_OnCastSpell(Spellbook sender, SpellbookCastSpellEventArgs args)

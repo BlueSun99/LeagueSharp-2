@@ -54,7 +54,7 @@ namespace SharpShooter.Plugins
 
         private void Game_OnUpdate(EventArgs args)
         {
-            if (ExtraExtensions.DownClocked())
+            if (UnderClocking.NeedtoUnderClocking())
                 return;
 
             R.Range = 1500 + (500 * R.Level);
