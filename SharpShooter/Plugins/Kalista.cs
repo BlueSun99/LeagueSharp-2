@@ -220,7 +220,7 @@ namespace SharpShooter.Plugins
                         {
                             var GrabTarget = HeroManager.Enemies.FirstOrDefault(x => !x.IsDead && x.HasBuff("rocketgrab2"));
                             if (GrabTarget != null)
-                                if (ObjectManager.Player.Distance(GrabTarget) < MyBlitzcrank.Distance(GrabTarget))
+                                if (ObjectManager.Player.Distance(GrabTarget) > MyBlitzcrank.Distance(GrabTarget))
                                     R.Cast();
                         }
                     }
