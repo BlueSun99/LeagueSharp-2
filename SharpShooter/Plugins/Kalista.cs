@@ -13,8 +13,8 @@ namespace SharpShooter.Plugins
     {
         private Spell Q, W, E, R;
         private int ELastCastTime;
-        private Vector3 BaronLocation = new Vector3(4553f, 9909f, -68f);
-        private Vector3 DragonLocation = new Vector3(10424f, 5093f, -62f);
+        private Vector3 BaronLocation;
+        private Vector3 DragonLocation;
 
         public Kalista()
         {
@@ -46,6 +46,7 @@ namespace SharpShooter.Plugins
             MenuProvider.Champion.Misc.addItem("Use Lasthit Assist (With E)", true);
             MenuProvider.Champion.Misc.addItem("Use Soulbound Saver (With R)", true);
             MenuProvider.Champion.Misc.addItem("Auto W", true);
+            MenuProvider.Champion.Misc.addItem("Auto Balista", true);
 
             MenuProvider.Champion.Drawings.addDrawQrange(System.Drawing.Color.DeepSkyBlue, true);
             MenuProvider.Champion.Drawings.addDrawWrange(System.Drawing.Color.DeepSkyBlue, false);
@@ -210,6 +211,19 @@ namespace SharpShooter.Plugins
                                 if (ObjectManager.Player.Distance(DragonLocation) <= W.Range)
                                     W.Cast(DragonLocation);
                         }
+
+                if (MenuProvider.Champion.Misc.getBoolValue("Auto Balista"))
+                    if (R.isReadyPerfectly())
+                    {
+                        var MyBlitzcrank = HeroManager.Allies.FirstOrDefault(x => !x.IsDead && x.HasBuff("kalistacoopstrikeally") && x.ChampionName == "Blitzcrank");
+                        if (MyBlitzcrank != null)
+                        {
+                            var GrabTarget = HeroManager.Enemies.FirstOrDefault(x => !x.IsDead && x.HasBuff("rocketgrab2"));
+                            if (GrabTarget != null)
+                                if (ObjectManager.Player.Distance(GrabTarget) < MyBlitzcrank.Distance(GrabTarget))
+                                    R.Cast();
+                        }
+                    }
             }
         }
 
@@ -245,7 +259,7 @@ namespace SharpShooter.Plugins
                     if (MenuProvider.Champion.Misc.getBoolValue("Use Soulbound Saver (With R)"))
                         if (R.isReadyPerfectly())
                         {
-                            var soulbound = HeroManager.Allies.FirstOrDefault(x => x.HasBuff("kalistacoopstrikeally"));
+                            var soulbound = HeroManager.Allies.FirstOrDefault(x => !x.IsDead && x.HasBuff("kalistacoopstrikeally"));
                             if (soulbound != null)
                                 if (args.Target.NetworkId == soulbound.NetworkId || args.End.Distance(soulbound.Position) <= 200)
                                     if (soulbound.HealthPercent < 20)
