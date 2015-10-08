@@ -117,7 +117,7 @@ namespace SharpShooter.Plugins
                                     if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Jungleclear.IfMana))
                                         if (W.isReadyPerfectly())
                                         {
-                                            var Target = MinionManager.GetMinions(W.Range, MinionTypes.All, MinionTeam.Neutral).FirstOrDefault(x => x.IsValidTarget(W.Range) && W.GetPrediction(x).Hitchance >= HitChance.High);
+                                            var Target = MinionManager.GetMinions(600, MinionTypes.All, MinionTeam.Neutral).FirstOrDefault(x => x.IsValidTarget(600) && W.GetPrediction(x).Hitchance >= HitChance.High);
                                             if (Target != null)
                                                 W.Cast(Target);
                                         }

@@ -11,6 +11,7 @@ namespace SharpShooter.Plugins
         private Spell Q, W, E, R;
         private float GetQRange { get { return 590 + ((25 * Q.Level) + 50) + 65; } }
         private bool isQActive { get { return ObjectManager.Player.HasBuff("JinxQ"); } }
+        private int WCastTime;
 
         public Jinx()
         {
@@ -42,6 +43,7 @@ namespace SharpShooter.Plugins
             MenuProvider.Champion.Misc.addUseAntiGapcloser();
             MenuProvider.Champion.Misc.addUseInterrupter();
             MenuProvider.Champion.Misc.addItem("Switch to FISHBONES If will hit enemy Number >=", new Slider(3, 2, 6));
+            MenuProvider.Champion.Misc.addItem("Auto R", true);
 
             MenuProvider.Champion.Drawings.addDrawQrange(System.Drawing.Color.DeepSkyBlue, false);
             MenuProvider.Champion.Drawings.addDrawWrange(System.Drawing.Color.DeepSkyBlue, true);
@@ -54,6 +56,7 @@ namespace SharpShooter.Plugins
             Drawing.OnDraw += Drawing_OnDraw;
             AntiGapcloser.OnEnemyGapcloser += AntiGapcloser_OnEnemyGapcloser;
             Interrupter2.OnInterruptableTarget += Interrupter2_OnInterruptableTarget;
+            Obj_AI_Base.OnProcessSpellCast += Obj_AI_Base_OnProcessSpellCast;
 
             Console.WriteLine("Sharpshooter: Jinx Loaded.");
         }
@@ -86,7 +89,7 @@ namespace SharpShooter.Plugins
                                 if (MenuProvider.Champion.Combo.UseE)
                                     if (E.isReadyPerfectly())
                                     {
-                                        var Target = HeroManager.Enemies.Where(x => x.IsValidTarget(600) && E.GetPrediction(x).Hitchance >= E.MinHitChance && !x.IsFacing(ObjectManager.Player) && x.IsMoving).OrderBy(x => x.Distance(ObjectManager.Player)).FirstOrDefault();
+                                        var Target = HeroManager.Enemies.Where(x => x.IsValidTarget(E.Range) && E.GetPrediction(x).Hitchance >= E.MinHitChance && !x.IsFacing(ObjectManager.Player) && x.IsMoving).OrderBy(x => x.Distance(ObjectManager.Player)).FirstOrDefault();
                                         if (Target != null)
                                             if (E.Cast(Target) != Spell.CastStates.SuccessfullyCasted)
                                                 E.CastWithExtraTrapLogic();
@@ -94,16 +97,17 @@ namespace SharpShooter.Plugins
 
                                 if (MenuProvider.Champion.Combo.UseR)
                                     if (R.isReadyPerfectly())
-                                    {
-                                        var Target = HeroManager.Enemies.FirstOrDefault(x => !Orbwalking.InAutoAttackRange(x) && x.isKillableAndValidTarget(GetRDamage(x), R.Range) && R.GetPrediction(x).Hitchance >= HitChance.High);
-                                        if (Target != null)
+                                        if (WCastTime + 1060 <= Environment.TickCount)
                                         {
-                                            var prediction = R.GetPrediction(Target);
-                                            var collision = LeagueSharp.Common.Collision.GetCollision(new System.Collections.Generic.List<SharpDX.Vector3> { prediction.UnitPosition }, new PredictionInput { Unit = ObjectManager.Player, Delay = R.Delay, Speed = R.Speed, Radius = R.Width, CollisionObjects = new CollisionableObjects[] { CollisionableObjects.Heroes } }).Any(x => x.NetworkId != Target.NetworkId);
-                                            if (!collision)
-                                                R.Cast(Target);
+                                            var Target = HeroManager.Enemies.FirstOrDefault(x => ObjectManager.Player.Distance(x) >= GetQRange && x.isKillableAndValidTarget(GetRDamage(x), R.Range) && R.GetPrediction(x).Hitchance >= HitChance.High);
+                                            if (Target != null)
+                                            {
+                                                var prediction = R.GetPrediction(Target);
+                                                var collision = LeagueSharp.Common.Collision.GetCollision(new System.Collections.Generic.List<SharpDX.Vector3> { prediction.UnitPosition }, new PredictionInput { Unit = ObjectManager.Player, Delay = R.Delay, Speed = R.Speed, Radius = R.Width, CollisionObjects = new CollisionableObjects[] { CollisionableObjects.Heroes } }).Any(x => x.NetworkId != Target.NetworkId);
+                                                if (!collision)
+                                                    R.Cast(Target);
+                                            }
                                         }
-                                    }
 
                                 break;
                             }
@@ -145,7 +149,7 @@ namespace SharpShooter.Plugins
                                     if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Jungleclear.IfMana))
                                         if (W.isReadyPerfectly())
                                         {
-                                            var Target = MinionManager.GetMinions(700, MinionTypes.All, MinionTeam.Neutral).FirstOrDefault(x => x.IsValidTarget(700) && W.GetPrediction(x).Hitchance >= W.MinHitChance);
+                                            var Target = MinionManager.GetMinions(600, MinionTypes.All, MinionTeam.Neutral).FirstOrDefault(x => x.IsValidTarget(600) && W.GetPrediction(x).Hitchance >= W.MinHitChance);
                                             if (Target != null)
                                                 W.Cast(Target);
                                         }
@@ -177,6 +181,13 @@ namespace SharpShooter.Plugins
                 if (E.isReadyPerfectly())
                     if (args.DangerLevel >= Interrupter2.DangerLevel.Medium)
                         E.Cast(sender);
+        }
+
+        private void Obj_AI_Base_OnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
+        {
+            if (sender.IsMe)
+                if (args.Slot == SpellSlot.W)
+                    WCastTime = Environment.TickCount;
         }
 
         private void Drawing_OnDraw(EventArgs args)

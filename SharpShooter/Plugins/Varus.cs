@@ -160,7 +160,7 @@ namespace SharpShooter.Plugins
                                 if (MenuProvider.Champion.Jungleclear.UseQ)
                                     if (Q.isReadyPerfectly())
                                     {
-                                        var Target = MinionManager.GetMinions(Q.ChargedMaxRange, MinionTypes.All, MinionTeam.Neutral).FirstOrDefault(x => x.IsValidTarget(Q.ChargedMaxRange));
+                                        var Target = MinionManager.GetMinions(600, MinionTypes.All, MinionTeam.Neutral).FirstOrDefault(x => x.IsValidTarget(600));
                                         if (Target != null)
                                             if (Q.IsCharging)
                                             {
@@ -176,7 +176,7 @@ namespace SharpShooter.Plugins
                                     if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Jungleclear.IfMana))
                                         if (E.isReadyPerfectly())
                                         {
-                                            var Target = MinionManager.GetMinions(E.Range, MinionTypes.All, MinionTeam.Neutral).FirstOrDefault(x => x.IsValidTarget(E.Range));
+                                            var Target = MinionManager.GetMinions(600, MinionTypes.All, MinionTeam.Neutral).FirstOrDefault(x => x.IsValidTarget(600));
                                             if (Target != null)
                                                 E.Cast(Target);
                                         }
