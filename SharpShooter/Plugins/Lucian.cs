@@ -68,7 +68,7 @@ namespace SharpShooter.Plugins
                             if (MenuProvider.Champion.Combo.UseQ)
                                 if (Q.isReadyPerfectly())
                                     if (!ObjectManager.Player.IsDashing())
-                                        if (!ObjectManager.Player.HasBuff("lucianpassivebuff"))
+                                        if (HasPassive == false)
                                         {
                                             var Target = TargetSelector.GetTarget(Q.Range, Q.DamageType);
                                             if (Target != null)
@@ -101,7 +101,7 @@ namespace SharpShooter.Plugins
                             if (MenuProvider.Champion.Combo.UseW)
                                 if (W.isReadyPerfectly())
                                     if (!ObjectManager.Player.IsDashing())
-                                        if (!ObjectManager.Player.HasBuff("lucianpassivebuff"))
+                                        if (HasPassive == false)
                                         {
                                             if (HeroManager.Enemies.Any(x => Orbwalking.InAutoAttackRange(x)))
                                                 WNoCollision.CastOnBestTarget();
@@ -124,7 +124,7 @@ namespace SharpShooter.Plugins
                     case Orbwalking.OrbwalkingMode.Mixed:
                         {
                             if (MenuProvider.Champion.Harass.UseQ)
-                                if (!ObjectManager.Player.HasBuff("lucianpassivebuff"))
+                                if (HasPassive == false)
                                     if (Q.isReadyPerfectly())
                                         if (!ObjectManager.Player.IsDashing())
                                             if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Harass.IfMana))
@@ -155,7 +155,7 @@ namespace SharpShooter.Plugins
                                 if (W.isReadyPerfectly())
                                     if (!ObjectManager.Player.IsDashing())
                                         if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Harass.IfMana))
-                                            if (!ObjectManager.Player.HasBuff("lucianpassivebuff"))
+                                            if (HasPassive == false)
                                             {
                                                 if (HeroManager.Enemies.Any(x => Orbwalking.InAutoAttackRange(x)))
                                                     WNoCollision.CastOnBestTarget();
@@ -179,7 +179,7 @@ namespace SharpShooter.Plugins
                         {
                             //Laneclear
                             if (MenuProvider.Champion.Laneclear.UseQ)
-                                if (!ObjectManager.Player.HasBuff("lucianpassivebuff"))
+                                if (HasPassive == false)
                                     if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Laneclear.IfMana))
                                         if (Q.isReadyPerfectly())
                                             if (!ObjectManager.Player.IsDashing())
@@ -198,7 +198,7 @@ namespace SharpShooter.Plugins
 
                             //Jungleclear
                             if (MenuProvider.Champion.Jungleclear.UseQ)
-                                if (!ObjectManager.Player.HasBuff("lucianpassivebuff"))
+                                if (HasPassive == false)
                                     if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Jungleclear.IfMana))
                                         if (Q.isReadyPerfectly())
                                             if (!ObjectManager.Player.IsDashing())
@@ -209,7 +209,7 @@ namespace SharpShooter.Plugins
                                             }
 
                             if (MenuProvider.Champion.Jungleclear.UseW)
-                                if (!ObjectManager.Player.HasBuff("lucianpassivebuff"))
+                                if (HasPassive == false)
                                     if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Jungleclear.IfMana))
                                         if (W.isReadyPerfectly())
                                             if (!ObjectManager.Player.IsDashing())
@@ -230,6 +230,8 @@ namespace SharpShooter.Plugins
             {
                 if (args.SData.IsAutoAttack())
                 {
+                    HasPassive = false;
+
                     switch (MenuProvider.Orbwalker.ActiveMode)
                     {
                         case Orbwalking.OrbwalkingMode.Combo:
@@ -251,7 +253,6 @@ namespace SharpShooter.Plugins
                 }
             }
         }
-
 
         private void Obj_AI_Base_OnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
         {
