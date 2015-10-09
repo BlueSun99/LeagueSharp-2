@@ -91,8 +91,9 @@ namespace SharpShooter.Plugins
                                     {
                                         var Target = HeroManager.Enemies.Where(x => x.IsValidTarget(E.Range) && E.GetPrediction(x).Hitchance >= E.MinHitChance && !x.IsFacing(ObjectManager.Player) && x.IsMoving).OrderBy(x => x.Distance(ObjectManager.Player)).FirstOrDefault();
                                         if (Target != null)
-                                            if (E.Cast(Target) != Spell.CastStates.SuccessfullyCasted)
-                                                E.CastWithExtraTrapLogic();
+                                            E.Cast(Target);
+                                        else
+                                            E.CastWithExtraTrapLogic();
                                     }
 
                                 if (MenuProvider.Champion.Combo.UseR)
