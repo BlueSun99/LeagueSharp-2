@@ -56,7 +56,8 @@ namespace SharpShooter.Plugins
                 if (args.Target != null)
                     if (args.SData.IsAutoAttack())
                         if (args.Target.Type == GameObjectType.obj_AI_Turret || args.Target.Type == GameObjectType.obj_Turret)
-                            E.CastOnUnit(args.Target as Obj_AI_Base);
+                            if (MenuProvider.Champion.Misc.getBoolValue("Auto E on Turret"))
+                                E.CastOnUnit(args.Target as Obj_AI_Base);
         }
 
         private void Game_OnUpdate(EventArgs args)
