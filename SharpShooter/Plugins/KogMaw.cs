@@ -25,20 +25,24 @@ namespace SharpShooter.Plugins
             MenuProvider.Champion.Combo.addUseW();
             MenuProvider.Champion.Combo.addUseE();
             MenuProvider.Champion.Combo.addUseR();
+            MenuProvider.Champion.Combo.addItem("R Stacks Limit", new Slider(3, 1, 6));
 
             MenuProvider.Champion.Harass.addUseQ();
             MenuProvider.Champion.Harass.addUseE();
             MenuProvider.Champion.Harass.addUseR();
+            MenuProvider.Champion.Harass.addItem("R Stacks Limit", new Slider(1, 1, 6));
             MenuProvider.Champion.Harass.addIfMana(60);
 
             MenuProvider.Champion.Laneclear.addUseE(false);
             MenuProvider.Champion.Laneclear.addUseR(false);
+            MenuProvider.Champion.Laneclear.addItem("R Stacks Limit", new Slider(1, 1, 6));
             MenuProvider.Champion.Laneclear.addIfMana(60);
 
             MenuProvider.Champion.Jungleclear.addUseQ();
             MenuProvider.Champion.Jungleclear.addUseW();
             MenuProvider.Champion.Jungleclear.addUseE();
             MenuProvider.Champion.Jungleclear.addUseR();
+            MenuProvider.Champion.Jungleclear.addItem("R Stacks Limit", new Slider(1, 1, 6));
             MenuProvider.Champion.Jungleclear.addIfMana(20);
 
             MenuProvider.Champion.Drawings.addDrawQrange(System.Drawing.Color.DeepSkyBlue, false);
@@ -59,7 +63,7 @@ namespace SharpShooter.Plugins
             if (UnderClocking.NeedtoUnderClocking())
                 return;
 
-            W.Range = 565 + 110 + W.Level * 20;
+            W.Range = 565 + 110 + (W.Level * 20) + 65;
             R.Range = 900 + R.Level * 300;
 
             if (!ObjectManager.Player.IsDead)
@@ -89,7 +93,15 @@ namespace SharpShooter.Plugins
 
                                 if (MenuProvider.Champion.Combo.UseR)
                                     if (R.isReadyPerfectly())
-                                        R.CastOnBestTarget();
+                                        if (ObjectManager.Player.GetBuffCount("kogmawlivingartillerycost") < MenuProvider.Champion.Combo.getSliderValue("R Stacks Limit").Value)
+                                            R.CastOnBestTarget();
+                                        else
+                                        {
+                                            var killableTarget = HeroManager.Enemies.FirstOrDefault(x => x.isKillableAndValidTarget(R.GetDamage(x), R.Range) && R.GetPrediction(x).Hitchance >= R.MinHitChance);
+                                            if (killableTarget != null)
+                                                R.Cast(killableTarget);
+                                        }
+
                                 break;
                             }
                         case Orbwalking.OrbwalkingMode.Mixed:
@@ -111,7 +123,8 @@ namespace SharpShooter.Plugins
                                 if (MenuProvider.Champion.Harass.UseR)
                                     if (R.isReadyPerfectly())
                                         if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Harass.IfMana))
-                                            R.CastOnBestTarget();
+                                            if (ObjectManager.Player.GetBuffCount("kogmawlivingartillerycost") < MenuProvider.Champion.Harass.getSliderValue("R Stacks Limit").Value)
+                                                R.CastOnBestTarget();
                                 break;
                             }
                         case Orbwalking.OrbwalkingMode.LaneClear:
@@ -129,11 +142,12 @@ namespace SharpShooter.Plugins
                                 if (MenuProvider.Champion.Laneclear.UseR)
                                     if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Laneclear.IfMana))
                                         if (R.isReadyPerfectly())
-                                        {
-                                            var FarmLocation = R.GetCircularFarmLocation(MinionManager.GetMinions(R.Range));
-                                            if (FarmLocation.MinionsHit >= 4)
-                                                R.Cast(FarmLocation.Position);
-                                        }
+                                            if (ObjectManager.Player.GetBuffCount("kogmawlivingartillerycost") < MenuProvider.Champion.Laneclear.getSliderValue("R Stacks Limit").Value)
+                                            {
+                                                var FarmLocation = R.GetCircularFarmLocation(MinionManager.GetMinions(R.Range));
+                                                if (FarmLocation.MinionsHit >= 4)
+                                                    R.Cast(FarmLocation.Position);
+                                            }
 
                                 //Jungleclear
                                 if (MenuProvider.Champion.Jungleclear.UseE)
@@ -148,11 +162,13 @@ namespace SharpShooter.Plugins
                                 if (MenuProvider.Champion.Jungleclear.UseR)
                                     if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Jungleclear.IfMana))
                                         if (R.isReadyPerfectly())
-                                        {
-                                            var Target = MinionManager.GetMinions(600, MinionTypes.All, MinionTeam.Neutral).FirstOrDefault(x => x.IsValidTarget(600));
-                                            if (Target != null)
-                                                R.Cast(Target);
-                                        }
+                                            if (ObjectManager.Player.GetBuffCount("kogmawlivingartillerycost") < MenuProvider.Champion.Jungleclear.getSliderValue("R Stacks Limit").Value)
+                                            {
+                                                var Target = MinionManager.GetMinions(600, MinionTypes.All, MinionTeam.Neutral).FirstOrDefault(x => x.IsValidTarget(600));
+                                                if (Target != null)
+                                                    R.Cast(Target);
+                                            }
+
                                 break;
                             }
                     }

@@ -27,9 +27,6 @@ namespace SharpShooter
 
                 addSubMenu("Champion", ObjectManager.Player.ChampionName);
 
-                addItem("Developer: xcsoft");
-                addItem("Skype: lsxcsoft");
-
                 Champion.addOrbwalker();
                 Champion.addTargetSelector();
             }
@@ -38,25 +35,23 @@ namespace SharpShooter
                 MenuInstance = new Menu("SharpShooter: " + ObjectManager.Player.ChampionName + "(X)", "SharpShooterCommon", true);
 
                 addItem("txt1", "Sorry. " + ObjectManager.Player.ChampionName + " is not supported.", null);
-                addItem("txt2", " ");
-                addItem("txt3", "---Supported Champions---");
-
-                addItem("Ashe");
-                addItem("Caitlyn");
-                addItem("Corki");
-                addItem("Ezreal");
-                addItem("Graves");
-                addItem("Jinx");
-                addItem("Kalista");
-                addItem("KogMaw");
-                addItem("Lucian");
-                addItem("MissFortune");
-                addItem("Sivir");
-                addItem("Tristana");
-                addItem("Twitch");
-                addItem("Varus");
-                addItem("Vayne");
             }
+
+            SupportedChampions.addItem("1. Ashe");
+            SupportedChampions.addItem("2. Caitlyn");
+            SupportedChampions.addItem("3. Corki");
+            SupportedChampions.addItem("4. Ezreal");
+            SupportedChampions.addItem("5. Graves");
+            SupportedChampions.addItem("6. Jinx");
+            SupportedChampions.addItem("7. Kalista");
+            SupportedChampions.addItem("8. KogMaw");
+            SupportedChampions.addItem("9. Lucian");
+            SupportedChampions.addItem("10. MissFortune");
+            SupportedChampions.addItem("11. Sivir");
+            SupportedChampions.addItem("12. Tristana");
+            SupportedChampions.addItem("13. Twitch");
+            SupportedChampions.addItem("14. Varus");
+            SupportedChampions.addItem("15. Vayne");
 
             MenuInstance.AddToMainMenu();
 
@@ -118,6 +113,29 @@ namespace SharpShooter
         }
 
         /// <summary>
+        /// 이 클래스를 이용해서 이 SupportedChampions 메뉴에 접근할 수 있습니다.
+        /// </summary>
+        internal class SupportedChampions
+        {
+            /// <summary>
+            /// SupportedChampions 메뉴에 항목을 추가합니다.
+            /// </summary>
+            /// <param name="DisplayName">추가할 항목의 표기이름을 기입하십시오.</param>
+            /// <param name="Value">항목의 값을 기입하십시오.</param>
+            /// <param name="ChampUniq">이 값을 true로 지정하면 플레이어의 항목의 이름에 챔피언이름을 포함한 항목이 생성됩니다.</param>
+            internal static void addItem(string DisplayName, object Value = null, bool ChampUniq = true)
+            {
+                if (Value == null)
+                {
+                    MenuInstance.SubMenu("Supported champions").AddItem(new MenuItem(DisplayName, DisplayName, ChampUniq));
+                    return;
+                }
+
+                MenuInstance.SubMenu("Supported champions").AddItem(new MenuItem(DisplayName, DisplayName, ChampUniq)).SetValue(Value);
+            }
+        }
+
+        /// <summary>
         /// 이 클래스를 이용해서 챔피언 메뉴에 접근할 수 있습니다.
         /// </summary>
         internal class Champion
@@ -132,7 +150,7 @@ namespace SharpShooter
             {
                 if (Value == null)
                 {
-                    MenuInstance.AddItem(new MenuItem(DisplayName, DisplayName, ChampUniq));
+                    MenuInstance.SubMenu("Champion").AddItem(new MenuItem(DisplayName, DisplayName, ChampUniq));
                     return;
                 }
 
