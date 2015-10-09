@@ -293,7 +293,7 @@ namespace SharpShooter.Plugins
 
         private float GetJungleDamage(Obj_AI_Minion enemy)
         {
-            return 50000;
+            return E.isReadyPerfectly() ? E.GetDamage(enemy) : 0;
         }
     }
 }
