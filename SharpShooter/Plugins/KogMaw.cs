@@ -190,7 +190,7 @@ namespace SharpShooter.Plugins
                     case Orbwalking.OrbwalkingMode.LaneClear:
                         if (W.isReadyPerfectly())
                             if (MenuProvider.Champion.Jungleclear.UseW)
-                                if (MinionManager.GetMinions(W.Range, MinionTypes.All, MinionTeam.Neutral).Any(x => Orbwalking.InAutoAttackRange(x) && x.NetworkId == args.Target.NetworkId))
+                                if (MinionManager.GetMinions(Orbwalking.GetRealAutoAttackRange(ObjectManager.Player), MinionTypes.All, MinionTeam.Neutral).Any(x => x.NetworkId == args.Target.NetworkId))
                                     W.Cast();
                         break;
                 }
