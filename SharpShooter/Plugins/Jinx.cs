@@ -49,7 +49,7 @@ namespace SharpShooter.Plugins
             MenuProvider.Champion.Drawings.addDrawWrange(System.Drawing.Color.DeepSkyBlue, true);
             MenuProvider.Champion.Drawings.addDrawErange(System.Drawing.Color.DeepSkyBlue, false);
             MenuProvider.Champion.Drawings.addDrawRrange(System.Drawing.Color.DeepSkyBlue, true);
-            MenuProvider.Champion.Drawings.addItem("Draw Rocket explosion range on Orbwalker Target", true);
+            MenuProvider.Champion.Drawings.addItem("Draw Rocket explosion range on AutoAttack Target", true);
             MenuProvider.Champion.Drawings.addDamageIndicator(GetComboDamage);
 
             Game.OnUpdate += Game_OnUpdate;
@@ -206,7 +206,7 @@ namespace SharpShooter.Plugins
             if (MenuProvider.Champion.Drawings.DrawRrange.Active && R.isReadyPerfectly())
                 Render.Circle.DrawCircle(ObjectManager.Player.Position, R.Range, MenuProvider.Champion.Drawings.DrawRrange.Color);
 
-            if (MenuProvider.Champion.Drawings.getBoolValue("Draw Rocket explosion range on Orbwalker Target"))
+            if (MenuProvider.Champion.Drawings.getBoolValue("Draw Rocket explosion range on AutoAttack Target"))
                 if (isQActive)
                 {
                     var AATarget = MenuProvider.Orbwalker.GetTarget();
