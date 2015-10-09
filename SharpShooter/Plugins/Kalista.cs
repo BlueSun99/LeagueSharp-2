@@ -201,17 +201,18 @@ namespace SharpShooter.Plugins
                 }
 
                 if (MenuProvider.Champion.Misc.getBoolValue("Auto W"))
-                    if (ObjectManager.Player.Position.CountEnemiesInRange(1500f) <= 0)
-                        if (MenuProvider.Orbwalker.GetTarget() == null)
-                        {
-                            if (W.isReadyPerfectly())
-                                if (ObjectManager.Player.Distance(BaronLocation) <= W.Range)
-                                    W.Cast(BaronLocation);
+                    if (!ObjectManager.Player.IsRecalling())
+                        if (ObjectManager.Player.Position.CountEnemiesInRange(1500f) <= 0)
+                            if (MenuProvider.Orbwalker.GetTarget() == null)
+                            {
+                                if (W.isReadyPerfectly())
+                                    if (ObjectManager.Player.Distance(BaronLocation) <= W.Range)
+                                        W.Cast(BaronLocation);
 
-                            if (W.isReadyPerfectly())
-                                if (ObjectManager.Player.Distance(DragonLocation) <= W.Range)
-                                    W.Cast(DragonLocation);
-                        }
+                                if (W.isReadyPerfectly())
+                                    if (ObjectManager.Player.Distance(DragonLocation) <= W.Range)
+                                        W.Cast(DragonLocation);
+                            }
 
                 if (MenuProvider.Champion.Misc.getBoolValue("Auto Balista"))
                     if (R.isReadyPerfectly())
