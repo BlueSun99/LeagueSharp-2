@@ -89,15 +89,16 @@ namespace SharpShooter.Plugins
 
                                 if (MenuProvider.Champion.Combo.UseR)
                                     if (R.isReadyPerfectly())
-                                    {
-                                        var Target = HeroManager.Enemies.FirstOrDefault(x => !Orbwalking.InAutoAttackRange(x) && x.isKillableAndValidTarget(R.GetDamage(x), R.Range));
-                                        if (Target != null)
+                                        if (ObjectManager.Player.CountEnemiesInRange(1500f) <= 0)
                                         {
-                                            var collision = LeagueSharp.Common.Collision.GetCollision(new System.Collections.Generic.List<SharpDX.Vector3> { Target.ServerPosition }, new PredictionInput { Unit = ObjectManager.Player, Delay = 0.5f, Speed = 1500f, Radius = 200f, CollisionObjects = new CollisionableObjects[] { CollisionableObjects.Heroes } }).Any(x => x.NetworkId != Target.NetworkId);
-                                            if (!collision)
-                                                R.CastOnUnit(Target);
+                                            var Target = HeroManager.Enemies.FirstOrDefault(x => !Orbwalking.InAutoAttackRange(x) && x.isKillableAndValidTarget(R.GetDamage(x), R.Range));
+                                            if (Target != null)
+                                            {
+                                                var collision = LeagueSharp.Common.Collision.GetCollision(new System.Collections.Generic.List<SharpDX.Vector3> { Target.ServerPosition }, new PredictionInput { Unit = ObjectManager.Player, Delay = 0.5f, Speed = 1500f, Radius = 200f, CollisionObjects = new CollisionableObjects[] { CollisionableObjects.Heroes } }).Any(x => x.NetworkId != Target.NetworkId);
+                                                if (!collision)
+                                                    R.CastOnUnit(Target);
+                                            }
                                         }
-                                    }
                                 break;
                             }
                         case Orbwalking.OrbwalkingMode.Mixed:

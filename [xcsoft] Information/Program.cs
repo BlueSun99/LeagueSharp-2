@@ -89,7 +89,7 @@ namespace _xcsoft__Information
 
             foreach (var Mob in Mobs)
             {
-                MobsList += "\n" + Mob.Name + "[Skinname: " + Mob.SkinName + "/HP: " + Mob.Health + " / " + Mob.MaxHealth + "(" + Mob.HealthPercent.ToString("0.0") + "%)],";
+                MobsList += "\n" + Mob.Name + "[BaseSkin: " + Mob.CharData.BaseSkinName + "/HP: " + Mob.Health + " / " + Mob.MaxHealth + "(" + Mob.HealthPercent.ToString("0.0") + "%)],";
             }
 
             Render.Circle.DrawCircle(Player.Position, 1500, Color.Red, 10);
