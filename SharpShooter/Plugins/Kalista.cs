@@ -256,17 +256,18 @@ namespace SharpShooter.Plugins
 
         private void Obj_AI_Base_OnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
         {
-            if (sender.IsEnemy)
-                if (sender.Type == GameObjectType.obj_AI_Hero)
-                    if (MenuProvider.Champion.Misc.getBoolValue("Use Soulbound Saver (With R)"))
-                        if (R.isReadyPerfectly())
-                        {
-                            var soulbound = HeroManager.Allies.FirstOrDefault(x => !x.IsDead && x.HasBuff("kalistacoopstrikeally"));
-                            if (soulbound != null)
-                                if (args.Target.NetworkId == soulbound.NetworkId || args.End.Distance(soulbound.Position) <= 200)
-                                    if (soulbound.HealthPercent < 20)
-                                        R.Cast();
-                        }
+            if (sender != null)
+                if (sender.IsEnemy)
+                    if (sender.Type == GameObjectType.obj_AI_Hero)
+                        if (MenuProvider.Champion.Misc.getBoolValue("Use Soulbound Saver (With R)"))
+                            if (R.isReadyPerfectly())
+                            {
+                                var soulbound = HeroManager.Allies.FirstOrDefault(x => !x.IsDead && x.HasBuff("kalistacoopstrikeally"));
+                                if (soulbound != null)
+                                    if (args.Target.NetworkId == soulbound.NetworkId || args.End.Distance(soulbound.Position) <= 200)
+                                        if (soulbound.HealthPercent < 20)
+                                            R.Cast();
+                            }
         }
 
         private void Drawing_OnDraw(EventArgs args)
