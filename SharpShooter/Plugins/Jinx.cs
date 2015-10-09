@@ -99,16 +99,17 @@ namespace SharpShooter.Plugins
                                 if (MenuProvider.Champion.Combo.UseR)
                                     if (R.isReadyPerfectly())
                                         if (WCastTime + 1060 <= Environment.TickCount)
-                                        {
-                                            var Target = HeroManager.Enemies.FirstOrDefault(x => ObjectManager.Player.Distance(x) >= GetQRange && x.isKillableAndValidTarget(GetRDamage(x), R.Range) && R.GetPrediction(x).Hitchance >= HitChance.High);
-                                            if (Target != null)
+                                            if (!ObjectManager.Player.IsWindingUp)
                                             {
-                                                var prediction = R.GetPrediction(Target);
-                                                var collision = LeagueSharp.Common.Collision.GetCollision(new System.Collections.Generic.List<SharpDX.Vector3> { prediction.UnitPosition }, new PredictionInput { Unit = ObjectManager.Player, Delay = R.Delay, Speed = R.Speed, Radius = R.Width, CollisionObjects = new CollisionableObjects[] { CollisionableObjects.Heroes } }).Any(x => x.NetworkId != Target.NetworkId);
-                                                if (!collision)
-                                                    R.Cast(Target);
+                                                var Target = HeroManager.Enemies.FirstOrDefault(x => ObjectManager.Player.Distance(x) >= GetQRange && x.isKillableAndValidTarget(GetRDamage(x), R.Range) && R.GetPrediction(x).Hitchance >= HitChance.High);
+                                                if (Target != null)
+                                                {
+                                                    var prediction = R.GetPrediction(Target);
+                                                    var collision = LeagueSharp.Common.Collision.GetCollision(new System.Collections.Generic.List<SharpDX.Vector3> { prediction.UnitPosition }, new PredictionInput { Unit = ObjectManager.Player, Delay = R.Delay, Speed = R.Speed, Radius = R.Width, CollisionObjects = new CollisionableObjects[] { CollisionableObjects.Heroes } }).Any(x => x.NetworkId != Target.NetworkId);
+                                                    if (!collision)
+                                                        R.Cast(Target);
+                                                }
                                             }
-                                        }
 
                                 break;
                             }
