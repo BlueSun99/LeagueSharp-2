@@ -217,7 +217,21 @@ namespace SharpShooter.Plugins
 
         private float GetComboDamage(Obj_AI_Base enemy)
         {
-            return R.isReadyPerfectly() ? (float)GetRDamage(enemy) : 0;
+            float damage = 0;
+
+            damage += (float)ObjectManager.Player.GetAutoAttackDamage(enemy, true);
+
+            if (W.isReadyPerfectly())
+            {
+                damage += W.GetDamage(enemy);
+            }
+
+            if (R.isReadyPerfectly())
+            {
+                damage += (float)GetRDamage(enemy);
+            }
+
+            return damage;
         }
 
         private void QSwitch(bool activate)

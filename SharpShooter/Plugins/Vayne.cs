@@ -181,12 +181,26 @@ namespace SharpShooter.Plugins
 
         private float GetComboDamage(Obj_AI_Base enemy)
         {
-            var buff = ObjectManager.Player.GetBuff("vaynesilvereddebuff");
+            float damage = 0;
+
+            damage += (float)ObjectManager.Player.GetAutoAttackDamage(enemy, true);
+
+            var buff = enemy.GetBuff("vaynesilvereddebuff");
 
             if (buff != null)
                 if (buff.Caster.IsMe)
                     if (buff.Count == 2)
-                        return W.GetDamage(enemy) + (float)ObjectManager.Player.GetAutoAttackDamage(enemy, true);
+                        damage += W.GetDamage(enemy) + (float)ObjectManager.Player.GetAutoAttackDamage(enemy);
+
+            if (Q.isReadyPerfectly())
+            {
+                damage += Q.GetDamage(enemy) + (float)ObjectManager.Player.GetAutoAttackDamage(enemy);
+            }
+
+            if (ObjectManager.Player.HasBuff("vaynetumblebonus"))
+            {
+                damage += Q.GetDamage(enemy) + (float)ObjectManager.Player.GetAutoAttackDamage(enemy);
+            }
 
             return 0;
         }

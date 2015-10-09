@@ -185,11 +185,21 @@ namespace SharpShooter.Plugins
 
         private float GetComboDamage(Obj_AI_Base enemy)
         {
-            float Damage = 0;
+            float damage = 0;
+
+            damage += (float)ObjectManager.Player.GetAutoAttackDamage(enemy, true);
+
             if (enemy.HasBuff("tristanaecharge"))
-                Damage += (float)(E.GetDamage(enemy) * (enemy.GetBuffCount("tristanaecharge") * 0.30)) + E.GetDamage(enemy);
-            Damage += R.isReadyPerfectly() ? R.GetDamage(enemy) : 0;
-            return Damage;
+            {
+                damage += (float)(E.GetDamage(enemy) * (enemy.GetBuffCount("tristanaecharge") * 0.30)) + E.GetDamage(enemy);
+            }
+
+            if (R.isReadyPerfectly())
+            {
+                damage += R.GetDamage(enemy);
+            }
+
+            return damage;
         }
     }
 }

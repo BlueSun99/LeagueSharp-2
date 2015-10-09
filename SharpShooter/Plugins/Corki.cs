@@ -152,7 +152,31 @@ namespace SharpShooter.Plugins
 
         private float GetComboDamage(Obj_AI_Base enemy)
         {
-            return R.isReadyPerfectly() ? (ObjectManager.Player.HasBuff("corkimissilebarragecounterbig") ? R.GetDamage(enemy, 1) : R.GetDamage(enemy)) : 0;
+            float damage = 0;
+
+            damage += (float)ObjectManager.Player.GetAutoAttackDamage(enemy, true);
+
+            if (Q.isReadyPerfectly())
+            {
+                damage += Q.GetDamage(enemy);
+            }
+
+            if (W.isReadyPerfectly())
+            {
+                damage += W.GetDamage(enemy);
+            }
+
+            if (E.isReadyPerfectly())
+            {
+                damage += E.GetDamage(enemy);
+            }
+
+            if (R.isReadyPerfectly())
+            {
+                damage += ObjectManager.Player.HasBuff("corkimissilebarragecounterbig") ? R.GetDamage(enemy, 1) : R.GetDamage(enemy);
+            }
+
+            return damage;
         }
     }
 }
