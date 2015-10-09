@@ -195,7 +195,7 @@ namespace SharpShooter.Plugins
                             E.Cast();
 
                     if (E.isReadyPerfectly())
-                        if (MinionManager.GetMinions(E.Range).Any(x => x.isKillableAndValidTarget(E.GetDamage(x)) && (x.SkinName.ToLower().Contains("siege") || x.SkinName.ToLower().Contains("super"))))
+                        if (MinionManager.GetMinions(E.Range).Any(x => x.isKillableAndValidTarget(E.GetDamage(x)) && (x.CharData.BaseSkinName.ToLower().Contains("siege") || x.CharData.BaseSkinName.ToLower().Contains("super"))))
                             E.Cast();
                 }
 
