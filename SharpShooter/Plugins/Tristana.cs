@@ -33,6 +33,7 @@ namespace SharpShooter.Plugins
             MenuProvider.Champion.Misc.addUseKillsteal();
             MenuProvider.Champion.Misc.addUseAntiGapcloser();
             MenuProvider.Champion.Misc.addUseInterrupter();
+            MenuProvider.Champion.Misc.addItem("Auto E on Turret", true);
 
             MenuProvider.Champion.Drawings.addDrawWrange(System.Drawing.Color.DeepSkyBlue, false);
             MenuProvider.Champion.Drawings.addDrawErange(System.Drawing.Color.DeepSkyBlue, false);
@@ -44,8 +45,18 @@ namespace SharpShooter.Plugins
             AntiGapcloser.OnEnemyGapcloser += AntiGapcloser_OnEnemyGapcloser;
             Interrupter2.OnInterruptableTarget += Interrupter2_OnInterruptableTarget;
             Orbwalking.BeforeAttack += Orbwalking_BeforeAttack;
+            Obj_AI_Base.OnDoCast += Obj_AI_Base_OnDoCast;
 
             Console.WriteLine("Sharpshooter: Tristana Loaded.");
+        }
+
+        private void Obj_AI_Base_OnDoCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
+        {
+            if (sender.IsMe)
+                if (args.Target != null)
+                    if (args.SData.IsAutoAttack())
+                        if (args.Target.Type == GameObjectType.obj_AI_Turret || args.Target.Type == GameObjectType.obj_Turret)
+                            E.CastOnUnit(args.Target as Obj_AI_Base);
         }
 
         private void Game_OnUpdate(EventArgs args)
@@ -53,8 +64,8 @@ namespace SharpShooter.Plugins
             if (UnderClocking.NeedtoUnderClocking())
                 return;
 
-            E.Range = Orbwalking.GetRealAutoAttackRange(ObjectManager.Player);
-            R.Range = Orbwalking.GetRealAutoAttackRange(ObjectManager.Player);
+            E.Range = Orbwalking.GetRealAutoAttackRange(null) + 65;
+            R.Range = Orbwalking.GetRealAutoAttackRange(null) + 65;
 
             if (!ObjectManager.Player.IsDead)
             {
