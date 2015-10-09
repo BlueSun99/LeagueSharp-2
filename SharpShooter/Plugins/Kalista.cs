@@ -53,6 +53,7 @@ namespace SharpShooter.Plugins
             MenuProvider.Champion.Drawings.addDrawErange(System.Drawing.Color.DeepSkyBlue, false);
             MenuProvider.Champion.Drawings.addDrawRrange(System.Drawing.Color.DeepSkyBlue, true);
             MenuProvider.Champion.Drawings.addDamageIndicator(GetComboDamage);
+            MenuProvider.Champion.Drawings.addDamageIndicatorForJungle(GetJungleDamage);
 
             Game.OnUpdate += Game_OnUpdate;
             Drawing.OnDraw += Drawing_OnDraw;
@@ -288,6 +289,11 @@ namespace SharpShooter.Plugins
         private float GetComboDamage(Obj_AI_Base enemy)
         {
             return E.isReadyPerfectly() ? E.GetDamage(enemy) : 0;
+        }
+
+        private float GetJungleDamage(Obj_AI_Minion enemy)
+        {
+            return 50000;
         }
     }
 }

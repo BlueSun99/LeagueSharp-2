@@ -1413,6 +1413,37 @@ namespace SharpShooter
                         DamageIndicator.FillColor = eventArgs.GetNewValue<Circle>().Color;
                     };
                 }
+
+                /// <summary>
+                /// Drawings 메뉴에 DamageIndicatorForJungle(정글몹에 데미지 표시)를 추가합니다.
+                /// </summary>
+                /// <param name="damage"></param>
+                internal static void addDamageIndicatorForJungle(DamageIndicatorForJungle.DamageToUnitDelegate damage)
+                {
+                    var drawDamageMenu = new MenuItem("Draw_DamageIndicatorForJungle", "DamageIndicator For Jungle", true).SetValue(true);
+                    var drawDamageFill = new MenuItem("DamageIndicatorForJungle_FillColor", "DamageIndicator For Jungle FillColor", true).SetValue(new Circle(true, System.Drawing.Color.GreenYellow));
+
+                    MenuInstance.SubMenu("Champion").SubMenu("Drawings").AddItem(drawDamageMenu);
+                    MenuInstance.SubMenu("Champion").SubMenu("Drawings").AddItem(drawDamageFill);
+
+                    DamageIndicatorForJungle.DamageToUnit = damage;
+                    DamageIndicatorForJungle.Enabled = drawDamageMenu.GetValue<bool>();
+                    DamageIndicatorForJungle.Fill = drawDamageFill.GetValue<Circle>().Active;
+                    DamageIndicatorForJungle.FillColor = drawDamageFill.GetValue<Circle>().Color;
+
+                    drawDamageMenu.ValueChanged +=
+                    delegate (object sender, OnValueChangeEventArgs eventArgs)
+                    {
+                        DamageIndicatorForJungle.Enabled = eventArgs.GetNewValue<bool>();
+                    };
+
+                    drawDamageFill.ValueChanged +=
+                    delegate (object sender, OnValueChangeEventArgs eventArgs)
+                    {
+                        DamageIndicatorForJungle.Fill = eventArgs.GetNewValue<Circle>().Active;
+                        DamageIndicatorForJungle.FillColor = eventArgs.GetNewValue<Circle>().Color;
+                    };
+                }
             }
         }
     }
