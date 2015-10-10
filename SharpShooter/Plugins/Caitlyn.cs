@@ -91,16 +91,16 @@ namespace SharpShooter.Plugins
 
                                 if (MenuProvider.Champion.Combo.UseR)
                                     if (R.isReadyPerfectly())
-                                        if (ObjectManager.Player.CountEnemiesInRange(1500f) <= 1)
-                                        {
-                                            var Target = HeroManager.Enemies.FirstOrDefault(x => !Orbwalking.InAutoAttackRange(x) && x.isKillableAndValidTarget(R.GetDamage(x), R.Range));
-                                            if (Target != null)
+                                    {
+                                        var Target = HeroManager.Enemies.FirstOrDefault(x => !Orbwalking.InAutoAttackRange(x) && x.isKillableAndValidTarget(R.GetDamage(x), R.Range));
+                                        if (Target != null)
+                                            if (ObjectManager.Player.GetEnemiesInRange(1000f).Count(x => Target.NetworkId != Target.NetworkId) == 0)
                                             {
                                                 var collision = LeagueSharp.Common.Collision.GetCollision(new System.Collections.Generic.List<SharpDX.Vector3> { Target.ServerPosition }, new PredictionInput { Unit = ObjectManager.Player, Delay = 0.5f, Speed = 1500f, Radius = 200f, CollisionObjects = new CollisionableObjects[] { CollisionableObjects.Heroes } }).Any(x => x.NetworkId != Target.NetworkId);
                                                 if (!collision)
                                                     R.CastOnUnit(Target);
                                             }
-                                        }
+                                    }
                                 break;
                             }
                         case Orbwalking.OrbwalkingMode.Mixed:
@@ -138,16 +138,16 @@ namespace SharpShooter.Plugins
 
                     if (MenuProvider.Champion.Misc.getBoolValue("Auto R on Killable Target"))
                         if (R.isReadyPerfectly())
-                            if (ObjectManager.Player.CountEnemiesInRange(1500f) <= 1)
-                            {
-                                var Target = HeroManager.Enemies.FirstOrDefault(x => !Orbwalking.InAutoAttackRange(x) && x.isKillableAndValidTarget(R.GetDamage(x), R.Range));
-                                if (Target != null)
+                        {
+                            var Target = HeroManager.Enemies.FirstOrDefault(x => !Orbwalking.InAutoAttackRange(x) && x.isKillableAndValidTarget(R.GetDamage(x), R.Range));
+                            if (Target != null)
+                                if (ObjectManager.Player.GetEnemiesInRange(1000f).Count(x => Target.NetworkId != Target.NetworkId) == 0)
                                 {
                                     var collision = LeagueSharp.Common.Collision.GetCollision(new System.Collections.Generic.List<SharpDX.Vector3> { Target.ServerPosition }, new PredictionInput { Unit = ObjectManager.Player, Delay = 0.5f, Speed = 1500f, Radius = 200f, CollisionObjects = new CollisionableObjects[] { CollisionableObjects.Heroes } }).Any(x => x.NetworkId != Target.NetworkId);
                                     if (!collision)
                                         R.CastOnUnit(Target);
                                 }
-                            }
+                        }
 
                     if (MenuProvider.Champion.Misc.getBoolValue("Auto W on Immobile Target"))
                         if (W.isReadyPerfectly())
