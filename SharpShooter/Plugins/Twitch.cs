@@ -131,7 +131,7 @@ namespace SharpShooter.Plugins
         {
             float damage = 0;
 
-            damage += (float)ObjectManager.Player.GetAutoAttackDamage(enemy, true);
+            //damage += (float)ObjectManager.Player.GetAutoAttackDamage(enemy, true);
 
             if (E.isReadyPerfectly())
             {
