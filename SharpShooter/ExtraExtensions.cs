@@ -40,7 +40,7 @@ namespace SharpShooter
                 if (dragonSlayerBuff.Count >= 4)
                     CalculatedDamage += dragonSlayerBuff.Count == 5 ? CalculatedDamage * 0.30 : CalculatedDamage * 0.15;
 
-            if (Target.Name.ToLowerInvariant().Contains("baron") && ObjectManager.Player.HasBuff("barontarget"))
+            if (Target.CharData.BaseSkinName.ToLowerInvariant().Contains("baron") && ObjectManager.Player.HasBuff("barontarget"))
                 CalculatedDamage *= 0.5;
 
             return Target.Health + Target.HPRegenRate + Target.PhysicalShield < CalculatedDamage;
@@ -62,7 +62,7 @@ namespace SharpShooter
                 if (dragonSlayerBuff.Count >= 4)
                     CalculatedDamage += dragonSlayerBuff.Count == 5 ? CalculatedDamage * 0.30 : CalculatedDamage * 0.15;
 
-            if (Target.Name.ToLowerInvariant().Contains("baron") && ObjectManager.Player.HasBuff("barontarget"))
+            if (Target.CharData.BaseSkinName.ToLowerInvariant().Contains("baron") && ObjectManager.Player.HasBuff("barontarget"))
                 CalculatedDamage *= 0.5;
 
             return Target.Health + Target.HPRegenRate + Target.PhysicalShield < CalculatedDamage;
