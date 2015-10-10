@@ -243,7 +243,7 @@ namespace SharpShooter.Plugins
                 }
 
             var DrawRKillable = MenuProvider.Champion.Drawings.getCircleValue("Draw R Killable");
-            if (DrawRKillable.Active && R.isReadyPerfectly())
+            if (DrawRKillable.Active && R.Level > 0)
                 foreach (var Target in HeroManager.Enemies.Where(x => x.isKillableAndValidTarget(GetRDamage(x))))
                 {
                     var TargetPos = Drawing.WorldToScreen(Target.Position);

@@ -195,7 +195,7 @@ namespace SharpShooter.Plugins
                     Render.Circle.DrawCircle(ObjectManager.Player.Position, R.Range, MenuProvider.Champion.Drawings.DrawRrange.Color);
 
                 var DrawRKillable = MenuProvider.Champion.Drawings.getCircleValue("Draw R Killable");
-                if (DrawRKillable.Active && R.isReadyPerfectly())
+                if (DrawRKillable.Active && R.Level > 0)
                     foreach (var Target in HeroManager.Enemies.Where(x => x.isKillableAndValidTarget(R.GetDamage(x))))
                     {
                         var TargetPos = Drawing.WorldToScreen(Target.Position);
