@@ -68,7 +68,6 @@ namespace SharpShooter.Plugins
             R.Range = 900 + R.Level * 300;
 
             if (!ObjectManager.Player.IsDead)
-            {
                 if (Orbwalking.CanMove(10))
                 {
                     switch (MenuProvider.Orbwalker.ActiveMode)
@@ -174,7 +173,6 @@ namespace SharpShooter.Plugins
                             }
                     }
                 }
-            }
         }
 
         private void Orbwalking_BeforeAttack(Orbwalking.BeforeAttackEventArgs args)
