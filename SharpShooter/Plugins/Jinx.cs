@@ -43,7 +43,8 @@ namespace SharpShooter.Plugins
             MenuProvider.Champion.Misc.addUseAntiGapcloser();
             MenuProvider.Champion.Misc.addUseInterrupter();
             MenuProvider.Champion.Misc.addItem("Switch to FISHBONES If will hit enemy Number >=", new Slider(3, 2, 6));
-            MenuProvider.Champion.Misc.addItem("Auto R", true);
+            MenuProvider.Champion.Misc.addItem("Auto R on Killable Target", true);
+            MenuProvider.Champion.Misc.addItem("Auto E on Immobile Target", true);
 
             MenuProvider.Champion.Drawings.addDrawQrange(System.Drawing.Color.DeepSkyBlue, false);
             MenuProvider.Champion.Drawings.addDrawWrange(System.Drawing.Color.DeepSkyBlue, true);
@@ -167,7 +168,7 @@ namespace SharpShooter.Plugins
                             }
                     }
 
-                    if (MenuProvider.Champion.Misc.getBoolValue("Auto R"))
+                    if (MenuProvider.Champion.Misc.getBoolValue("Auto R on Killable Target"))
                     {
                         if (R.isReadyPerfectly())
                             if (WCastTime + 1060 <= Environment.TickCount)
@@ -183,6 +184,14 @@ namespace SharpShooter.Plugins
                                     }
                                 }
                     }
+
+                    if (MenuProvider.Champion.Misc.getBoolValue("Auto E on Immobile Target"))
+                        if (E.isReadyPerfectly())
+                        {
+                            var Target = HeroManager.Enemies.FirstOrDefault(x => x.IsValidTarget(E.Range) && x.isImmobileUntil() > 0.5f);
+                            if (Target != null)
+                                E.Cast(Target);
+                        }
                 }
             }
         }
