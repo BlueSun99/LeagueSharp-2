@@ -38,7 +38,7 @@ namespace SharpShooter.Plugins
             MenuProvider.Champion.Misc.addUseAntiGapcloser();
             MenuProvider.Champion.Misc.addUseInterrupter();
             MenuProvider.Champion.Misc.addItem("Auto R on Killable Target", false);
-            MenuProvider.Champion.Misc.addItem("Auto E on Immobile Target", true);
+            MenuProvider.Champion.Misc.addItem("Auto W on Immobile Target", true);
 
             MenuProvider.Champion.Drawings.addDrawQrange(System.Drawing.Color.DeepSkyBlue, true);
             MenuProvider.Champion.Drawings.addDrawWrange(System.Drawing.Color.DeepSkyBlue, false);
