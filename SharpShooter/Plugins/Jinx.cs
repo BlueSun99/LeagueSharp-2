@@ -51,6 +51,7 @@ namespace SharpShooter.Plugins
             MenuProvider.Champion.Drawings.addDrawErange(System.Drawing.Color.DeepSkyBlue, false);
             MenuProvider.Champion.Drawings.addDrawRrange(System.Drawing.Color.DeepSkyBlue, true);
             MenuProvider.Champion.Drawings.addItem("Draw Rocket explosion range on AutoAttack Target", true);
+            MenuProvider.Champion.Drawings.addItem("Draw R Killable", new Circle(true, System.Drawing.Color.GreenYellow));
             MenuProvider.Champion.Drawings.addDamageIndicator(GetComboDamage);
 
             Game.OnUpdate += Game_OnUpdate;
@@ -239,6 +240,15 @@ namespace SharpShooter.Plugins
                     var AATarget = MenuProvider.Orbwalker.GetTarget();
                     if (AATarget != null)
                         Render.Circle.DrawCircle(AATarget.Position, 200, System.Drawing.Color.Red, 4, true);
+                }
+
+            var DrawRKillable = MenuProvider.Champion.Drawings.getCircleValue("Draw R Killable");
+            if (DrawRKillable.Active && R.isReadyPerfectly())
+                foreach (var Target in HeroManager.Enemies.Where(x => x.isKillableAndValidTarget(GetRDamage(x))))
+                {
+                    var TargetPos = Drawing.WorldToScreen(Target.Position);
+                    Render.Circle.DrawCircle(Target.Position, Target.BoundingRadius, DrawRKillable.Color);
+                    Drawing.DrawText(TargetPos.X, TargetPos.Y - 20, DrawRKillable.Color, "R Killable");
                 }
         }
 

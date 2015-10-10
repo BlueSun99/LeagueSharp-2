@@ -22,14 +22,14 @@ namespace SharpShooter.Plugins
             R.SetSkillshot(0.25f, 100f, 2100f, false, SkillshotType.SkillshotLine);
 
             MenuProvider.Champion.Combo.addUseQ();
-            MenuProvider.Champion.Combo.addItem("Q Range", new Slider(425, 100, 850));
+            MenuProvider.Champion.Combo.addItem("Q Range", new Slider(550, 100, 850));
             MenuProvider.Champion.Combo.addUseW();
             MenuProvider.Champion.Combo.addUseE();
             MenuProvider.Champion.Combo.addUseR();
             MenuProvider.Champion.Combo.addItem("Cast R if Will Hit >=", new Slider(3, 2, 5));
 
             MenuProvider.Champion.Harass.addUseQ();
-            MenuProvider.Champion.Harass.addItem("Q Range", new Slider(425, 100, 850));
+            MenuProvider.Champion.Harass.addItem("Q Range", new Slider(550, 100, 850));
             MenuProvider.Champion.Harass.addIfMana(60);
 
             MenuProvider.Champion.Jungleclear.addUseQ();
@@ -42,6 +42,7 @@ namespace SharpShooter.Plugins
             MenuProvider.Champion.Drawings.addDrawWrange(System.Drawing.Color.DeepSkyBlue, false);
             MenuProvider.Champion.Drawings.addDrawErange(System.Drawing.Color.DeepSkyBlue, false);
             MenuProvider.Champion.Drawings.addDrawRrange(System.Drawing.Color.DeepSkyBlue, true);
+            MenuProvider.Champion.Drawings.addItem("Draw R Killable", new Circle(true, System.Drawing.Color.GreenYellow));
             MenuProvider.Champion.Drawings.addDamageIndicator(GetComboDamage);
 
             Game.OnUpdate += Game_OnUpdate;
@@ -177,6 +178,15 @@ namespace SharpShooter.Plugins
 
                 if (MenuProvider.Champion.Drawings.DrawRrange.Active && R.isReadyPerfectly())
                     Render.Circle.DrawCircle(ObjectManager.Player.Position, R.Range, MenuProvider.Champion.Drawings.DrawRrange.Color);
+
+                var DrawRKillable = MenuProvider.Champion.Drawings.getCircleValue("Draw R Killable");
+                if (DrawRKillable.Active && R.isReadyPerfectly())
+                    foreach (var Target in HeroManager.Enemies.Where(x => x.isKillableAndValidTarget(R.GetDamage(x))))
+                    {
+                        var TargetPos = Drawing.WorldToScreen(Target.Position);
+                        Render.Circle.DrawCircle(Target.Position, Target.BoundingRadius, DrawRKillable.Color);
+                        Drawing.DrawText(TargetPos.X, TargetPos.Y - 20, DrawRKillable.Color, "R Killable");
+                    }
             }
         }
 
