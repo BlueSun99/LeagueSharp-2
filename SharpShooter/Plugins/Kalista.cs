@@ -27,6 +27,7 @@ namespace SharpShooter.Plugins
 
             MenuProvider.Champion.Combo.addUseQ();
             MenuProvider.Champion.Combo.addUseE();
+            MenuProvider.Champion.Combo.addItem("Attack Minion For Chasing", true);
 
             MenuProvider.Champion.Harass.addUseQ();
             MenuProvider.Champion.Harass.addIfMana();
@@ -78,6 +79,14 @@ namespace SharpShooter.Plugins
                 {
                     case Orbwalking.OrbwalkingMode.Combo:
                         {
+                            if (MenuProvider.Champion.Combo.getBoolValue("Attack Minion For Chasing"))
+                                if (!HeroManager.Enemies.Any(x => x.IsValidTarget() && Orbwalking.InAutoAttackRange(x)))
+                                {
+                                    var Minion = MinionManager.GetMinions(Orbwalking.GetRealAutoAttackRange(null) + 65, MinionTypes.All, MinionTeam.NotAlly).OrderBy(x => x.Distance(ObjectManager.Player)).FirstOrDefault();
+                                    if (Minion != null)
+                                        Orbwalking.Orbwalk(Minion, Game.CursorPos);
+                                }
+
                             if (MenuProvider.Champion.Combo.UseQ)
                                 if (Q.isReadyPerfectly())
                                     if (!ObjectManager.Player.IsDashing())
