@@ -20,8 +20,6 @@ namespace SharpShooter
         public static bool Enabled = true;
         private static DamageToUnitDelegate _damageToUnit;
 
-        private static readonly Render.Text Text = new Render.Text(0, 0, "", 14, SharpDX.Color.Red, "monospace");
-
         public static List<JungleMobOffsets> JungleMobOffsetsList = new List<JungleMobOffsets>()
         {
             new JungleMobOffsets { BaseSkinName = "SRU_Red", Width = 139, Height = 4, XOffset = 6, YOffset= 22 },
