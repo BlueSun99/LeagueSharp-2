@@ -184,7 +184,10 @@ namespace SharpShooter.Plugins
         {
             float damage = 0;
 
-            damage += (float)ObjectManager.Player.GetAutoAttackDamage(enemy, true);
+            if (!ObjectManager.Player.IsWindingUp)
+            {
+                damage += (float)ObjectManager.Player.GetAutoAttackDamage(enemy, true);
+            }
 
             var buff = enemy.GetBuff("vaynesilvereddebuff");
 
