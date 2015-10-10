@@ -72,10 +72,10 @@ namespace SharpShooter.Plugins
                                             if (Prediction.Hitchance >= HitChance.High)
                                             {
                                                 var FinalPosition = Prediction.UnitPosition.To2D().Extend(ObjectManager.Player.ServerPosition.To2D(), 400).To3D();
-                                                for (int i = 1; i <= 400; i += (int)enemy.BoundingRadius)
+                                                for (int i = 1; i < 400; i += 50)
                                                 {
                                                     Vector3 loc3 = Prediction.UnitPosition.Extend(ObjectManager.Player.ServerPosition, -i);
-                                                    if (loc3.IsWall())
+                                                    if (loc3.IsWall() || FinalPosition.IsWall())
                                                     {
                                                         E.CastOnUnit(enemy);
                                                         break;
