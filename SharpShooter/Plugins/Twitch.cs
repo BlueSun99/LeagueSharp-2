@@ -114,7 +114,7 @@ namespace SharpShooter.Plugins
                 if (MenuProvider.Champion.Drawings.getBoolValue("R Pierce Line"))
                     if (ObjectManager.Player.HasBuff("TwitchFullAutomatic"))
                     {
-                        var Target = TargetSelector.GetTarget(Orbwalking.GetRealAutoAttackRange(ObjectManager.Player), TargetSelector.DamageType.Physical);
+                        var Target = MenuProvider.Orbwalker.GetTarget() as Obj_AI_Base;
                         if (Target.IsValidTarget())
                         {
                             var from = Drawing.WorldToScreen(ObjectManager.Player.Position);
