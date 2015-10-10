@@ -62,8 +62,8 @@ namespace SharpShooter.Plugins
             Spellbook.OnCastSpell += Spellbook_OnCastSpell;
             Obj_AI_Base.OnProcessSpellCast += Obj_AI_Base_OnProcessSpellCast;
 
-            BaronLocation = new Vector3(4553f, 9909f, -68f);
-            DragonLocation = new Vector3(10424f, 5093f, -62f);
+            BaronLocation = new Vector3(4910f, 10385f, -71f);
+            DragonLocation = new Vector3(9796f, 4432f, -71f);
 
             Console.WriteLine("Sharpshooter: Kalista Loaded.");
             Game.PrintChat("<font color = \"#00D8FF\">SharpShooter Reworked:</font> <font color = \"#FF007F\">Kalista</font> Loaded.");
