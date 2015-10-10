@@ -50,6 +50,7 @@ namespace SharpShooter.Plugins
             Orbwalking.BeforeAttack += Orbwalking_BeforeAttack;
 
             Console.WriteLine("Sharpshooter: Vayne Loaded.");
+            Game.PrintChat("<font color = \"#00D8FF\">SharpShooter Reworked:</font> <font color = \"#FF007F\">Vayne</font> Loaded");
         }
 
         private void Game_OnUpdate(EventArgs args)

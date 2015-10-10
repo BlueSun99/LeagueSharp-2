@@ -55,7 +55,8 @@ namespace SharpShooter.Plugins
             Drawing.OnDraw += Drawing_OnDraw;
             Orbwalking.BeforeAttack += Orbwalking_BeforeAttack;
 
-            Console.WriteLine("Sharpshooter: Kogmaw Loaded.");
+            Console.WriteLine("Sharpshooter: KogMaw Loaded.");
+            Game.PrintChat("<font color = \"#00D8FF\">SharpShooter Reworked:</font> <font color = \"#FF007F\">KogMaw</font> Loaded");
         }
 
         private void Game_OnUpdate(EventArgs args)
