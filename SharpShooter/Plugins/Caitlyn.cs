@@ -91,7 +91,7 @@ namespace SharpShooter.Plugins
 
                                 if (MenuProvider.Champion.Combo.UseR)
                                     if (R.isReadyPerfectly())
-                                        if (ObjectManager.Player.CountEnemiesInRange(1500f) <= 0)
+                                        if (ObjectManager.Player.CountEnemiesInRange(1500f) <= 1)
                                         {
                                             var Target = HeroManager.Enemies.FirstOrDefault(x => !Orbwalking.InAutoAttackRange(x) && x.isKillableAndValidTarget(R.GetDamage(x), R.Range));
                                             if (Target != null)
@@ -138,7 +138,7 @@ namespace SharpShooter.Plugins
 
                     if (MenuProvider.Champion.Misc.getBoolValue("Auto R on Killable Target"))
                         if (R.isReadyPerfectly())
-                            if (ObjectManager.Player.CountEnemiesInRange(1500) <= 0)
+                            if (ObjectManager.Player.CountEnemiesInRange(1500f) <= 1)
                             {
                                 var Target = HeroManager.Enemies.FirstOrDefault(x => !Orbwalking.InAutoAttackRange(x) && x.isKillableAndValidTarget(R.GetDamage(x), R.Range));
                                 if (Target != null)
