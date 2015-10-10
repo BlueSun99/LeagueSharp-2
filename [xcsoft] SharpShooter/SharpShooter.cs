@@ -98,6 +98,7 @@ namespace Sharpshooter
             Drawing.OnDraw += Drawing_OnDraw;
 
             Game.PrintChat("<font color = \"#00D8FF\">[xcsoft] SharpShooter:</font> <font color = \"#FF007F\">" + Player.ChampionName + "</font> Loaded");
+            Game.PrintChat("<font color = \"#00D8FF\">[xcsoft] SharpShooter:</font> This SharpShooter is Old Version, Please Use 'SharpShooter Reworked'.");
         }
 
         static void Drawing_OnDraw(EventArgs args)

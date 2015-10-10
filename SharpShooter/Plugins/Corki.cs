@@ -46,7 +46,7 @@ namespace SharpShooter.Plugins
             Drawing.OnDraw += Drawing_OnDraw;
 
             Console.WriteLine("Sharpshooter: Corki Loaded.");
-            Game.PrintChat("<font color = \"#00D8FF\">SharpShooter Reworked:</font> <font color = \"#FF007F\">Corki</font> Loaded");
+            Game.PrintChat("<font color = \"#00D8FF\">SharpShooter Reworked:</font> <font color = \"#FF007F\">Corki</font> Loaded.");
         }
 
         private void Game_OnUpdate(EventArgs args)

@@ -48,7 +48,7 @@ namespace SharpShooter.Plugins
             Obj_AI_Base.OnDoCast += Obj_AI_Base_OnDoCast;
 
             Console.WriteLine("Sharpshooter: Tristana Loaded.");
-            Game.PrintChat("<font color = \"#00D8FF\">SharpShooter Reworked:</font> <font color = \"#FF007F\">Tristana</font> Loaded");
+            Game.PrintChat("<font color = \"#00D8FF\">SharpShooter Reworked:</font> <font color = \"#FF007F\">Tristana</font> Loaded.");
         }
 
         private void Obj_AI_Base_OnDoCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)

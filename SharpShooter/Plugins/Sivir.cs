@@ -45,7 +45,7 @@ namespace SharpShooter.Plugins
             Obj_AI_Base.OnProcessSpellCast += Obj_AI_Base_OnProcessSpellCast;
 
             Console.WriteLine("Sharpshooter: Sivir Loaded.");
-            Game.PrintChat("<font color = \"#00D8FF\">SharpShooter Reworked:</font> <font color = \"#FF007F\">Sivir</font> Loaded");
+            Game.PrintChat("<font color = \"#00D8FF\">SharpShooter Reworked:</font> <font color = \"#FF007F\">Sivir</font> Loaded.");
         }
 
         private void Game_OnUpdate(EventArgs args)

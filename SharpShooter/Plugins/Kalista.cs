@@ -66,7 +66,7 @@ namespace SharpShooter.Plugins
             DragonLocation = new Vector3(10424f, 5093f, -62f);
 
             Console.WriteLine("Sharpshooter: Kalista Loaded.");
-            Game.PrintChat("<font color = \"#00D8FF\">SharpShooter Reworked:</font> <font color = \"#FF007F\">Kalista</font> Loaded");
+            Game.PrintChat("<font color = \"#00D8FF\">SharpShooter Reworked:</font> <font color = \"#FF007F\">Kalista</font> Loaded.");
         }
 
         private void Game_OnUpdate(EventArgs args)

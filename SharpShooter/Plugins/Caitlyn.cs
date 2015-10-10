@@ -51,7 +51,7 @@ namespace SharpShooter.Plugins
             Interrupter2.OnInterruptableTarget += Interrupter2_OnInterruptableTarget;
 
             Console.WriteLine("Sharpshooter: Caitlyn Loaded.");
-            Game.PrintChat("<font color = \"#00D8FF\">SharpShooter Reworked:</font> <font color = \"#FF007F\">Caitlyn</font> Loaded");
+            Game.PrintChat("<font color = \"#00D8FF\">SharpShooter Reworked:</font> <font color = \"#FF007F\">Caitlyn</font> Loaded.");
         }
 
         private void Game_OnUpdate(EventArgs args)
