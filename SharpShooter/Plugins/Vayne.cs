@@ -19,7 +19,7 @@ namespace SharpShooter.Plugins
             E = new Spell(SpellSlot.E, 650f) { Width = 1f };
             R = new Spell(SpellSlot.R);
 
-            E.SetTargetted(0.14f, 1700f);
+            E.SetTargetted(0.14f, 1600f);
 
             MenuProvider.Champion.Combo.addUseQ();
             MenuProvider.Champion.Combo.addUseE();
@@ -71,8 +71,8 @@ namespace SharpShooter.Plugins
                                             var Prediction = E.GetPrediction(enemy);
                                             if (Prediction.Hitchance >= HitChance.High)
                                             {
-                                                var FinalPosition = Prediction.UnitPosition.To2D().Extend(ObjectManager.Player.ServerPosition.To2D(), 350).To3D();
-                                                for (int i = 1; i <= 350; i += (int)enemy.BoundingRadius)
+                                                var FinalPosition = Prediction.UnitPosition.To2D().Extend(ObjectManager.Player.ServerPosition.To2D(), 400).To3D();
+                                                for (int i = 1; i <= 400; i += (int)enemy.BoundingRadius)
                                                 {
                                                     Vector3 loc3 = Prediction.UnitPosition.Extend(ObjectManager.Player.ServerPosition, -i);
                                                     if (loc3.IsWall())
