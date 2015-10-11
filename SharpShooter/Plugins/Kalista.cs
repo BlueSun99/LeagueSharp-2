@@ -46,8 +46,9 @@ namespace SharpShooter.Plugins
             MenuProvider.Champion.Misc.addItem("Use Mobsteal (With E)", true);
             MenuProvider.Champion.Misc.addItem("Use Lasthit Assist (With E)", true);
             MenuProvider.Champion.Misc.addItem("Use Soulbound Saver (With R)", true);
-            MenuProvider.Champion.Misc.addItem("Auto W", true);
-            MenuProvider.Champion.Misc.addItem("Auto Balista", true);
+            MenuProvider.Champion.Misc.addItem("Auto W (With W)", true);
+            MenuProvider.Champion.Misc.addItem("Auto Balista (With R)", true);
+            MenuProvider.Champion.Misc.addItem("Kill steal Siege minion & Super minion (With E)");
 
             MenuProvider.Champion.Drawings.addDrawQrange(System.Drawing.Color.DeepSkyBlue, true);
             MenuProvider.Champion.Drawings.addDrawWrange(System.Drawing.Color.DeepSkyBlue, false);
@@ -204,7 +205,10 @@ namespace SharpShooter.Plugins
                     if (E.isReadyPerfectly())
                         if (MinionManager.GetMinions(E.Range, MinionTypes.All, MinionTeam.Neutral).Any(x => x.isKillableAndValidTarget(E.GetDamage(x))))
                             E.Cast();
+                }
 
+                if (MenuProvider.Champion.Misc.getBoolValue("Kill steal Siege minion & Super minion (With E)"))
+                {
                     if (E.isReadyPerfectly())
                         if (MinionManager.GetMinions(E.Range).Any(x => x.isKillableAndValidTarget(E.GetDamage(x)) && (x.CharData.BaseSkinName.ToLower().Contains("siege") || x.CharData.BaseSkinName.ToLower().Contains("super"))))
                             E.Cast();
