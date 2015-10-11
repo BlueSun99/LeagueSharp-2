@@ -48,7 +48,7 @@ namespace SharpShooter.Plugins
             MenuProvider.Champion.Misc.addItem("Use Soulbound Saver (With R)", true);
             MenuProvider.Champion.Misc.addItem("Auto W on Dragon or Baron (With W)", true);
             MenuProvider.Champion.Misc.addItem("Auto Balista Combo (With R)", true);
-            MenuProvider.Champion.Misc.addItem("Steal Siege minion & Super minion (With E)", true);
+            MenuProvider.Champion.Misc.addItem("Auto Steal Siege minion & Super minion (With E)", true);
             MenuProvider.Champion.Misc.addItem("Auto E Harass (With E)", true);
 
             MenuProvider.Champion.Drawings.addDrawQrange(System.Drawing.Color.DeepSkyBlue, true);
@@ -208,7 +208,7 @@ namespace SharpShooter.Plugins
                             E.Cast();
                 }
 
-                if (MenuProvider.Champion.Misc.getBoolValue("Steal Siege minion & Super minion (With E)"))
+                if (MenuProvider.Champion.Misc.getBoolValue("Auto Steal Siege minion & Super minion (With E)"))
                 {
                     if (E.isReadyPerfectly())
                         if (MinionManager.GetMinions(E.Range).Any(x => x.isKillableAndValidTarget(E.GetDamage(x)) && (x.CharData.BaseSkinName.ToLower().Contains("siege") || x.CharData.BaseSkinName.ToLower().Contains("super"))))
