@@ -230,29 +230,32 @@ namespace SharpShooter.Plugins
         {
             if (sender.IsMe)
             {
-                if (args.SData.IsAutoAttack())
+                Utility.DelayAction.Add(Game.Ping <= 30 ? 30 : 0, () =>
                 {
-                    HasPassive = false;
-
-                    switch (MenuProvider.Orbwalker.ActiveMode)
+                    if (args.SData.IsAutoAttack())
                     {
-                        case Orbwalking.OrbwalkingMode.Combo:
-                            {
-                                if (MenuProvider.Champion.Combo.UseE)
-                                    if (E.isReadyPerfectly())
-                                        if (ObjectManager.Player.Position.Extend(Game.CursorPos, 700).CountEnemiesInRange(700) <= 1)
-                                            E.Cast(ObjectManager.Player.Position.Extend(Game.CursorPos, 700));
-                                break;
-                            }
-                    }
-                }
+                        HasPassive = false;
 
-                if (args.Slot == SpellSlot.Q || args.Slot == SpellSlot.E)
-                {
-                    //do you know it? lucian can do autoattack cancel like riven
-                    ObjectManager.Player.IssueOrder(GameObjectOrder.MoveTo, Game.CursorPos);
-                    Utility.DelayAction.Add(Game.Ping * 2 + 10, Orbwalking.ResetAutoAttackTimer);
-                }
+                        switch (MenuProvider.Orbwalker.ActiveMode)
+                        {
+                            case Orbwalking.OrbwalkingMode.Combo:
+                                {
+                                    if (MenuProvider.Champion.Combo.UseE)
+                                        if (E.isReadyPerfectly())
+                                            if (ObjectManager.Player.Position.Extend(Game.CursorPos, 700).CountEnemiesInRange(700) <= 1)
+                                                E.Cast(ObjectManager.Player.Position.Extend(Game.CursorPos, 700));
+                                    break;
+                                }
+                        }
+                    }
+
+                    if (args.Slot == SpellSlot.Q || args.Slot == SpellSlot.E)
+                    {
+                        //do you know it? lucian can do autoattack cancel like riven
+                        ObjectManager.Player.IssueOrder(GameObjectOrder.MoveTo, Game.CursorPos);
+                        Utility.DelayAction.Add(30, Orbwalking.ResetAutoAttackTimer);
+                    }
+                });
             }
         }
 

@@ -48,7 +48,7 @@ namespace SharpShooter.Plugins
             Game.OnUpdate += Game_OnUpdate;
             Drawing.OnDraw += Drawing_OnDraw;
             AntiGapcloser.OnEnemyGapcloser += AntiGapcloser_OnEnemyGapcloser;
-            Obj_AI_Base.OnDoCast += Obj_AI_Base_OnDoCast;
+            Orbwalking.AfterAttack += Orbwalking_AfterAttack;
 
             Console.WriteLine("Sharpshooter: Graves Loaded.");
             Game.PrintChat("<font color = \"#00D8FF\">SharpShooter Reworked:</font> <font color = \"#FF007F\">Graves</font> Loaded.");
@@ -130,25 +130,24 @@ namespace SharpShooter.Plugins
             }
         }
 
-        private void Obj_AI_Base_OnDoCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
+        private void Orbwalking_AfterAttack(AttackableUnit unit, AttackableUnit Target)
         {
-            if (sender.IsMe)
-                if (args.SData.IsAutoAttack())
-                    switch (MenuProvider.Orbwalker.ActiveMode)
-                    {
-                        case Orbwalking.OrbwalkingMode.Combo:
-                            {
-                                if (MenuProvider.Champion.Combo.UseE)
-                                    if (E.isReadyPerfectly())
-                                        if (ObjectManager.Player.Position.Extend(Game.CursorPos, 700).CountEnemiesInRange(700) <= 1)
-                                            if (!Q.isReadyPerfectly())
-                                                E.Cast(ObjectManager.Player.Position.Extend(Game.CursorPos, 450));
-                                            else
-                                               if (ObjectManager.Player.Mana - E.ManaCost >= Q.ManaCost)
-                                                E.Cast(ObjectManager.Player.Position.Extend(Game.CursorPos, 450));
-                                break;
-                            }
-                    }
+            if (unit.IsMe)
+                switch (MenuProvider.Orbwalker.ActiveMode)
+                {
+                    case Orbwalking.OrbwalkingMode.Combo:
+                        {
+                            if (MenuProvider.Champion.Combo.UseE)
+                                if (E.isReadyPerfectly())
+                                    if (ObjectManager.Player.Position.Extend(Game.CursorPos, 700).CountEnemiesInRange(700) <= 1)
+                                        if (!Q.isReadyPerfectly())
+                                            E.Cast(ObjectManager.Player.Position.Extend(Game.CursorPos, 450));
+                                        else
+                                           if (ObjectManager.Player.Mana - E.ManaCost >= Q.ManaCost)
+                                            E.Cast(ObjectManager.Player.Position.Extend(Game.CursorPos, 450));
+                            break;
+                        }
+                }
         }
 
         private void AntiGapcloser_OnEnemyGapcloser(ActiveGapcloser gapcloser)

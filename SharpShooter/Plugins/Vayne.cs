@@ -44,7 +44,7 @@ namespace SharpShooter.Plugins
             Game.OnUpdate += Game_OnUpdate;
             Drawing.OnDraw += Drawing_OnDraw;
             Obj_AI_Base.OnProcessSpellCast += Obj_AI_Base_OnProcessSpellCast;
-            Obj_AI_Base.OnDoCast += Obj_AI_Base_OnDoCast;
+            Orbwalking.AfterAttack += Orbwalking_AfterAttack;
             AntiGapcloser.OnEnemyGapcloser += AntiGapcloser_OnEnemyGapcloser;
             Interrupter2.OnInterruptableTarget += Interrupter2_OnInterruptableTarget;
             Orbwalking.BeforeAttack += Orbwalking_BeforeAttack;
@@ -97,48 +97,47 @@ namespace SharpShooter.Plugins
                             Q.Cast(Game.CursorPos);
         }
 
-        private void Obj_AI_Base_OnDoCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
+        private void Orbwalking_AfterAttack(AttackableUnit unit, AttackableUnit Target)
         {
-            if (sender.IsMe)
-                if (args.SData.IsAutoAttack())
-                    switch (MenuProvider.Orbwalker.ActiveMode)
-                    {
-                        case Orbwalking.OrbwalkingMode.Combo:
-                            {
-                                if (MenuProvider.Champion.Combo.UseQ)
-                                    if (Q.isReadyPerfectly())
+            if (unit.IsMe)
+                switch (MenuProvider.Orbwalker.ActiveMode)
+                {
+                    case Orbwalking.OrbwalkingMode.Combo:
+                        {
+                            if (MenuProvider.Champion.Combo.UseQ)
+                                if (Q.isReadyPerfectly())
+                                    if (ObjectManager.Player.Position.Extend(Game.CursorPos, 700).CountEnemiesInRange(700) <= 1)
+                                        Q.Cast(Game.CursorPos);
+                            break;
+                        }
+                    case Orbwalking.OrbwalkingMode.Mixed:
+                        {
+                            if (MenuProvider.Champion.Harass.UseQ)
+                                if (Q.isReadyPerfectly())
+                                    if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Harass.IfMana))
                                         if (ObjectManager.Player.Position.Extend(Game.CursorPos, 700).CountEnemiesInRange(700) <= 1)
                                             Q.Cast(Game.CursorPos);
-                                break;
-                            }
-                        case Orbwalking.OrbwalkingMode.Mixed:
-                            {
-                                if (MenuProvider.Champion.Harass.UseQ)
-                                    if (Q.isReadyPerfectly())
-                                        if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Harass.IfMana))
-                                            if (ObjectManager.Player.Position.Extend(Game.CursorPos, 700).CountEnemiesInRange(700) <= 1)
+                            break;
+                        }
+                    case Orbwalking.OrbwalkingMode.LaneClear:
+                        {
+                            //Lane
+                            if (MenuProvider.Champion.Laneclear.UseQ)
+                                if (Q.isReadyPerfectly())
+                                    if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Laneclear.IfMana))
+                                        if (ObjectManager.Player.Position.Extend(Game.CursorPos, 700).CountEnemiesInRange(700) <= 1)
+                                            if (MinionManager.GetMinions(Orbwalking.GetRealAutoAttackRange(ObjectManager.Player)).Any(x => x.NetworkId == Target.NetworkId))
                                                 Q.Cast(Game.CursorPos);
-                                break;
-                            }
-                        case Orbwalking.OrbwalkingMode.LaneClear:
-                            {
-                                //Lane
-                                if (MenuProvider.Champion.Laneclear.UseQ)
-                                    if (Q.isReadyPerfectly())
-                                        if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Laneclear.IfMana))
-                                            if (ObjectManager.Player.Position.Extend(Game.CursorPos, 700).CountEnemiesInRange(700) <= 1)
-                                                if (MinionManager.GetMinions(Orbwalking.GetRealAutoAttackRange(ObjectManager.Player)).Any(x => x.NetworkId == args.Target.NetworkId))
-                                                    Q.Cast(Game.CursorPos);
 
-                                //Jugnle
-                                if (MenuProvider.Champion.Jungleclear.UseQ)
-                                    if (Q.isReadyPerfectly())
-                                        if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Jungleclear.IfMana))
-                                            if (MinionManager.GetMinions(Orbwalking.GetRealAutoAttackRange(ObjectManager.Player), MinionTypes.All, MinionTeam.Neutral).Any(x => x.NetworkId == args.Target.NetworkId))
-                                                Q.Cast(Game.CursorPos);
-                                break;
-                            }
-                    }
+                            //Jugnle
+                            if (MenuProvider.Champion.Jungleclear.UseQ)
+                                if (Q.isReadyPerfectly())
+                                    if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Jungleclear.IfMana))
+                                        if (MinionManager.GetMinions(Orbwalking.GetRealAutoAttackRange(ObjectManager.Player), MinionTypes.All, MinionTeam.Neutral).Any(x => x.NetworkId == Target.NetworkId))
+                                            Q.Cast(Game.CursorPos);
+                            break;
+                        }
+                }
         }
 
         private void Orbwalking_BeforeAttack(Orbwalking.BeforeAttackEventArgs args)

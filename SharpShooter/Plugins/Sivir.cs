@@ -41,7 +41,7 @@ namespace SharpShooter.Plugins
 
             Game.OnUpdate += Game_OnUpdate;
             Drawing.OnDraw += Drawing_OnDraw;
-            Obj_AI_Base.OnDoCast += Obj_AI_Base_OnDoCast;
+            Orbwalking.AfterAttack += Orbwalking_AfterAttack;
             Obj_AI_Base.OnProcessSpellCast += Obj_AI_Base_OnProcessSpellCast;
 
             Console.WriteLine("Sharpshooter: Sivir Loaded.");
@@ -120,36 +120,35 @@ namespace SharpShooter.Plugins
                     Utility.DelayAction.Add(Game.Ping + 10, Orbwalking.ResetAutoAttackTimer);
         }
 
-        private void Obj_AI_Base_OnDoCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
+        private void Orbwalking_AfterAttack(AttackableUnit unit, AttackableUnit Target)
         {
-            if (sender.IsMe)
-                if (args.SData.IsAutoAttack())
-                    if (Orbwalking.InAutoAttackRange(args.Target as AttackableUnit))
-                        switch (MenuProvider.Orbwalker.ActiveMode)
-                        {
-                            case Orbwalking.OrbwalkingMode.Combo:
-                                {
-                                    if (MenuProvider.Champion.Combo.UseW)
-                                        if (W.isReadyPerfectly())
-                                            W.Cast();
-                                    break;
-                                }
-                            case Orbwalking.OrbwalkingMode.LaneClear:
-                                {
-                                    if (MenuProvider.Champion.Laneclear.UseW)
-                                        if (W.isReadyPerfectly())
-                                            if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Laneclear.IfMana))
-                                                if (MinionManager.GetMinions(Orbwalking.GetRealAutoAttackRange(ObjectManager.Player)).Any(x => x.NetworkId == args.Target.NetworkId))
-                                                    W.Cast();
+            if (unit.IsMe)
+                if (Orbwalking.InAutoAttackRange(Target))
+                    switch (MenuProvider.Orbwalker.ActiveMode)
+                    {
+                        case Orbwalking.OrbwalkingMode.Combo:
+                            {
+                                if (MenuProvider.Champion.Combo.UseW)
+                                    if (W.isReadyPerfectly())
+                                        W.Cast();
+                                break;
+                            }
+                        case Orbwalking.OrbwalkingMode.LaneClear:
+                            {
+                                if (MenuProvider.Champion.Laneclear.UseW)
+                                    if (W.isReadyPerfectly())
+                                        if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Laneclear.IfMana))
+                                            if (MinionManager.GetMinions(Orbwalking.GetRealAutoAttackRange(ObjectManager.Player)).Any(x => x.NetworkId == Target.NetworkId))
+                                                W.Cast();
 
-                                    if (MenuProvider.Champion.Jungleclear.UseW)
-                                        if (W.isReadyPerfectly())
-                                            if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Jungleclear.IfMana))
-                                                if (MinionManager.GetMinions(Orbwalking.GetRealAutoAttackRange(ObjectManager.Player), MinionTypes.All, MinionTeam.Neutral).Any(x => x.NetworkId == args.Target.NetworkId))
-                                                    W.Cast();
-                                    break;
-                                }
-                        }
+                                if (MenuProvider.Champion.Jungleclear.UseW)
+                                    if (W.isReadyPerfectly())
+                                        if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Jungleclear.IfMana))
+                                            if (MinionManager.GetMinions(Orbwalking.GetRealAutoAttackRange(ObjectManager.Player), MinionTypes.All, MinionTeam.Neutral).Any(x => x.NetworkId == Target.NetworkId))
+                                                W.Cast();
+                                break;
+                            }
+                    }
         }
 
         private void Drawing_OnDraw(EventArgs args)
@@ -178,7 +177,7 @@ namespace SharpShooter.Plugins
                 damage += Q.GetDamage(enemy) * 1.4f;
             }
 
-            if(W.isReadyPerfectly())
+            if (W.isReadyPerfectly())
             {
                 damage += (float)ObjectManager.Player.GetAutoAttackDamage(enemy);
             }

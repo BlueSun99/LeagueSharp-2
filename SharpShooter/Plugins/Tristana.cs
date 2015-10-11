@@ -46,20 +46,19 @@ namespace SharpShooter.Plugins
             AntiGapcloser.OnEnemyGapcloser += AntiGapcloser_OnEnemyGapcloser;
             Interrupter2.OnInterruptableTarget += Interrupter2_OnInterruptableTarget;
             Orbwalking.BeforeAttack += Orbwalking_BeforeAttack;
-            Obj_AI_Base.OnDoCast += Obj_AI_Base_OnDoCast;
+            Orbwalking.AfterAttack += Orbwalking_AfterAttack;
 
             Console.WriteLine("Sharpshooter: Tristana Loaded.");
             Game.PrintChat("<font color = \"#00D8FF\">SharpShooter Reworked:</font> <font color = \"#FF007F\">Tristana</font> Loaded.");
         }
 
-        private void Obj_AI_Base_OnDoCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
+        private void Orbwalking_AfterAttack(AttackableUnit unit, AttackableUnit Target)
         {
-            if (sender.IsMe)
-                if (args.Target != null)
-                    if (args.SData.IsAutoAttack())
-                        if (args.Target.Type == GameObjectType.obj_AI_Turret || args.Target.Type == GameObjectType.obj_Turret)
-                            if (MenuProvider.Champion.Misc.getBoolValue("Auto E on Turret"))
-                                E.CastOnUnit(args.Target as Obj_AI_Base);
+            if (unit.IsMe)
+                if (Target != null)
+                    if (Target.Type == GameObjectType.obj_AI_Turret || Target.Type == GameObjectType.obj_Turret)
+                        if (MenuProvider.Champion.Misc.getBoolValue("Auto E on Turret"))
+                            E.CastOnUnit(Target as Obj_AI_Base);
         }
 
         private void Game_OnUpdate(EventArgs args)
