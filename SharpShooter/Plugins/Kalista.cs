@@ -42,7 +42,7 @@ namespace SharpShooter.Plugins
             MenuProvider.Champion.Jungleclear.addUseE();
             MenuProvider.Champion.Jungleclear.addIfMana(20);
 
-            MenuProvider.Champion.Misc.addUseKillsteal();
+            MenuProvider.Champion.Misc.addItem("Use Killsteal (With E)", true);
             MenuProvider.Champion.Misc.addItem("Use Mobsteal (With E)", true);
             MenuProvider.Champion.Misc.addItem("Use Lasthit Assist (With E)", true);
             MenuProvider.Champion.Misc.addItem("Use Soulbound Saver (With R)", true);
@@ -196,7 +196,7 @@ namespace SharpShooter.Plugins
                         }
                 }
 
-                if (MenuProvider.Champion.Misc.UseKillsteal)
+                if (MenuProvider.Champion.Misc.getBoolValue("Use Killsteal (With E)"))
                     if (E.isReadyPerfectly())
                         if (HeroManager.Enemies.Any(x => x.isKillableAndValidTarget(E.GetDamage(x), E.Range)))
                             E.Cast();
