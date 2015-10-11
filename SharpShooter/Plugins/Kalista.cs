@@ -170,7 +170,7 @@ namespace SharpShooter.Plugins
                             if (MenuProvider.Champion.Laneclear.UseE)
                                 if (E.isReadyPerfectly())
                                     if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Laneclear.IfMana))
-                                        if (MinionManager.GetMinions(E.Range).Count(x => HealthPrediction.GetHealthPrediction(x, 250) < 0 && x.isKillableAndValidTarget(E.GetDamage(x))) >= MenuProvider.Champion.Laneclear.getSliderValue("Cast E if Killable Minion Number >=").Value)
+                                        if (MinionManager.GetMinions(E.Range).Count(x => HealthPrediction.GetHealthPrediction(x, 250) > 0 && x.isKillableAndValidTarget(E.GetDamage(x))) >= MenuProvider.Champion.Laneclear.getSliderValue("Cast E if Killable Minion Number >=").Value)
                                             E.Cast();
 
                             //Jugnle
@@ -247,7 +247,7 @@ namespace SharpShooter.Plugins
                 if (MenuProvider.Champion.Misc.getBoolValue("Use Lasthit Assist (With E)"))
                     if (E.isReadyPerfectly())
                         if (Minion.isKillableAndValidTarget(E.GetDamage(Minion)))
-                            if (HealthPrediction.GetHealthPrediction(Minion, 250) < 0)
+                            if (HealthPrediction.GetHealthPrediction(Minion, 250) > 0)
                                 if (!HeroManager.Enemies.Any(x => Orbwalking.InAutoAttackRange(x)))
                                     E.Cast();
             }
