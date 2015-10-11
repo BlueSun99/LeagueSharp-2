@@ -48,7 +48,7 @@ namespace SharpShooter.Plugins
             MenuProvider.Champion.Misc.addItem("Use Soulbound Saver (With R)", true);
             MenuProvider.Champion.Misc.addItem("Auto W on Dragon or Baron (With W)", true);
             MenuProvider.Champion.Misc.addItem("Auto Balista Combo (With R)", true);
-            MenuProvider.Champion.Misc.addItem("Steal Siege minion & Super minion (With E)");
+            MenuProvider.Champion.Misc.addItem("Steal Siege minion & Super minion (With E)", true);
 
             MenuProvider.Champion.Drawings.addDrawQrange(System.Drawing.Color.DeepSkyBlue, true);
             MenuProvider.Champion.Drawings.addDrawWrange(System.Drawing.Color.DeepSkyBlue, false);
