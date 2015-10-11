@@ -46,9 +46,9 @@ namespace SharpShooter.Plugins
             MenuProvider.Champion.Misc.addItem("Use Mobsteal (With E)", true);
             MenuProvider.Champion.Misc.addItem("Use Lasthit Assist (With E)", true);
             MenuProvider.Champion.Misc.addItem("Use Soulbound Saver (With R)", true);
-            MenuProvider.Champion.Misc.addItem("Auto W (With W)", true);
-            MenuProvider.Champion.Misc.addItem("Auto Balista (With R)", true);
-            MenuProvider.Champion.Misc.addItem("Kill steal Siege minion & Super minion (With E)");
+            MenuProvider.Champion.Misc.addItem("Auto W on Dragon or Baron (With W)", true);
+            MenuProvider.Champion.Misc.addItem("Auto Balista Combo (With R)", true);
+            MenuProvider.Champion.Misc.addItem("Steal Siege minion & Super minion (With E)");
 
             MenuProvider.Champion.Drawings.addDrawQrange(System.Drawing.Color.DeepSkyBlue, true);
             MenuProvider.Champion.Drawings.addDrawWrange(System.Drawing.Color.DeepSkyBlue, false);
@@ -207,14 +207,14 @@ namespace SharpShooter.Plugins
                             E.Cast();
                 }
 
-                if (MenuProvider.Champion.Misc.getBoolValue("Kill steal Siege minion & Super minion (With E)"))
+                if (MenuProvider.Champion.Misc.getBoolValue("Steal Siege minion & Super minion (With E)"))
                 {
                     if (E.isReadyPerfectly())
                         if (MinionManager.GetMinions(E.Range).Any(x => x.isKillableAndValidTarget(E.GetDamage(x)) && (x.CharData.BaseSkinName.ToLower().Contains("siege") || x.CharData.BaseSkinName.ToLower().Contains("super"))))
                             E.Cast();
                 }
 
-                if (MenuProvider.Champion.Misc.getBoolValue("Auto W"))
+                if (MenuProvider.Champion.Misc.getBoolValue("Auto W on Dragon or Baron (With W)"))
                     if (!ObjectManager.Player.IsRecalling())
                         if (ObjectManager.Player.Position.CountEnemiesInRange(1500f) <= 0)
                             if (MenuProvider.Orbwalker.GetTarget() == null)
@@ -228,7 +228,7 @@ namespace SharpShooter.Plugins
                                         W.Cast(DragonLocation);
                             }
 
-                if (MenuProvider.Champion.Misc.getBoolValue("Auto Balista"))
+                if (MenuProvider.Champion.Misc.getBoolValue("Auto Balista Combo (With R)"))
                     if (R.isReadyPerfectly())
                     {
                         var MyBlitzcrank = HeroManager.Allies.FirstOrDefault(x => !x.IsDead && x.HasBuff("kalistacoopstrikeally") && x.ChampionName == "Blitzcrank");
