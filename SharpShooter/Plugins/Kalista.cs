@@ -49,6 +49,7 @@ namespace SharpShooter.Plugins
             MenuProvider.Champion.Misc.addItem("Auto W on Dragon or Baron (With W)", true);
             MenuProvider.Champion.Misc.addItem("Auto Balista Combo (With R)", true);
             MenuProvider.Champion.Misc.addItem("Steal Siege minion & Super minion (With E)", true);
+            MenuProvider.Champion.Misc.addItem("Auto E Harass (With E)", true);
 
             MenuProvider.Champion.Drawings.addDrawQrange(System.Drawing.Color.DeepSkyBlue, true);
             MenuProvider.Champion.Drawings.addDrawWrange(System.Drawing.Color.DeepSkyBlue, false);
@@ -67,7 +68,7 @@ namespace SharpShooter.Plugins
             DragonLocation = new Vector3(9796f, 4432f, -71f);
 
             Console.WriteLine("Sharpshooter: Kalista Loaded.");
-            Game.PrintChat("<font color = \"#00D8FF\">SharpShooter Reworked:</font> <font color = \"#FF007F\">Kalista</font> Loaded.");
+            Game.PrintChat("<font color = \"#00D8FF\"><b>SharpShooter Reworked:</b></font> <font color = \"#FF007F\">Kalista</font> Loaded.");
         }
 
         private void Game_OnUpdate(EventArgs args)
@@ -240,6 +241,12 @@ namespace SharpShooter.Plugins
                                     R.Cast();
                         }
                     }
+
+                if (MenuProvider.Champion.Misc.getBoolValue("Auto E Harass (With E)"))
+                    if (E.isReadyPerfectly())
+                        if (HeroManager.Enemies.Any(x => x.IsValidTarget(E.Range) && E.GetDamage(x) > 10))
+                            if (MinionManager.GetMinions(E.Range, MinionTypes.All, MinionTeam.NotAlly).Any(x => HealthPrediction.GetHealthPrediction(x, 100) > 0 && x.isKillableAndValidTarget(E.GetDamage(x), E.Range)))
+                                E.Cast();
             }
         }
 

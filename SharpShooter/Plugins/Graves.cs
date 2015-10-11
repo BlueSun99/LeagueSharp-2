@@ -51,7 +51,7 @@ namespace SharpShooter.Plugins
             Orbwalking.AfterAttack += Orbwalking_AfterAttack;
 
             Console.WriteLine("Sharpshooter: Graves Loaded.");
-            Game.PrintChat("<font color = \"#00D8FF\">SharpShooter Reworked:</font> <font color = \"#FF007F\">Graves</font> Loaded.");
+            Game.PrintChat("<font color = \"#00D8FF\"><b>SharpShooter Reworked:</b></font> <font color = \"#FF007F\">Graves</font> Loaded.");
         }
 
         private void Game_OnUpdate(EventArgs args)

@@ -52,7 +52,7 @@ namespace SharpShooter.Plugins
             Orbwalking.BeforeAttack += Orbwalking_BeforeAttack;
 
             Console.WriteLine("Sharpshooter: Lucian Loaded.");
-            Game.PrintChat("<font color = \"#00D8FF\">SharpShooter Reworked:</font> <font color = \"#FF007F\">Lucian</font> Loaded.");
+            Game.PrintChat("<font color = \"#00D8FF\"><b>SharpShooter Reworked:</b></font> <font color = \"#FF007F\">Lucian</font> Loaded.");
         }
 
         private void Game_OnUpdate(EventArgs args)
@@ -249,10 +249,15 @@ namespace SharpShooter.Plugins
                         }
                     }
 
-                    if (args.Slot == SpellSlot.Q || args.Slot == SpellSlot.W || args.Slot == SpellSlot.E)
+                    if (args.Slot == SpellSlot.Q || args.Slot == SpellSlot.W)
                     {
                         ObjectManager.Player.IssueOrder(GameObjectOrder.MoveTo, Game.CursorPos);
-                        Orbwalking.ResetAutoAttackTimer();
+                        Utility.DelayAction.Add(100, Orbwalking.ResetAutoAttackTimer);
+                    }
+
+                    if (args.Slot == SpellSlot.E)
+                    {
+                        Utility.DelayAction.Add(50, Orbwalking.ResetAutoAttackTimer);
                     }
                 });
             }
@@ -271,7 +276,7 @@ namespace SharpShooter.Plugins
         private void Orbwalking_BeforeAttack(Orbwalking.BeforeAttackEventArgs args)
         {
             if (args.Unit.IsMe)
-                if (ObjectManager.Player.HasBuff("LucianR"))
+                if (ObjectManager.Player.HasBuff("LucianR") || ObjectManager.Player.IsWindingUp)
                     args.Process = false;
         }
 

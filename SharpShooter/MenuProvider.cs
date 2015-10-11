@@ -113,6 +113,29 @@ namespace SharpShooter
         }
 
         /// <summary>
+        /// 이 클래스를 이용해서 이 Activator 메뉴에 접근할 수 있습니다.
+        /// </summary>
+        internal class Activator
+        {
+            /// <summary>
+            /// SupportedChampions 메뉴에 항목을 추가합니다.
+            /// </summary>
+            /// <param name="DisplayName">추가할 항목의 표기이름을 기입하십시오.</param>
+            /// <param name="Value">항목의 값을 기입하십시오.</param>
+            /// <param name="ChampUniq">이 값을 true로 지정하면 플레이어의 항목의 이름에 챔피언이름을 포함한 항목이 생성됩니다.</param>
+            internal static void addItem(string DisplayName, object Value = null, bool ChampUniq = true)
+            {
+                if (Value == null)
+                {
+                    MenuInstance.SubMenu("Activator").AddItem(new MenuItem(DisplayName, DisplayName, ChampUniq));
+                    return;
+                }
+
+                MenuInstance.SubMenu("Activator").AddItem(new MenuItem(DisplayName, DisplayName, ChampUniq)).SetValue(Value);
+            }
+        }
+
+        /// <summary>
         /// 이 클래스를 이용해서 이 SupportedChampions 메뉴에 접근할 수 있습니다.
         /// </summary>
         internal class SupportedChampions
@@ -162,7 +185,7 @@ namespace SharpShooter
             /// </summary>
             internal static void addOrbwalker()
             {
-                Orbwalker = new Orbwalking.Orbwalker(MenuInstance.SubMenu("Champion").AddSubMenu(new Menu("Orbwalker", "Orbwalker")));
+                Orbwalker = new SharpShooter.Orbwalking.Orbwalker(MenuInstance.SubMenu("Champion").AddSubMenu(new Menu("Orbwalker", "Orbwalker")));
             }
 
             /// <summary>
