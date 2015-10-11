@@ -249,11 +249,10 @@ namespace SharpShooter.Plugins
                         }
                     }
 
-                    if (args.Slot == SpellSlot.Q || args.Slot == SpellSlot.E)
+                    if (args.Slot == SpellSlot.Q || args.Slot == SpellSlot.W || args.Slot == SpellSlot.E)
                     {
-                        //do you know it? lucian can do autoattack cancel like riven
                         ObjectManager.Player.IssueOrder(GameObjectOrder.MoveTo, Game.CursorPos);
-                        Utility.DelayAction.Add(30, Orbwalking.ResetAutoAttackTimer);
+                        Orbwalking.ResetAutoAttackTimer();
                     }
                 });
             }
