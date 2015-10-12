@@ -37,14 +37,14 @@ namespace SharpShooter
             new JungleMobOffsets { BaseSkinName = "SRU_RazorbeakMini", Width = 49, Height = 2, XOffset = 36, YOffset= 20 },
             new JungleMobOffsets { BaseSkinName = "SRU_Murkwolf", Width = 74, Height = 2, XOffset = 53, YOffset= 22 },
             new JungleMobOffsets { BaseSkinName = "SRU_MurkwolfMini", Width = 55, Height = 2, XOffset = 40, YOffset= 20 },
-            new JungleMobOffsets { BaseSkinName = "SRU_ChaosMinionMelee", Width = 62, Height = 2, XOffset = 44, YOffset= 21 },
-            new JungleMobOffsets { BaseSkinName = "SRU_ChaosMinionSiege", Width = 60, Height = 2, XOffset = 44, YOffset= 21 },
-            new JungleMobOffsets { BaseSkinName = "SRU_ChaosMinionSuper", Width = 55, Height = 2, XOffset = 44, YOffset= 21 },
-            new JungleMobOffsets { BaseSkinName = "SRU_ChaosMinionRanged", Width = 62, Height = 2, XOffset = 44, YOffset= 21 },
-            new JungleMobOffsets { BaseSkinName = "SRU_OrderMinionMelee", Width = 62, Height = 2, XOffset = 44, YOffset= 21 },
-            new JungleMobOffsets { BaseSkinName = "SRU_OrderMinionSiege", Width = 60, Height = 2, XOffset = 44, YOffset= 21 },
-            new JungleMobOffsets { BaseSkinName = "SRU_OrderMinionSuper", Width = 55, Height = 2, XOffset = 44, YOffset= 21 },
-            new JungleMobOffsets { BaseSkinName = "SRU_OrderMinionRanged", Width = 62, Height = 2, XOffset = 44, YOffset= 21 }
+            //new JungleMobOffsets { BaseSkinName = "SRU_ChaosMinionMelee", Width = 62, Height = 2, XOffset = 44, YOffset= 21 },
+            //new JungleMobOffsets { BaseSkinName = "SRU_ChaosMinionSiege", Width = 60, Height = 2, XOffset = 44, YOffset= 21 },
+            //new JungleMobOffsets { BaseSkinName = "SRU_ChaosMinionSuper", Width = 55, Height = 2, XOffset = 44, YOffset= 21 },
+            //new JungleMobOffsets { BaseSkinName = "SRU_ChaosMinionRanged", Width = 62, Height = 2, XOffset = 44, YOffset= 21 },
+            //new JungleMobOffsets { BaseSkinName = "SRU_OrderMinionMelee", Width = 62, Height = 2, XOffset = 44, YOffset= 21 },
+            //new JungleMobOffsets { BaseSkinName = "SRU_OrderMinionSiege", Width = 60, Height = 2, XOffset = 44, YOffset= 21 },
+            //new JungleMobOffsets { BaseSkinName = "SRU_OrderMinionSuper", Width = 55, Height = 2, XOffset = 44, YOffset= 21 },
+            //new JungleMobOffsets { BaseSkinName = "SRU_OrderMinionRanged", Width = 62, Height = 2, XOffset = 44, YOffset= 21 }
         };
 
         public static DamageToUnitDelegate DamageToUnit
