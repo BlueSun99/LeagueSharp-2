@@ -72,7 +72,7 @@ namespace SharpShooter.Plugins
                             {
                                 if (MenuProvider.Champion.Combo.UseQ)
                                     if (Q.isReadyPerfectly())
-                                        Q.CastOnBestTarget();
+                                        Q.CastOnBestTarget(0, false, true);
 
                                 if (MenuProvider.Champion.Combo.UseW)
                                     if (W.isReadyPerfectly())
@@ -108,7 +108,7 @@ namespace SharpShooter.Plugins
                                 if (MenuProvider.Champion.Harass.UseQ)
                                     if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Harass.IfMana))
                                         if (Q.isReadyPerfectly())
-                                            Q.CastOnBestTarget();
+                                            Q.CastOnBestTarget(0, false, true);
                                 break;
                             }
                         case Orbwalking.OrbwalkingMode.LaneClear:

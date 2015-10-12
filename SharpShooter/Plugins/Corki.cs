@@ -64,7 +64,7 @@ namespace SharpShooter.Plugins
                             {
                                 if (MenuProvider.Champion.Combo.UseQ)
                                     if (Q.isReadyPerfectly())
-                                        Q.CastOnBestTarget();
+                                        Q.CastOnBestTarget(0, false, true);
 
                                 if (MenuProvider.Champion.Combo.UseE)
                                     if (E.isReadyPerfectly())
@@ -84,7 +84,7 @@ namespace SharpShooter.Plugins
                                 if (MenuProvider.Champion.Harass.UseQ)
                                     if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Harass.IfMana))
                                         if (Q.isReadyPerfectly())
-                                            Q.CastOnBestTarget();
+                                            Q.CastOnBestTarget(0, false, true);
 
                                 if (MenuProvider.Champion.Harass.UseR)
                                     if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Harass.IfMana))

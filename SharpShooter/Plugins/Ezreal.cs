@@ -72,14 +72,14 @@ namespace SharpShooter.Plugins
 
                                 if (MenuProvider.Champion.Combo.UseW)
                                     if (W.isReadyPerfectly())
-                                        W.CastOnBestTarget();
+                                        W.CastOnBestTarget(0, false, true);
 
                                 if (MenuProvider.Champion.Combo.UseR)
                                     if (R.isReadyPerfectly())
                                     {
                                         var KillableTarget = HeroManager.Enemies.FirstOrDefault(x => !Orbwalking.InAutoAttackRange(x) && x.isKillableAndValidTarget(R.GetDamage(x), R.Range));
                                         if (KillableTarget != null)
-                                            R.Cast(KillableTarget);
+                                            R.Cast(KillableTarget, false, true);
                                         R.CastIfWillHit(TargetSelector.GetTarget(R.Range, R.DamageType), 3);
                                     }
                                 break;
@@ -98,7 +98,7 @@ namespace SharpShooter.Plugins
                                 if (MenuProvider.Champion.Harass.UseW)
                                     if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Harass.IfMana))
                                         if (W.isReadyPerfectly())
-                                            W.CastOnBestTarget();
+                                            W.CastOnBestTarget(0, false, true);
                                 break;
                             }
                         case Orbwalking.OrbwalkingMode.LaneClear:

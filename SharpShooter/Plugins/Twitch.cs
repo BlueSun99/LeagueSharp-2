@@ -57,7 +57,7 @@ namespace SharpShooter.Plugins
                             {
                                 if (MenuProvider.Champion.Combo.UseW)
                                     if (W.isReadyPerfectly())
-                                        W.CastOnBestTarget();
+                                        W.CastOnBestTarget(0, false, true);
 
                                 if (MenuProvider.Champion.Combo.UseE)
                                     if (E.isReadyPerfectly())

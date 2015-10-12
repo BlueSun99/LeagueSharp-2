@@ -76,12 +76,12 @@ namespace SharpShooter.Plugins
                                         if (Q.IsCharging)
                                         {
                                             if (Q.Range >= Q.ChargedMaxRange)
-                                                Q.CastOnBestTarget();
+                                                Q.CastOnBestTarget(0, false, true);
                                             else
                                             {
                                                 var killableTarget = HeroManager.Enemies.FirstOrDefault(x => x.isKillableAndValidTarget(Q.GetDamage(x), Q.Range));
                                                 if (killableTarget != null)
-                                                    Q.Cast(killableTarget);
+                                                    Q.Cast(killableTarget, false, true);
                                             }
 
                                         }
@@ -92,7 +92,7 @@ namespace SharpShooter.Plugins
 
                                 if (MenuProvider.Champion.Combo.UseE)
                                     if (E.isReadyPerfectly())
-                                        E.CastOnBestTarget();
+                                        E.CastOnBestTarget(0, false, true);
 
                                 if (MenuProvider.Champion.Combo.UseR)
                                     if (R.isReadyPerfectly())
@@ -109,12 +109,12 @@ namespace SharpShooter.Plugins
                                         if (Q.IsCharging)
                                         {
                                             if (Q.Range >= Q.ChargedMaxRange)
-                                                Q.CastOnBestTarget();
+                                                Q.CastOnBestTarget(0f, false, true);
                                             else
                                             {
                                                 var killableTarget = HeroManager.Enemies.FirstOrDefault(x => x.isKillableAndValidTarget(Q.GetDamage(x), Q.Range));
                                                 if (killableTarget != null)
-                                                    Q.Cast(killableTarget);
+                                                    Q.Cast(killableTarget, false, true);
                                             }
                                         }
                                         else
@@ -127,7 +127,7 @@ namespace SharpShooter.Plugins
                                 if (MenuProvider.Champion.Harass.UseE)
                                     if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Harass.IfMana))
                                         if (E.isReadyPerfectly())
-                                            E.CastOnBestTarget();
+                                            E.CastOnBestTarget(0f, false, true);
                                 break;
                             }
                         case Orbwalking.OrbwalkingMode.LaneClear:

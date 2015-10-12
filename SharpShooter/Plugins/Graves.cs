@@ -72,19 +72,19 @@ namespace SharpShooter.Plugins
                                     {
                                         var QTarget = TargetSelector.GetTarget(MenuProvider.Champion.Combo.getSliderValue("Q Range").Value, Q.DamageType);
                                         if (QTarget != null)
-                                            Q.Cast(QTarget);
+                                            Q.Cast(QTarget, false, true);
                                     }
 
                                 if (MenuProvider.Champion.Combo.UseW)
                                     if (W.isReadyPerfectly())
-                                        W.CastOnBestTarget();
+                                        W.CastOnBestTarget(0, false, true);
 
                                 if (MenuProvider.Champion.Combo.UseR)
                                     if (R.isReadyPerfectly())
                                     {
                                         var RKillableTarget = HeroManager.Enemies.FirstOrDefault(x => x.isKillableAndValidTarget(R.GetDamage(x), R.Range));
                                         if (RKillableTarget != null)
-                                            R.Cast(RKillableTarget);
+                                            R.Cast(RKillableTarget, false, true);
                                         R.CastIfWillHit(TargetSelector.GetTarget(R.Range, R.DamageType), MenuProvider.Champion.Combo.getSliderValue("Cast R if Will Hit >=").Value);
                                     }
                                 break;
@@ -97,7 +97,7 @@ namespace SharpShooter.Plugins
                                         {
                                             var QTarget = TargetSelector.GetTarget(MenuProvider.Champion.Harass.getSliderValue("Q Range").Value, Q.DamageType);
                                             if (QTarget != null)
-                                                Q.Cast(QTarget);
+                                                Q.Cast(QTarget, false, true);
                                         }
                                 break;
                             }
@@ -121,11 +121,11 @@ namespace SharpShooter.Plugins
                 {
                     var QTarget = HeroManager.Enemies.OrderByDescending(x => Q.GetPrediction(x).Hitchance).FirstOrDefault(x => x.isKillableAndValidTarget(Q.GetDamage(x), Q.Range));
                     if (QTarget != null)
-                        Q.Cast(QTarget);
+                        Q.Cast(QTarget, false, true);
 
                     var RTarget = HeroManager.Enemies.OrderByDescending(x => R.GetPrediction(x).Hitchance).FirstOrDefault(x => x.isKillableAndValidTarget(R.GetDamage(x), R.Range));
                     if (RTarget != null)
-                        R.Cast(RTarget);
+                        R.Cast(RTarget, false, true);
                 }
             }
         }

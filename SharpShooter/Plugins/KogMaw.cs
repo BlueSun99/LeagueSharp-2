@@ -89,17 +89,17 @@ namespace SharpShooter.Plugins
 
                                 if (MenuProvider.Champion.Combo.UseE)
                                     if (E.isReadyPerfectly())
-                                        E.CastOnBestTarget();
+                                        E.CastOnBestTarget(0, false, true);
 
                                 if (MenuProvider.Champion.Combo.UseR)
                                     if (R.isReadyPerfectly())
                                         if (ObjectManager.Player.GetBuffCount("kogmawlivingartillerycost") < MenuProvider.Champion.Combo.getSliderValue("R Stacks Limit").Value)
-                                            R.CastOnBestTarget();
+                                            R.CastOnBestTarget(0, false, true);
                                         else
                                         {
                                             var killableTarget = HeroManager.Enemies.FirstOrDefault(x => x.isKillableAndValidTarget(R.GetDamage(x), R.Range) && R.GetPrediction(x).Hitchance >= R.MinHitChance);
                                             if (killableTarget != null)
-                                                R.Cast(killableTarget);
+                                                R.Cast(killableTarget, false, true);
                                         }
 
                                 break;
@@ -118,13 +118,13 @@ namespace SharpShooter.Plugins
                                 if (MenuProvider.Champion.Harass.UseE)
                                     if (E.isReadyPerfectly())
                                         if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Harass.IfMana))
-                                            E.CastOnBestTarget();
+                                            E.CastOnBestTarget(0, false, true);
 
                                 if (MenuProvider.Champion.Harass.UseR)
                                     if (R.isReadyPerfectly())
                                         if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Harass.IfMana))
                                             if (ObjectManager.Player.GetBuffCount("kogmawlivingartillerycost") < MenuProvider.Champion.Harass.getSliderValue("R Stacks Limit").Value)
-                                                R.CastOnBestTarget();
+                                                R.CastOnBestTarget(0, false, true);
                                 break;
                             }
                         case Orbwalking.OrbwalkingMode.LaneClear:
