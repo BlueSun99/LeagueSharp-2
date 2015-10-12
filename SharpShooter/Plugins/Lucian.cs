@@ -252,7 +252,7 @@ namespace SharpShooter.Plugins
                     if (args.Slot == SpellSlot.Q || args.Slot == SpellSlot.W)
                     {
                         ObjectManager.Player.IssueOrder(GameObjectOrder.MoveTo, Game.CursorPos);
-                        Utility.DelayAction.Add(100, Orbwalking.ResetAutoAttackTimer);
+                        Utility.DelayAction.Add(200, Orbwalking.ResetAutoAttackTimer);
                     }
                 });
             }
