@@ -91,10 +91,15 @@ namespace SharpShooter.Plugins
         private void Obj_AI_Base_OnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
         {
             if (sender.IsMe)
+            {
                 if (args.Slot == SpellSlot.R)
                     if (MenuProvider.Champion.Misc.getBoolValue("Auto Q when using R"))
                         if (Q.isReadyPerfectly())
                             Q.Cast(Game.CursorPos);
+
+                if (args.Slot == SpellSlot.Q)
+                    Utility.DelayAction.Add(250, Orbwalking.ResetAutoAttackTimer);
+            }
         }
 
         private void Orbwalking_AfterAttack(AttackableUnit unit, AttackableUnit Target)
