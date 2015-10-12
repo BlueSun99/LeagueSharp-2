@@ -254,11 +254,6 @@ namespace SharpShooter.Plugins
                         ObjectManager.Player.IssueOrder(GameObjectOrder.MoveTo, Game.CursorPos);
                         Utility.DelayAction.Add(100, Orbwalking.ResetAutoAttackTimer);
                     }
-
-                    if (args.Slot == SpellSlot.E)
-                    {
-                        Utility.DelayAction.Add(50, Orbwalking.ResetAutoAttackTimer);
-                    }
                 });
             }
         }
@@ -270,6 +265,9 @@ namespace SharpShooter.Plugins
                 {
                     if (args.Slot == SpellSlot.Q || args.Slot == SpellSlot.W || args.Slot == SpellSlot.E || args.Slot == SpellSlot.R)
                         HasPassive = true;
+
+                    if (args.Slot == SpellSlot.E)
+                        Utility.DelayAction.Add(250, Orbwalking.ResetAutoAttackTimer);
                 }
         }
 
