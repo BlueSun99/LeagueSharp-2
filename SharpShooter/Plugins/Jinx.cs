@@ -104,7 +104,7 @@ namespace SharpShooter.Plugins
                                         if (WCastTime + 1060 <= Environment.TickCount)
                                             if (!ObjectManager.Player.IsWindingUp)
                                             {
-                                                var Target = HeroManager.Enemies.FirstOrDefault(x => HealthPrediction.GetHealthPrediction(x, 250) > 0 && ObjectManager.Player.Distance(x) >= GetQRange && x.isKillableAndValidTarget(GetRDamage(x), R.Range) && R.GetPrediction(x).Hitchance >= HitChance.High);
+                                                var Target = HeroManager.Enemies.FirstOrDefault(x => HealthPrediction.GetHealthPrediction(x, 1000) > 0 && ObjectManager.Player.Distance(x) >= GetQRange && x.isKillableAndValidTarget(GetRDamage(x), R.Range) && R.GetPrediction(x).Hitchance >= HitChance.High);
                                                 if (Target != null)
                                                 {
                                                     var prediction = R.GetPrediction(Target);
@@ -175,7 +175,7 @@ namespace SharpShooter.Plugins
                             if (WCastTime + 1060 <= Environment.TickCount)
                                 if (!ObjectManager.Player.IsWindingUp)
                                 {
-                                    var Target = HeroManager.Enemies.FirstOrDefault(x => HealthPrediction.GetHealthPrediction(x, 250) > 0 && ObjectManager.Player.Distance(x) >= GetQRange && x.isKillableAndValidTarget(GetRDamage(x), R.Range) && R.GetPrediction(x).Hitchance >= HitChance.High);
+                                    var Target = HeroManager.Enemies.FirstOrDefault(x => HealthPrediction.GetHealthPrediction(x, 1000) > 0 && ObjectManager.Player.Distance(x) >= GetQRange && x.isKillableAndValidTarget(GetRDamage(x), R.Range) && R.GetPrediction(x).Hitchance >= HitChance.High);
                                     if (Target != null)
                                     {
                                         var prediction = R.GetPrediction(Target);
