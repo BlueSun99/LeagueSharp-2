@@ -36,7 +36,15 @@ namespace SharpShooter
             new JungleMobOffsets { BaseSkinName = "SRU_Razorbeak", Width = 74, Height = 2, XOffset = 53, YOffset= 22 },
             new JungleMobOffsets { BaseSkinName = "SRU_RazorbeakMini", Width = 49, Height = 2, XOffset = 36, YOffset= 20 },
             new JungleMobOffsets { BaseSkinName = "SRU_Murkwolf", Width = 74, Height = 2, XOffset = 53, YOffset= 22 },
-            new JungleMobOffsets { BaseSkinName = "SRU_MurkwolfMini", Width = 55, Height = 2, XOffset = 40, YOffset= 20 }
+            new JungleMobOffsets { BaseSkinName = "SRU_MurkwolfMini", Width = 55, Height = 2, XOffset = 40, YOffset= 20 },
+            new JungleMobOffsets { BaseSkinName = "SRU_ChaosMinionMelee", Width = 62, Height = 2, XOffset = 44, YOffset= 21 },
+            new JungleMobOffsets { BaseSkinName = "SRU_ChaosMinionSiege", Width = 60, Height = 2, XOffset = 44, YOffset= 21 },
+            new JungleMobOffsets { BaseSkinName = "SRU_ChaosMinionSuper", Width = 55, Height = 2, XOffset = 44, YOffset= 21 },
+            new JungleMobOffsets { BaseSkinName = "SRU_ChaosMinionRanged", Width = 62, Height = 2, XOffset = 44, YOffset= 21 },
+            new JungleMobOffsets { BaseSkinName = "SRU_OrderMinionMelee", Width = 62, Height = 2, XOffset = 44, YOffset= 21 },
+            new JungleMobOffsets { BaseSkinName = "SRU_OrderMinionSiege", Width = 60, Height = 2, XOffset = 44, YOffset= 21 },
+            new JungleMobOffsets { BaseSkinName = "SRU_OrderMinionSuper", Width = 55, Height = 2, XOffset = 44, YOffset= 21 },
+            new JungleMobOffsets { BaseSkinName = "SRU_OrderMinionRanged", Width = 62, Height = 2, XOffset = 44, YOffset= 21 }
         };
 
         public static DamageToUnitDelegate DamageToUnit
@@ -60,31 +68,33 @@ namespace SharpShooter
                 return;
             }
 
-            foreach (var unit in ObjectManager.Get<Obj_AI_Minion>().Where(h => h.IsValid && h.IsHPBarRendered && h.Team == GameObjectTeam.Neutral))
+            foreach (var unit in ObjectManager.Get<Obj_AI_Minion>().Where(h => h.IsValid && !h.IsAlly && h.IsHPBarRendered))
             {
-                var MobOffset = JungleMobOffsetsList.Find(x => x.BaseSkinName == unit.CharData.BaseSkinName);
-
-                if (MobOffset != null)
+                if (_damageToUnit(unit) > 10)
                 {
-                    var barPos = unit.HPBarPosition;
-                    barPos.X += MobOffset.XOffset;
-                    barPos.Y += MobOffset.YOffset;
-
-                    var damage = _damageToUnit(unit);
-
-                    if (damage > 0)
+                    var MobOffset = JungleMobOffsetsList.Find(x => x.BaseSkinName == unit.CharData.BaseSkinName);
+                    if (MobOffset != null)
                     {
-                        var HPPercent = (unit.Health / unit.MaxHealth) * 100;
-                        var HPPrecentAfterDamage = ((unit.Health - damage) / unit.MaxHealth) * 100;
-                        float DrawStartXPos = barPos.X + (MobOffset.Width * (HPPrecentAfterDamage / 100));
-                        float DrawEndXPos = barPos.X + (MobOffset.Width * (HPPercent / 100));
+                        var barPos = unit.HPBarPosition;
+                        barPos.X += MobOffset.XOffset;
+                        barPos.Y += MobOffset.YOffset;
 
-                        if (unit.Health < damage)
+                        var damage = _damageToUnit(unit);
+
+                        if (damage > 0)
                         {
-                            DrawStartXPos = barPos.X;
-                        }
+                            var HPPercent = (unit.Health / unit.MaxHealth) * 100;
+                            var HPPrecentAfterDamage = ((unit.Health - damage) / unit.MaxHealth) * 100;
+                            float DrawStartXPos = barPos.X + (MobOffset.Width * (HPPrecentAfterDamage / 100));
+                            float DrawEndXPos = barPos.X + (MobOffset.Width * (HPPercent / 100));
 
-                        Drawing.DrawLine(DrawStartXPos, barPos.Y, DrawEndXPos, barPos.Y, MobOffset.Height, FillColor);
+                            if (unit.Health < damage)
+                            {
+                                DrawStartXPos = barPos.X;
+                            }
+
+                            Drawing.DrawLine(DrawStartXPos, barPos.Y, DrawEndXPos, barPos.Y, MobOffset.Height, FillColor);
+                        }
                     }
                 }
             }
