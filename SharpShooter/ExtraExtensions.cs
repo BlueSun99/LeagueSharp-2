@@ -15,7 +15,7 @@ namespace SharpShooter
 
         internal static bool isKillableAndValidTarget(this Obj_AI_Hero Target, double CalculatedDamage, float distance = float.MaxValue)
         {
-            if (Target == null || !Target.IsValidTarget(distance) || Target.Health <= 0 || Target.HasBuffOfType(BuffType.SpellImmunity) || Target.HasBuffOfType(BuffType.SpellShield))
+            if (Target == null || !Target.IsValidTarget(distance) || Target.Health <= 0 || Target.HasBuffOfType(BuffType.SpellImmunity) || Target.HasBuffOfType(BuffType.SpellShield) || Target.CharData.BaseSkinName == "gangplankbarrel")
                 return false;
 
             if (ObjectManager.Player.HasBuff("summonerexhaust"))
@@ -29,7 +29,7 @@ namespace SharpShooter
 
         internal static bool isKillableAndValidTarget(this Obj_AI_Minion Target, double CalculatedDamage, float distance = float.MaxValue)
         {
-            if (Target == null || !Target.IsValidTarget(distance) || Target.Health <= 0 || Target.HasBuffOfType(BuffType.SpellImmunity) || Target.HasBuffOfType(BuffType.SpellShield))
+            if (Target == null || !Target.IsValidTarget(distance) || Target.Health <= 0 || Target.HasBuffOfType(BuffType.SpellImmunity) || Target.HasBuffOfType(BuffType.SpellShield) || Target.CharData.BaseSkinName == "gangplankbarrel")
                 return false;
 
             if (ObjectManager.Player.HasBuff("summonerexhaust"))
@@ -48,7 +48,7 @@ namespace SharpShooter
 
         internal static bool isKillableAndValidTarget(this Obj_AI_Base Target, double CalculatedDamage, float distance = float.MaxValue)
         {
-            if (Target == null || !Target.IsValidTarget(distance) || Target.Health <= 0 || Target.HasBuffOfType(BuffType.SpellImmunity) || Target.HasBuffOfType(BuffType.SpellShield))
+            if (Target == null || !Target.IsValidTarget(distance) || Target.Health <= 0 || Target.HasBuffOfType(BuffType.SpellImmunity) || Target.HasBuffOfType(BuffType.SpellShield) || Target.CharData.BaseSkinName == "gangplankbarrel")
                 return false;
 
             if (ObjectManager.Player.HasBuff("summonerexhaust"))
