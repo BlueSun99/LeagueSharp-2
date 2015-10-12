@@ -33,6 +33,7 @@ namespace SharpShooter.Plugins
             MenuProvider.Champion.Jungleclear.addUseW();
             MenuProvider.Champion.Jungleclear.addIfMana(20);
 
+            MenuProvider.Champion.Misc.addItem("Auto Q on immobile Target", true);
             MenuProvider.Champion.Misc.addItem("Auto E against targeted spells", true);
 
             MenuProvider.Champion.Drawings.addDrawQrange(System.Drawing.Color.DeepSkyBlue, true);
@@ -97,6 +98,14 @@ namespace SharpShooter.Plugins
                                 break;
                             }
                     }
+
+                    if (MenuProvider.Champion.Misc.getBoolValue("Auto Q on immobile Target"))
+                        if (Q.isReadyPerfectly())
+                        {
+                            var Target = HeroManager.Enemies.FirstOrDefault(x => x.IsValidTarget(Q.Range) && Q.GetPrediction(x).Hitchance >= HitChance.Immobile);
+                            if (Target != null)
+                                Q.Cast(Target);
+                        }
                 }
             }
         }
