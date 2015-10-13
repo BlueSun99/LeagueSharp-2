@@ -46,10 +46,12 @@ namespace SharpShooter.Plugins
             MenuProvider.Champion.Misc.addItem("Use Mobsteal (With E)", true);
             MenuProvider.Champion.Misc.addItem("Use Lasthit Assist (With E)", true);
             MenuProvider.Champion.Misc.addItem("Use Soulbound Saver (With R)", true);
-            MenuProvider.Champion.Misc.addItem("Auto W on Dragon or Baron (With W)", true);
             MenuProvider.Champion.Misc.addItem("Auto Balista Combo (With R)", true);
             MenuProvider.Champion.Misc.addItem("Auto Steal Siege minion & Super minion (With E)", true);
             MenuProvider.Champion.Misc.addItem("Auto E Harass (With E)", true);
+            MenuProvider.Champion.Misc.addItem("Auto W on Dragon or Baron (With W)", true);
+            MenuProvider.Champion.Misc.addItem("Cast W on Dragon", new KeyBind('J', KeyBindType.Press));
+            MenuProvider.Champion.Misc.addItem("Cast W on Baron", new KeyBind('K', KeyBindType.Press));
 
             MenuProvider.Champion.Drawings.addDrawQrange(System.Drawing.Color.DeepSkyBlue, true);
             MenuProvider.Champion.Drawings.addDrawWrange(System.Drawing.Color.DeepSkyBlue, false);
@@ -98,11 +100,14 @@ namespace SharpShooter.Plugins
                                         {
                                             var Target = TargetSelector.GetTargetNoCollision(Q);
                                             if (Target != null)
-                                                if (!E.isReadyPerfectly())
+                                                if (ObjectManager.Player.Mana - Q.ManaCost >= E.ManaCost)
                                                     Q.Cast(Target);
                                                 else
-                                            if (ObjectManager.Player.Mana - Q.ManaCost >= E.ManaCost)
-                                                    Q.Cast(Target);
+                                                {
+                                                    var killableTarget = HeroManager.Enemies.FirstOrDefault(x => x.isKillableAndValidTarget(Q.GetDamage(x), E.Range) && Q.GetPrediction(x).Hitchance >= Q.MinHitChance);
+                                                    if (killableTarget != null)
+                                                        Q.Cast(killableTarget);
+                                                }
                                         }
 
                             if (MenuProvider.Champion.Combo.UseE)
@@ -216,20 +221,6 @@ namespace SharpShooter.Plugins
                             E.Cast();
                 }
 
-                if (MenuProvider.Champion.Misc.getBoolValue("Auto W on Dragon or Baron (With W)"))
-                    if (!ObjectManager.Player.IsRecalling())
-                        if (ObjectManager.Player.Position.CountEnemiesInRange(1500f) <= 0)
-                            if (MenuProvider.Orbwalker.GetTarget() == null)
-                            {
-                                if (W.isReadyPerfectly())
-                                    if (ObjectManager.Player.Distance(BaronLocation) <= W.Range)
-                                        W.Cast(BaronLocation);
-
-                                if (W.isReadyPerfectly())
-                                    if (ObjectManager.Player.Distance(DragonLocation) <= W.Range)
-                                        W.Cast(DragonLocation);
-                            }
-
                 if (MenuProvider.Champion.Misc.getBoolValue("Auto Balista Combo (With R)"))
                     if (R.isReadyPerfectly())
                     {
@@ -250,6 +241,30 @@ namespace SharpShooter.Plugins
                             if (HeroManager.Enemies.Any(x => x.IsValidTarget(E.Range) && E.GetDamage(x) > 10))
                                 if (MinionManager.GetMinions(E.Range, MinionTypes.All, MinionTeam.NotAlly).Any(x => HealthPrediction.GetHealthPrediction(x, 250) > 0 && x.isKillableAndValidTarget(E.GetDamage(x), E.Range)))
                                     E.Cast();
+
+                if (MenuProvider.Champion.Misc.getBoolValue("Auto W on Dragon or Baron (With W)"))
+                    if (!ObjectManager.Player.IsRecalling())
+                        if (ObjectManager.Player.Position.CountEnemiesInRange(1500f) <= 0)
+                            if (MenuProvider.Orbwalker.GetTarget() == null)
+                            {
+                                if (W.isReadyPerfectly())
+                                    if (ObjectManager.Player.Distance(BaronLocation) <= W.Range)
+                                        W.Cast(BaronLocation);
+
+                                if (W.isReadyPerfectly())
+                                    if (ObjectManager.Player.Distance(DragonLocation) <= W.Range)
+                                        W.Cast(DragonLocation);
+                            }
+
+                if (MenuProvider.Champion.Misc.getKeyBindValue("Cast W on Dragon").Active)
+                    if (W.isReadyPerfectly())
+                        if (ObjectManager.Player.Distance(DragonLocation) <= W.Range)
+                            W.Cast(BaronLocation);
+
+                if (MenuProvider.Champion.Misc.getKeyBindValue("Cast W on Baron").Active)
+                    if (W.isReadyPerfectly())
+                        if (ObjectManager.Player.Distance(BaronLocation) <= W.Range)
+                            W.Cast(BaronLocation);
             }
         }
 
