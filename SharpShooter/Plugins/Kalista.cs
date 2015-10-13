@@ -246,9 +246,10 @@ namespace SharpShooter.Plugins
                 if (MenuProvider.Champion.Misc.getBoolValue("Auto E Harass (With E)"))
                     if (E.isReadyPerfectly())
                         //if (MenuProvider.Orbwalker.ActiveMode != Orbwalking.OrbwalkingMode.Combo)
-                        if (HeroManager.Enemies.Any(x => x.IsValidTarget(E.Range) && E.GetDamage(x) > 10))
-                            if (MinionManager.GetMinions(E.Range, MinionTypes.All, MinionTeam.NotAlly).Any(x => HealthPrediction.GetHealthPrediction(x, 250) > 0 && x.isKillableAndValidTarget(E.GetDamage(x), E.Range)))
-                                E.Cast();
+                        if (ObjectManager.Player.Mana - E.ManaCost >= E.ManaCost)
+                            if (HeroManager.Enemies.Any(x => x.IsValidTarget(E.Range) && E.GetDamage(x) > 10))
+                                if (MinionManager.GetMinions(E.Range, MinionTypes.All, MinionTeam.NotAlly).Any(x => HealthPrediction.GetHealthPrediction(x, 250) > 0 && x.isKillableAndValidTarget(E.GetDamage(x), E.Range)))
+                                    E.Cast();
             }
         }
 
