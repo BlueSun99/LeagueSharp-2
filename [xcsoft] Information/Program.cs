@@ -43,24 +43,24 @@ namespace _xcsoft__Information
             Menu.AddToMainMenu();
 
             Menu.AddItem(new MenuItem("switch", "Switch")).SetValue<Boolean>(true);
-            Menu.AddItem(new MenuItem("x", "X")).SetValue<Slider>(new Slider(250 ,0 , Drawing.Width));
-            Menu.AddItem(new MenuItem("y", "Y")).SetValue<Slider>(new Slider(0 ,0 , Drawing.Height));
+            Menu.AddItem(new MenuItem("x", "X")).SetValue<Slider>(new Slider(250, 0, Drawing.Width));
+            Menu.AddItem(new MenuItem("y", "Y")).SetValue<Slider>(new Slider(0, 0, Drawing.Height));
             Menu.AddItem(new MenuItem("size", "Size")).SetValue<Slider>(new Slider(11, 10, 20));
 
             Menu.Item("x").ValueChanged +=
-                delegate(object sender, OnValueChangeEventArgs eventArgs)
+                delegate (object sender, OnValueChangeEventArgs eventArgs)
                 {
                     Text.X = eventArgs.GetNewValue<Slider>().Value;
                 };
 
             Menu.Item("y").ValueChanged +=
-                delegate(object sender, OnValueChangeEventArgs eventArgs)
+                delegate (object sender, OnValueChangeEventArgs eventArgs)
                 {
                     Text.Y = eventArgs.GetNewValue<Slider>().Value;
                 };
 
             Menu.Item("size").ValueChanged +=
-                delegate(object sender, OnValueChangeEventArgs eventArgs)
+                delegate (object sender, OnValueChangeEventArgs eventArgs)
                 {
                     Text = new Render.Text(Menu.Item("x").GetValue<Slider>().Value, Menu.Item("y").GetValue<Slider>().Value, "", Menu.Item("size").GetValue<Slider>().Value, SharpDX.Color.White, Font);
                 };
@@ -72,16 +72,16 @@ namespace _xcsoft__Information
 
         static void Drawing_OnDraw(EventArgs args)
         {
-            if (!Menu.Item("switch").GetValue<Boolean>())
+            if (!Menu.Item("switch").GetValue<Boolean>() || !(Hud.SelectedUnit is Obj_AI_Hero))
                 return;
 
-            Target = TargetSelector.GetSelectedTarget() != null ? TargetSelector.GetSelectedTarget() : Player;
-            
+            Target = Hud.SelectedUnit != null ? Hud.SelectedUnit as Obj_AI_Hero : Player;
+
             var buffs = string.Empty;
 
             foreach (var buff in Target.Buffs)
             {
-                buffs += "\n" + buff.Name + "[Count: " + buff.Count + "/Duration: " + (buff.EndTime - Game.ClockTime).ToString("0.00") +"],";
+                buffs += "\n" + buff.Name + "[Count: " + buff.Count + "/Duration: " + (buff.EndTime - Game.ClockTime).ToString("0.00") + "],";
             }
 
             var Mobs = MinionManager.GetMinions(1500, MinionTypes.All, MinionTeam.NotAlly, MinionOrderTypes.MaxHealth);

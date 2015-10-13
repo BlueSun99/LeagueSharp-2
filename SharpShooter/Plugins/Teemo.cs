@@ -72,7 +72,11 @@ namespace SharpShooter.Plugins
 
                                 if (MenuProvider.Champion.Combo.UseR)
                                     if (R.isReadyPerfectly())
-                                        R.CastOnBestTarget();
+                                    {
+                                        var Target = HeroManager.Enemies.FirstOrDefault(x => x.IsValidTarget(R.Range) && !x.IsFacing(ObjectManager.Player) && !x.HasBuff("bantamtraptarget") && R.GetPrediction(x).Hitchance >= R.MinHitChance);
+                                        if (Target != null)
+                                            R.Cast(Target, false, true);
+                                    }
                                 break;
                             }
                         case Orbwalking.OrbwalkingMode.Mixed:
