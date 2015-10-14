@@ -295,7 +295,7 @@ namespace SharpShooter.Plugins
         {
             if (Unit == null)
             {
-                QSwitch(false);
+                QSwitch(true);
                 return;
             }
 
