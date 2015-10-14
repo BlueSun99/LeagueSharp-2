@@ -332,11 +332,11 @@ namespace SharpShooter.Plugins
 
                 if (MenuProvider.Champion.Drawings.getBoolValue("Draw E Damage Percent"))
                 {
-                    foreach (var Target in HeroManager.Enemies.Where(x => E.GetDamage(x) > 10))
+                    foreach (var Target in HeroManager.Enemies.Where(x => !x.IsDead && E.GetDamage(x) > 10))
                     {
                         var TargetPos = Drawing.WorldToScreen(Target.Position);
                         var DamagePercent = (E.GetDamage(Target) / Target.Health + Target.PhysicalShield) * 100;
-                        Drawing.DrawText(TargetPos.X, TargetPos.Y - 50, System.Drawing.Color.White, DamagePercent.ToString("0.00"));
+                        Drawing.DrawText(TargetPos.X, TargetPos.Y - 50, System.Drawing.Color.GreenYellow, DamagePercent.ToString("0.00"));
                     }
                 }
             }
