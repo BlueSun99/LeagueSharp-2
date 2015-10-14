@@ -28,6 +28,7 @@ namespace SharpShooter.Plugins
 
             MenuProvider.Champion.Harass.addUseQ();
             MenuProvider.Champion.Harass.addUseW(false);
+            MenuProvider.Champion.Harass.addAutoHarass();
             MenuProvider.Champion.Harass.addIfMana(60);
 
             MenuProvider.Champion.Laneclear.addUseQ();
@@ -124,6 +125,19 @@ namespace SharpShooter.Plugins
                                         }
                                 break;
                             }
+                    }
+
+                    if (MenuProvider.Champion.Harass.Auto)
+                    {
+                        if (Q.isReadyPerfectly())
+                            if (MenuProvider.Champion.Harass.UseQ)
+                                if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Harass.IfMana))
+                                    Q.CastOnBestTarget();
+
+                        if (W.isReadyPerfectly())
+                            if (MenuProvider.Champion.Harass.UseW)
+                                if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Harass.IfMana))
+                                    W.CastOnBestTarget();
                     }
                 }
             }
