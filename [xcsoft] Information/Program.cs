@@ -72,7 +72,7 @@ namespace _xcsoft__Information
 
         static void Drawing_OnDraw(EventArgs args)
         {
-            if (!Menu.Item("switch").GetValue<Boolean>() || !(Hud.SelectedUnit is Obj_AI_Hero))
+            if (!Menu.Item("switch").GetValue<Boolean>())
                 return;
 
             Target = Hud.SelectedUnit != null ? Hud.SelectedUnit as Obj_AI_Hero : Player;

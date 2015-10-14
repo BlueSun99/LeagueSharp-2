@@ -8,7 +8,7 @@ namespace SharpShooter
 
         internal static bool NeedtoUnderClocking()
         {
-            if (lasttick + 100 <= Environment.TickCount)
+            if (lasttick + 50 <= Environment.TickCount)
             {
                 lasttick = Environment.TickCount;
                 return false;

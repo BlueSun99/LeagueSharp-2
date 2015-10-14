@@ -60,6 +60,7 @@ namespace SharpShooter.Plugins
             MenuProvider.Champion.Drawings.addDrawRrange(System.Drawing.Color.DeepSkyBlue, true);
             MenuProvider.Champion.Drawings.addDamageIndicator(GetComboDamage);
             MenuProvider.Champion.Drawings.addDamageIndicatorForJungle(GetJungleDamage);
+            MenuProvider.Champion.Drawings.addItem("Draw E Damage Percent", true);
             MenuProvider.Champion.Drawings.addItem("DebugMode", false);
 
             Game.OnUpdate += Game_OnUpdate;
@@ -328,6 +329,16 @@ namespace SharpShooter.Plugins
 
                 if (MenuProvider.Champion.Drawings.DrawRrange.Active && R.isReadyPerfectly())
                     Render.Circle.DrawCircle(ObjectManager.Player.Position, R.Range, MenuProvider.Champion.Drawings.DrawRrange.Color);
+
+                if (MenuProvider.Champion.Drawings.getBoolValue("Draw E Damage Percent"))
+                {
+                    foreach (var Target in HeroManager.Enemies.Where(x => E.GetDamage(x) > 10))
+                    {
+                        var TargetPos = Drawing.WorldToScreen(Target.Position);
+                        var DamagePercent = (E.GetDamage(Target) / Target.Health + Target.PhysicalShield) * 100;
+                        Drawing.DrawText(TargetPos.X, TargetPos.Y - 20, System.Drawing.Color.YellowGreen, "E Damage:" + DamagePercent.ToString("0.00"));
+                    }
+                }
             }
         }
 
