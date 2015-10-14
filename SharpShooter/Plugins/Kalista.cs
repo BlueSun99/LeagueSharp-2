@@ -264,7 +264,7 @@ namespace SharpShooter.Plugins
                 if (MenuProvider.Champion.Misc.getKeyBindValue("Cast W on Dragon").Active)
                     if (W.isReadyPerfectly())
                         if (ObjectManager.Player.Distance(DragonLocation) <= W.Range)
-                            W.Cast(BaronLocation);
+                            W.Cast(DragonLocation);
 
                 if (MenuProvider.Champion.Misc.getKeyBindValue("Cast W on Baron").Active)
                     if (W.isReadyPerfectly())
