@@ -58,9 +58,9 @@ namespace SharpShooter.Plugins
             MenuProvider.Champion.Drawings.addDrawWrange(System.Drawing.Color.DeepSkyBlue, false);
             MenuProvider.Champion.Drawings.addDrawErange(System.Drawing.Color.DeepSkyBlue, false);
             MenuProvider.Champion.Drawings.addDrawRrange(System.Drawing.Color.DeepSkyBlue, true);
+            MenuProvider.Champion.Drawings.addItem("Draw E Damage Percent", true);
             MenuProvider.Champion.Drawings.addDamageIndicator(GetComboDamage);
             MenuProvider.Champion.Drawings.addDamageIndicatorForJungle(GetJungleDamage);
-            MenuProvider.Champion.Drawings.addItem("Draw E Damage Percent", true);
             MenuProvider.Champion.Drawings.addItem("DebugMode", false);
 
             Game.OnUpdate += Game_OnUpdate;
