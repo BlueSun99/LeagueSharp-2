@@ -116,7 +116,7 @@ namespace SharpShooter.Plugins
 
                                 if (MenuProvider.Champion.Combo.UseE)
                                     if (E.isReadyPerfectly())
-                                        if (HeroManager.Enemies.Any(x => HealthPrediction.GetHealthPrediction(x, 250) > 0 && x.isKillableAndValidTarget(E.GetDamage(x), E.Range)))
+                                        if (HeroManager.Enemies.Any(x => HealthPrediction.GetHealthPrediction(x, 500) > 0 && x.isKillableAndValidTarget(E.GetDamage(x), E.Range)))
                                             E.Cast();
 
                                 break;
@@ -182,7 +182,7 @@ namespace SharpShooter.Plugins
                                 if (MenuProvider.Champion.Laneclear.UseE)
                                     if (E.isReadyPerfectly())
                                         if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Laneclear.IfMana))
-                                            if (MinionManager.GetMinions(E.Range).Count(x => HealthPrediction.GetHealthPrediction(x, 250) > 0 && x.isKillableAndValidTarget(E.GetDamage(x))) >= MenuProvider.Champion.Laneclear.getSliderValue("Cast E if Killable Minion Number >=").Value)
+                                            if (MinionManager.GetMinions(E.Range).Count(x => HealthPrediction.GetHealthPrediction(x, 500) > 0 && x.isKillableAndValidTarget(E.GetDamage(x))) >= MenuProvider.Champion.Laneclear.getSliderValue("Cast E if Killable Minion Number >=").Value)
                                                 E.Cast();
 
                                 //Jugnle
@@ -199,7 +199,7 @@ namespace SharpShooter.Plugins
                                 if (MenuProvider.Champion.Jungleclear.UseE)
                                     if (E.isReadyPerfectly())
                                         if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Jungleclear.IfMana))
-                                            if (MinionManager.GetMinions(E.Range, MinionTypes.All, MinionTeam.Neutral).Any(x => HealthPrediction.GetHealthPrediction(x, 250) > 0 && x.isKillableAndValidTarget(E.GetDamage(x))))
+                                            if (MinionManager.GetMinions(E.Range, MinionTypes.All, MinionTeam.Neutral).Any(x => HealthPrediction.GetHealthPrediction(x, 500) > 0 && x.isKillableAndValidTarget(E.GetDamage(x))))
                                                 E.Cast();
 
                                 break;
@@ -209,20 +209,20 @@ namespace SharpShooter.Plugins
 
                 if (MenuProvider.Champion.Misc.getBoolValue("Use Killsteal (With E)"))
                     if (E.isReadyPerfectly())
-                        if (HeroManager.Enemies.Any(x => HealthPrediction.GetHealthPrediction(x, 250) > 0 && x.isKillableAndValidTarget(E.GetDamage(x), E.Range)))
+                        if (HeroManager.Enemies.Any(x => HealthPrediction.GetHealthPrediction(x, 500) > 0 && x.isKillableAndValidTarget(E.GetDamage(x), E.Range)))
                             E.Cast();
 
                 if (MenuProvider.Champion.Misc.getBoolValue("Use Mobsteal (With E)"))
                 {
                     if (E.isReadyPerfectly())
-                        if (MinionManager.GetMinions(E.Range, MinionTypes.All, MinionTeam.Neutral).Any(x => HealthPrediction.GetHealthPrediction(x, 250) > 0 && x.isKillableAndValidTarget(E.GetDamage(x))))
+                        if (MinionManager.GetMinions(E.Range, MinionTypes.All, MinionTeam.Neutral).Any(x => HealthPrediction.GetHealthPrediction(x, 500) > 0 && x.isKillableAndValidTarget(E.GetDamage(x))))
                             E.Cast();
                 }
 
                 if (MenuProvider.Champion.Misc.getBoolValue("Auto Steal Siege minion & Super minion (With E)"))
                 {
                     if (E.isReadyPerfectly())
-                        if (MinionManager.GetMinions(E.Range).Any(x => HealthPrediction.GetHealthPrediction(x, 250) > 0 && x.isKillableAndValidTarget(E.GetDamage(x)) && (x.CharData.BaseSkinName.ToLower().Contains("siege") || x.CharData.BaseSkinName.ToLower().Contains("super"))))
+                        if (MinionManager.GetMinions(E.Range).Any(x => HealthPrediction.GetHealthPrediction(x, 500) > 0 && x.isKillableAndValidTarget(E.GetDamage(x)) && (x.CharData.BaseSkinName.ToLower().Contains("siege") || x.CharData.BaseSkinName.ToLower().Contains("super"))))
                             E.Cast();
                 }
 
@@ -244,7 +244,7 @@ namespace SharpShooter.Plugins
                         if (!(MenuProvider.Champion.Misc.getBoolValue("^ Don't do this if in ComboMode") && MenuProvider.Orbwalker.ActiveMode == Orbwalking.OrbwalkingMode.Combo))
                             if (ObjectManager.Player.Mana - E.ManaCost >= E.ManaCost)
                                 if (HeroManager.Enemies.Any(x => x.IsValidTarget(E.Range) && E.GetDamage(x) > 10))
-                                    if (MinionManager.GetMinions(E.Range, MinionTypes.All, MinionTeam.NotAlly).Any(x => HealthPrediction.GetHealthPrediction(x, 250) > 0 && x.isKillableAndValidTarget(E.GetDamage(x), E.Range)))
+                                    if (MinionManager.GetMinions(E.Range, MinionTypes.All, MinionTeam.NotAlly).Any(x => HealthPrediction.GetHealthPrediction(x, 500) > 0 && x.isKillableAndValidTarget(E.GetDamage(x), E.Range)))
                                         E.Cast();
 
                 if (MenuProvider.Champion.Misc.getBoolValue("Auto W on Dragon or Baron (With W)"))
@@ -281,7 +281,7 @@ namespace SharpShooter.Plugins
                 if (MenuProvider.Champion.Misc.getBoolValue("Use Lasthit Assist (With E)"))
                     if (E.isReadyPerfectly())
                         if (Minion.isKillableAndValidTarget(E.GetDamage(Minion)))
-                            if (HealthPrediction.GetHealthPrediction(Minion, 250) > 0)
+                            if (HealthPrediction.GetHealthPrediction(Minion, 500) > 0)
                                 if (!HeroManager.Enemies.Any(x => Orbwalking.InAutoAttackRange(x)))
                                     E.Cast();
             }
@@ -292,7 +292,7 @@ namespace SharpShooter.Plugins
             if (!ObjectManager.Player.IsDead)
                 if (sender.Owner.IsMe)
                     if (args.Slot == SpellSlot.E)
-                        if (ELastCastTime > Utils.TickCount - 500)
+                        if (ELastCastTime > Utils.TickCount - 700)
                             args.Process = false;
                         else
                             ELastCastTime = Utils.TickCount;
