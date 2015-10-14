@@ -37,8 +37,11 @@ namespace SharpShooter
 
             BuffInstance dragonSlayerBuff = ObjectManager.Player.GetBuff("s5test_dragonslayerbuff");
             if (dragonSlayerBuff != null)
+            {
                 if (dragonSlayerBuff.Count >= 4)
                     CalculatedDamage += dragonSlayerBuff.Count == 5 ? CalculatedDamage * 0.30 : CalculatedDamage * 0.15;
+                CalculatedDamage *= 1 - (dragonSlayerBuff.Count * 0.07);
+            }
 
             if (Target.CharData.BaseSkinName.ToLowerInvariant().Contains("baron") && ObjectManager.Player.HasBuff("barontarget"))
                 CalculatedDamage *= 0.5;
@@ -59,8 +62,11 @@ namespace SharpShooter
 
             BuffInstance dragonSlayerBuff = ObjectManager.Player.GetBuff("s5test_dragonslayerbuff");
             if (dragonSlayerBuff != null)
+            {
                 if (dragonSlayerBuff.Count >= 4)
                     CalculatedDamage += dragonSlayerBuff.Count == 5 ? CalculatedDamage * 0.30 : CalculatedDamage * 0.15;
+                CalculatedDamage *= 1 - (dragonSlayerBuff.Count * 0.07);
+            }
 
             if (Target.CharData.BaseSkinName.ToLowerInvariant().Contains("baron") && ObjectManager.Player.HasBuff("barontarget"))
                 CalculatedDamage *= 0.5;
