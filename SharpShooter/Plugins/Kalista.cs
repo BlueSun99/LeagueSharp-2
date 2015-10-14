@@ -346,7 +346,15 @@ namespace SharpShooter.Plugins
 
         private float GetComboDamage(Obj_AI_Base enemy)
         {
-            return E.isReadyPerfectly() ? E.GetDamage(enemy) : 0;
+            float damage = E.GetDamage(enemy);
+
+            if (ObjectManager.Player.HasBuff("summonerexhaust"))
+                damage *= 0.6f;
+
+            if (enemy.HasBuff("FerociousHowl"))
+                damage *= 0.3f;
+
+            return E.isReadyPerfectly() ? damage : 0;
         }
 
         private float GetJungleDamage(Obj_AI_Minion enemy)
@@ -354,7 +362,24 @@ namespace SharpShooter.Plugins
             if (MenuProvider.Champion.Drawings.getBoolValue("DebugMode"))
                 return 50000;
 
-            return E.isReadyPerfectly() ? E.GetDamage(enemy) : 0;
+            float damage = E.GetDamage(enemy);
+            if (ObjectManager.Player.HasBuff("summonerexhaust"))
+                damage *= 0.6f;
+
+            BuffInstance dragonSlayerBuff = ObjectManager.Player.GetBuff("s5test_dragonslayerbuff");
+            if (dragonSlayerBuff != null)
+            {
+                if (dragonSlayerBuff.Count >= 4)
+                    damage += dragonSlayerBuff.Count == 5 ? damage * 0.30f : damage * 0.15f;
+
+                if (enemy.CharData.BaseSkinName.ToLowerInvariant().Contains("dragon"))
+                    damage *= 1 - (dragonSlayerBuff.Count * 0.07f);
+            }
+
+            if (enemy.CharData.BaseSkinName.ToLowerInvariant().Contains("baron") && ObjectManager.Player.HasBuff("barontarget"))
+                damage *= 0.5f;
+
+            return E.isReadyPerfectly() ? damage : 0;
         }
     }
 }
