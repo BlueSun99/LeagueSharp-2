@@ -33,17 +33,17 @@ namespace SharpShooter.Plugins
             MenuProvider.Champion.Harass.addUseE();
             MenuProvider.Champion.Harass.addIfMana(60);
 
-            MenuProvider.Champion.Laneclear.addUseQ(false);
-            MenuProvider.Champion.Laneclear.addUseW(false);
-            MenuProvider.Champion.Laneclear.addUseE(false);
-            MenuProvider.Champion.Laneclear.addUseR(false);
-            MenuProvider.Champion.Laneclear.addIfMana(60);
+            //MenuProvider.Champion.Laneclear.addUseQ(false);
+            //MenuProvider.Champion.Laneclear.addUseW(false);
+            //MenuProvider.Champion.Laneclear.addUseE(false);
+            //MenuProvider.Champion.Laneclear.addUseR(false);
+            //MenuProvider.Champion.Laneclear.addIfMana(60);
 
-            MenuProvider.Champion.Jungleclear.addUseQ();
-            MenuProvider.Champion.Jungleclear.addUseW();
-            MenuProvider.Champion.Jungleclear.addUseE();
-            MenuProvider.Champion.Jungleclear.addUseR();
-            MenuProvider.Champion.Jungleclear.addIfMana(20);
+            //MenuProvider.Champion.Jungleclear.addUseQ();
+            //MenuProvider.Champion.Jungleclear.addUseW();
+            //MenuProvider.Champion.Jungleclear.addUseE();
+            //MenuProvider.Champion.Jungleclear.addUseR();
+            //MenuProvider.Champion.Jungleclear.addIfMana(20);
 
             MenuProvider.Champion.Misc.addUseAntiGapcloser();
             MenuProvider.Champion.Misc.addUseInterrupter();
@@ -52,6 +52,8 @@ namespace SharpShooter.Plugins
             MenuProvider.Champion.Drawings.addDrawWrange(System.Drawing.Color.DeepSkyBlue, true);
             MenuProvider.Champion.Drawings.addDrawErange(System.Drawing.Color.DeepSkyBlue, false);
             MenuProvider.Champion.Drawings.addDamageIndicator(GetComboDamage);
+
+            MenuProvider.Champion.addItem("Work In Progress");
 
             Game.OnUpdate += Game_OnUpdate;
             Drawing.OnDraw += Drawing_OnDraw;
@@ -118,29 +120,56 @@ namespace SharpShooter.Plugins
                                             E.CastOnBestTarget();
                                 break;
                             }
-                        case Orbwalking.OrbwalkingMode.LaneClear:
-                            {
-                                //Laneclear
-                                if (MenuProvider.Champion.Laneclear.UseW)
-                                    if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Laneclear.IfMana))
-                                        if (Q.isReadyPerfectly())
-                                        {
-                                            var FarmLocation = W.GetLineFarmLocation(MinionManager.GetMinions(W.Range));
-                                            if (FarmLocation.MinionsHit >= 1)
-                                                W.Cast(FarmLocation.Position);
-                                        }
+                        //case Orbwalking.OrbwalkingMode.LaneClear:
+                        //    {
+                        //        //Laneclear
+                        //        if (MenuProvider.Champion.Laneclear.UseW)
+                        //            if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Laneclear.IfMana))
+                        //                if (Q.isReadyPerfectly())
+                        //                {
+                        //                    var FarmLocation = W.GetLineFarmLocation(MinionManager.GetMinions(W.Range));
+                        //                    if (FarmLocation.MinionsHit >= 1)
+                        //                        W.Cast(FarmLocation.Position);
+                        //                }
 
-                                //Jungleclear
-                                if (MenuProvider.Champion.Jungleclear.UseW)
-                                    if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Jungleclear.IfMana))
-                                        if (W.isReadyPerfectly())
-                                        {
-                                            var Target = MinionManager.GetMinions(600, MinionTypes.All, MinionTeam.Neutral).FirstOrDefault(x => x.IsValidTarget(600) && W.GetPrediction(x).Hitchance >= HitChance.High);
-                                            if (Target != null)
-                                                W.Cast(Target);
-                                        }
-                                break;
-                            }
+                        //        //Jungleclear
+                        //        if (MenuProvider.Champion.Jungleclear.UseQ)
+                        //            if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Jungleclear.IfMana))
+                        //                if (Q.isReadyPerfectly())
+                        //                {
+                        //                    var Target = MinionManager.GetMinions(600, MinionTypes.All, MinionTeam.Neutral).FirstOrDefault(x => x.IsValidTarget(600) && Q.GetPrediction(x).Hitchance >= HitChance.High);
+                        //                    if (Target != null)
+                        //                        Q.Cast(Target);
+                        //                }
+
+                        //        if (MenuProvider.Champion.Jungleclear.UseW)
+                        //            if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Jungleclear.IfMana))
+                        //                if (W.isReadyPerfectly())
+                        //                {
+                        //                    var Target = MinionManager.GetMinions(600, MinionTypes.All, MinionTeam.Neutral).FirstOrDefault(x => x.IsValidTarget(600));
+                        //                    if (Target != null)
+                        //                        W.Cast(Target);
+                        //                }
+
+                        //        if (MenuProvider.Champion.Jungleclear.UseE)
+                        //            if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Jungleclear.IfMana))
+                        //                if (E.isReadyPerfectly())
+                        //                {
+                        //                    var Target = MinionManager.GetMinions(600, MinionTypes.All, MinionTeam.Neutral).FirstOrDefault(x => x.IsValidTarget(600));
+                        //                    if (Target != null)
+                        //                        E.Cast(Target);
+                        //                }
+
+                        //        if (MenuProvider.Champion.Jungleclear.UseR)
+                        //            if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Jungleclear.IfMana))
+                        //                if (R.isReadyPerfectly())
+                        //                {
+                        //                    var Target = MinionManager.GetMinions(600, MinionTypes.All, MinionTeam.Neutral).FirstOrDefault(x => x.IsValidTarget(600));
+                        //                    if (Target != null)
+                        //                        R.Cast();
+                        //                }
+                        //        break;
+                        //    }
                     }
                 }
             }
