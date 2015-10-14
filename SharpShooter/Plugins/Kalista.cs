@@ -336,7 +336,7 @@ namespace SharpShooter.Plugins
                     {
                         var TargetPos = Drawing.WorldToScreen(Target.Position);
                         var DamagePercent = (E.GetDamage(Target) / Target.Health + Target.PhysicalShield) * 100;
-                        Drawing.DrawText(TargetPos.X, TargetPos.Y - 50, System.Drawing.Color.GreenYellow, DamagePercent.ToString("0.00"));
+                        Drawing.DrawText(TargetPos.X, TargetPos.Y - 100, System.Drawing.Color.GreenYellow, DamagePercent.ToString("0.00"));
                     }
                 }
             }
