@@ -155,8 +155,9 @@ namespace SharpShooter.Plugins
             if (MenuProvider.Champion.Misc.UseAntiGapcloser)
                 if (gapcloser.End.Distance(ObjectManager.Player.Position) <= 200)
                     if (gapcloser.Sender.IsValidTarget())
-                        if (E.isReadyPerfectly())
-                            E.Cast(ObjectManager.Player.Position.Extend(gapcloser.Sender.Position, -E.Range));
+                        if (gapcloser.Sender.ChampionName.ToLowerInvariant() != "masteryi")
+                            if (E.isReadyPerfectly())
+                                E.Cast(ObjectManager.Player.Position.Extend(gapcloser.Sender.Position, -E.Range));
         }
 
         private void Drawing_OnDraw(EventArgs args)
