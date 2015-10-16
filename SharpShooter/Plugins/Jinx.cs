@@ -47,7 +47,6 @@ namespace SharpShooter.Plugins
 
             MenuProvider.Champion.Misc.addUseAntiGapcloser();
             MenuProvider.Champion.Misc.addUseInterrupter();
-
             MenuProvider.Champion.Misc.addItem("Auto E on Immobile Target", true);
             MenuProvider.Champion.Misc.addItem("Auto R on Killable Target", true);
             MenuProvider.Champion.Drawings.addDrawQrange(System.Drawing.Color.DeepSkyBlue, false);
@@ -183,7 +182,7 @@ namespace SharpShooter.Plugins
                                     if (Q.isReadyPerfectly())
                                         if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Laneclear.IfMana))
                                         {
-                                            var Target = MinionManager.GetMinions(float.MaxValue).FirstOrDefault(x => x.isKillableAndValidTarget(ObjectManager.Player.GetAutoAttackDamage(x, true) + Q.GetDamage(x)) && x.IsValidTarget(ObjectManager.Player.GetRealAutoAttackRange(x, GetQRange)));
+                                            var Target = MinionManager.GetMinions(float.MaxValue).FirstOrDefault(x => x.isKillableAndValidTarget(ObjectManager.Player.GetAutoAttackDamage(x, false) + Q.GetDamage(x)) && x.IsValidTarget(ObjectManager.Player.GetRealAutoAttackRange(x, GetQRange)));
                                             if (Target != null)
                                             {
                                                 QSwitch(true);
@@ -213,7 +212,7 @@ namespace SharpShooter.Plugins
                                     if (Q.isReadyPerfectly())
                                         if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Lasthit.IfMana))
                                         {
-                                            var Target = MinionManager.GetMinions(float.MaxValue).FirstOrDefault(x => x.isKillableAndValidTarget(ObjectManager.Player.GetAutoAttackDamage(x, true) + Q.GetDamage(x)) && x.IsValidTarget(ObjectManager.Player.GetRealAutoAttackRange(x, GetQRange)) && !x.IsValidTarget(ObjectManager.Player.GetRealAutoAttackRange(x, defaultRange)));
+                                            var Target = MinionManager.GetMinions(float.MaxValue).FirstOrDefault(x => x.isKillableAndValidTarget(ObjectManager.Player.GetAutoAttackDamage(x, false) + Q.GetDamage(x)) && x.IsValidTarget(ObjectManager.Player.GetRealAutoAttackRange(x, GetQRange)) && !x.IsValidTarget(ObjectManager.Player.GetRealAutoAttackRange(x, defaultRange)));
                                             if (Target != null)
                                             {
                                                 QSwitch(true);
