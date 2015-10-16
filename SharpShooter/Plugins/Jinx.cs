@@ -95,7 +95,7 @@ namespace SharpShooter.Plugins
                         if (MenuProvider.Champion.Jungleclear.UseQ)
                             if (MinionManager.GetMinions(float.MaxValue, MinionTypes.All, MinionTeam.Neutral).Any(x => x.NetworkId == args.Target.NetworkId))
                                 if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Jungleclear.IfMana))
-                                    QSwitch(MinionManager.GetMinions(float.MaxValue, MinionTypes.All, MinionTeam.Neutral).Count(x => x.IsValidTarget(200, true, x.ServerPosition)) >= 3);
+                                    QSwitch(MinionManager.GetMinions(float.MaxValue, MinionTypes.All, MinionTeam.Neutral).Count(x => x.IsValidTarget(200, true, x.ServerPosition)) >= 2);
                                 else
                                     QSwitch(false);
                         break;

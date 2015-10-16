@@ -53,8 +53,6 @@ namespace SharpShooter.Plugins
             MenuProvider.Champion.Drawings.addDrawErange(System.Drawing.Color.DeepSkyBlue, false);
             MenuProvider.Champion.Drawings.addDamageIndicator(GetComboDamage);
 
-            MenuProvider.Champion.addItem("Work In Progress");
-
             Game.OnUpdate += Game_OnUpdate;
             Drawing.OnDraw += Drawing_OnDraw;
             AntiGapcloser.OnEnemyGapcloser += AntiGapcloser_OnEnemyGapcloser;
