@@ -38,6 +38,7 @@ namespace SharpShooter.Plugins
             MenuProvider.Champion.Drawings.addDrawWrange(System.Drawing.Color.DeepSkyBlue, false);
             MenuProvider.Champion.Drawings.addDrawErange(System.Drawing.Color.DeepSkyBlue, false);
             MenuProvider.Champion.Drawings.addDrawRrange(System.Drawing.Color.DeepSkyBlue, false);
+            MenuProvider.Champion.Drawings.addItem("Draw E Killable", new Circle(true, System.Drawing.Color.GreenYellow));
             MenuProvider.Champion.Drawings.addItem("Draw R Killable", new Circle(true, System.Drawing.Color.GreenYellow));
             MenuProvider.Champion.Drawings.addDamageIndicator(GetComboDamage);
 
@@ -84,7 +85,7 @@ namespace SharpShooter.Plugins
                                 if (MenuProvider.Champion.Combo.UseR)
                                     if (R.isReadyPerfectly())
                                     {
-                                        var Target = HeroManager.Enemies.OrderByDescending(x => x.Health).FirstOrDefault(x => x.isKillableAndValidTarget(R.GetDamage(x), R.Range) && !x.isWillDeadByTristanaE());
+                                        var Target = HeroManager.Enemies.OrderByDescending(x => x.Health).FirstOrDefault(x => x.isKillableAndValidTarget(R.GetDamage(x), R.Range) && !x.isWillDieByTristanaE());
                                         if (Target != null)
                                             R.CastOnUnit(Target);
                                     }
@@ -116,7 +117,7 @@ namespace SharpShooter.Plugins
 
                 if (MenuProvider.Champion.Misc.UseKillsteal)
                 {
-                    var Target = HeroManager.Enemies.OrderByDescending(x => x.Health).FirstOrDefault(x => x.isKillableAndValidTarget(R.GetDamage(x), R.Range) && !x.isWillDeadByTristanaE());
+                    var Target = HeroManager.Enemies.OrderByDescending(x => x.Health).FirstOrDefault(x => x.isKillableAndValidTarget(R.GetDamage(x), R.Range) && !x.isWillDieByTristanaE());
                     if (Target != null)
                         R.CastOnUnit(Target);
                 }
@@ -182,8 +183,18 @@ namespace SharpShooter.Plugins
                 if (MenuProvider.Champion.Drawings.DrawRrange.Active && R.isReadyPerfectly())
                     Render.Circle.DrawCircle(ObjectManager.Player.Position, R.Range, MenuProvider.Champion.Drawings.DrawRrange.Color);
 
+                var DrawEKillable = MenuProvider.Champion.Drawings.getCircleValue("Draw E Killable");
+                if (DrawEKillable.Active)
+                    foreach (var Target in HeroManager.Enemies.Where(x => x.IsValidTarget() && x.isWillDieByTristanaE()))
+                    {
+
+                        var TargetPos = Drawing.WorldToScreen(Target.Position);
+                        Render.Circle.DrawCircle(Target.Position, Target.BoundingRadius, DrawEKillable.Color);
+                        Drawing.DrawText(TargetPos.X, TargetPos.Y - 50, DrawEKillable.Color, "will die by E");
+                    }
+
                 var DrawRKillable = MenuProvider.Champion.Drawings.getCircleValue("Draw R Killable");
-                if (DrawRKillable.Active && R.Level > 0)
+                if (DrawRKillable.Active && R.isReadyPerfectly())
                     foreach (var Target in HeroManager.Enemies.Where(x => x.isKillableAndValidTarget(R.GetDamage(x))))
                     {
                         var TargetPos = Drawing.WorldToScreen(Target.Position);

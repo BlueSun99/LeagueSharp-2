@@ -96,7 +96,7 @@ namespace SharpShooter
             return (result - Game.Time);
         }
 
-        internal static bool isWillDeadByTristanaE(this Obj_AI_Base target)
+        internal static bool isWillDieByTristanaE(this Obj_AI_Base target)
         {
             if (ObjectManager.Player.ChampionName == "Tristana")
                 if (target.HasBuff("tristanaecharge"))
