@@ -53,6 +53,7 @@ namespace SharpShooter
             SupportedChampions.addItem("14. Varus");
             SupportedChampions.addItem("15. Vayne");
             SupportedChampions.addItem("16. Teemo");
+            SupportedChampions.addItem("17. Ryze");
 
             MenuInstance.AddToMainMenu();
 

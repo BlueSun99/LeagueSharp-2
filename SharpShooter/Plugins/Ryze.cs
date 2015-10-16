@@ -6,11 +6,11 @@ using LeagueSharp.Common;
 
 namespace SharpShooter.Plugins
 {
-    public class _Ryze
+    public class Ryze
     {
         private Spell Q, W, E, R, QNoCollision;
 
-        public _Ryze()
+        public Ryze()
         {
             Q = new Spell(SpellSlot.Q, 900f, TargetSelector.DamageType.Magical) { MinHitChance = HitChance.High };
             QNoCollision = new Spell(SpellSlot.Q, 900f, TargetSelector.DamageType.Magical) { MinHitChance = HitChance.Low };
@@ -33,17 +33,15 @@ namespace SharpShooter.Plugins
             MenuProvider.Champion.Harass.addUseE();
             MenuProvider.Champion.Harass.addIfMana(60);
 
-            //MenuProvider.Champion.Laneclear.addUseQ(false);
-            //MenuProvider.Champion.Laneclear.addUseW(false);
-            //MenuProvider.Champion.Laneclear.addUseE(false);
-            //MenuProvider.Champion.Laneclear.addUseR(false);
-            //MenuProvider.Champion.Laneclear.addIfMana(60);
+            MenuProvider.Champion.Laneclear.addUseQ(false);
+            MenuProvider.Champion.Laneclear.addUseW(false);
+            MenuProvider.Champion.Laneclear.addUseE(false);
+            MenuProvider.Champion.Laneclear.addIfMana(60);
 
-            //MenuProvider.Champion.Jungleclear.addUseQ();
-            //MenuProvider.Champion.Jungleclear.addUseW();
-            //MenuProvider.Champion.Jungleclear.addUseE();
-            //MenuProvider.Champion.Jungleclear.addUseR();
-            //MenuProvider.Champion.Jungleclear.addIfMana(20);
+            MenuProvider.Champion.Jungleclear.addUseQ();
+            MenuProvider.Champion.Jungleclear.addUseW();
+            MenuProvider.Champion.Jungleclear.addUseE();
+            MenuProvider.Champion.Jungleclear.addIfMana(20);
 
             MenuProvider.Champion.Misc.addUseAntiGapcloser();
             MenuProvider.Champion.Misc.addUseInterrupter();
@@ -118,56 +116,65 @@ namespace SharpShooter.Plugins
                                             E.CastOnBestTarget();
                                 break;
                             }
-                        //case Orbwalking.OrbwalkingMode.LaneClear:
-                        //    {
-                        //        //Laneclear
-                        //        if (MenuProvider.Champion.Laneclear.UseW)
-                        //            if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Laneclear.IfMana))
-                        //                if (Q.isReadyPerfectly())
-                        //                {
-                        //                    var FarmLocation = W.GetLineFarmLocation(MinionManager.GetMinions(W.Range));
-                        //                    if (FarmLocation.MinionsHit >= 1)
-                        //                        W.Cast(FarmLocation.Position);
-                        //                }
+                        case Orbwalking.OrbwalkingMode.LaneClear:
+                            {
+                                //Laneclear
+                                if (MenuProvider.Champion.Laneclear.UseQ)
+                                    if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Laneclear.IfMana))
+                                        if (Q.isReadyPerfectly())
+                                        {
+                                            var Target = MinionManager.GetMinions(Q.Range).FirstOrDefault(x => x.isKillableAndValidTarget(Q.GetDamage(x), Q.Range) && Q.GetPrediction(x).Hitchance >= Q.MinHitChance);
+                                            if (Target != null)
+                                                Q.Cast(Target);
+                                        }
 
-                        //        //Jungleclear
-                        //        if (MenuProvider.Champion.Jungleclear.UseQ)
-                        //            if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Jungleclear.IfMana))
-                        //                if (Q.isReadyPerfectly())
-                        //                {
-                        //                    var Target = MinionManager.GetMinions(600, MinionTypes.All, MinionTeam.Neutral).FirstOrDefault(x => x.IsValidTarget(600) && Q.GetPrediction(x).Hitchance >= HitChance.High);
-                        //                    if (Target != null)
-                        //                        Q.Cast(Target);
-                        //                }
+                                if (MenuProvider.Champion.Laneclear.UseW)
+                                    if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Laneclear.IfMana))
+                                        if (W.isReadyPerfectly())
+                                        {
+                                            var Target = MinionManager.GetMinions(W.Range).FirstOrDefault(x => x.isKillableAndValidTarget(W.GetDamage(x), W.Range));
+                                            if (Target != null)
+                                                W.CastOnUnit(Target);
+                                        }
 
-                        //        if (MenuProvider.Champion.Jungleclear.UseW)
-                        //            if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Jungleclear.IfMana))
-                        //                if (W.isReadyPerfectly())
-                        //                {
-                        //                    var Target = MinionManager.GetMinions(600, MinionTypes.All, MinionTeam.Neutral).FirstOrDefault(x => x.IsValidTarget(600));
-                        //                    if (Target != null)
-                        //                        W.Cast(Target);
-                        //                }
+                                if (MenuProvider.Champion.Laneclear.UseE)
+                                    if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Laneclear.IfMana))
+                                        if (E.isReadyPerfectly())
+                                        {
+                                            var Target = MinionManager.GetMinions(E.Range).FirstOrDefault(x => x.isKillableAndValidTarget(E.GetDamage(x), E.Range));
+                                            if (Target != null)
+                                                E.CastOnUnit(Target);
+                                        }
 
-                        //        if (MenuProvider.Champion.Jungleclear.UseE)
-                        //            if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Jungleclear.IfMana))
-                        //                if (E.isReadyPerfectly())
-                        //                {
-                        //                    var Target = MinionManager.GetMinions(600, MinionTypes.All, MinionTeam.Neutral).FirstOrDefault(x => x.IsValidTarget(600));
-                        //                    if (Target != null)
-                        //                        E.Cast(Target);
-                        //                }
+                                //Jungleclear
+                                if (MenuProvider.Champion.Jungleclear.UseQ)
+                                    if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Jungleclear.IfMana))
+                                        if (Q.isReadyPerfectly())
+                                        {
+                                            var Target = MinionManager.GetMinions(600, MinionTypes.All, MinionTeam.Neutral).FirstOrDefault(x => x.IsValidTarget(600) && Q.GetPrediction(x).Hitchance >= Q.MinHitChance);
+                                            if (Target != null)
+                                                Q.Cast(Target);
+                                        }
 
-                        //        if (MenuProvider.Champion.Jungleclear.UseR)
-                        //            if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Jungleclear.IfMana))
-                        //                if (R.isReadyPerfectly())
-                        //                {
-                        //                    var Target = MinionManager.GetMinions(600, MinionTypes.All, MinionTeam.Neutral).FirstOrDefault(x => x.IsValidTarget(600));
-                        //                    if (Target != null)
-                        //                        R.Cast();
-                        //                }
-                        //        break;
-                        //    }
+                                if (MenuProvider.Champion.Jungleclear.UseW)
+                                    if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Jungleclear.IfMana))
+                                        if (W.isReadyPerfectly())
+                                        {
+                                            var Target = MinionManager.GetMinions(600, MinionTypes.All, MinionTeam.Neutral).FirstOrDefault(x => x.IsValidTarget(600));
+                                            if (Target != null)
+                                                W.CastOnUnit(Target);
+                                        }
+
+                                if (MenuProvider.Champion.Jungleclear.UseE)
+                                    if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Jungleclear.IfMana))
+                                        if (E.isReadyPerfectly())
+                                        {
+                                            var Target = MinionManager.GetMinions(600, MinionTypes.All, MinionTeam.Neutral).FirstOrDefault(x => x.IsValidTarget(600));
+                                            if (Target != null)
+                                                E.CastOnUnit(Target);
+                                        }
+                                break;
+                            }
                     }
                 }
             }

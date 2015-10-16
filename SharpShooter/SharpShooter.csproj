@@ -84,7 +84,7 @@
     <Compile Include="DamageIndicatorForJungle.cs" />
     <Compile Include="Orbwalker.cs" />
     <Compile Include="Plugins\_Kindred.cs" />
-    <Compile Include="Plugins\_Ryze.cs" />
+    <Compile Include="Plugins\Ryze.cs" />
     <Compile Include="Plugins\Teemo.cs" />
     <Compile Include="UnderClocking.cs" />
     <Compile Include="DynamicInitializer.cs" />
