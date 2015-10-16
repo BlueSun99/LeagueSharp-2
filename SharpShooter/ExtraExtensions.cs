@@ -105,11 +105,6 @@ namespace SharpShooter
             return false;
         }
 
-        internal static int CountEnemyMinionsInRange(this SharpDX.Vector3 point, float range)
-        {
-            return ObjectManager.Get<Obj_AI_Minion>().Count(h => h.IsValidTarget(range, true, point));
-        }
-
         internal static Spell.CastStates CastWithExtraTrapLogic(this Spell spell)
         {
             if (spell.isReadyPerfectly())
@@ -125,6 +120,14 @@ namespace SharpShooter
 
             }
             return Spell.CastStates.NotCasted;
+        }
+
+        internal static float GetRealAutoAttackRange(this AttackableUnit unit, AttackableUnit target, int AutoAttackRange)
+        {
+            float result = AutoAttackRange + unit.BoundingRadius;
+            if (target.IsValidTarget())
+                return result + target.BoundingRadius;
+            return result;
         }
     }
 }

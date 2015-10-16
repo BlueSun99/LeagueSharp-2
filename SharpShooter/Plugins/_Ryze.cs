@@ -6,11 +6,11 @@ using LeagueSharp.Common;
 
 namespace SharpShooter.Plugins
 {
-    public class Ryze
+    public class _Ryze
     {
         private Spell Q, W, E, R, QNoCollision;
 
-        public Ryze()
+        public _Ryze()
         {
             Q = new Spell(SpellSlot.Q, 900f, TargetSelector.DamageType.Magical) { MinHitChance = HitChance.High };
             QNoCollision = new Spell(SpellSlot.Q, 900f, TargetSelector.DamageType.Magical) { MinHitChance = HitChance.Low };
