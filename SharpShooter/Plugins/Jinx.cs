@@ -182,7 +182,7 @@ namespace SharpShooter.Plugins
                                     if (Q.isReadyPerfectly())
                                         if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Laneclear.IfMana))
                                         {
-                                            var Target = MinionManager.GetMinions(float.MaxValue).FirstOrDefault(x => x.isKillableAndValidTarget(ObjectManager.Player.GetAutoAttackDamage(x, false) + Q.GetDamage(x)) && x.IsValidTarget(ObjectManager.Player.GetRealAutoAttackRange(x, GetQRange)));
+                                            var Target = MinionManager.GetMinions(float.MaxValue).FirstOrDefault(x => x.isKillableAndValidTarget(ObjectManager.Player.GetAutoAttackDamage(x, false) + Q.GetDamage(x)) && x.IsValidTarget(ObjectManager.Player.GetRealAutoAttackRange(x, GetQRange)) && MinionManager.GetMinions(float.MaxValue).Count(m => m.IsValidTarget(200, true, x.ServerPosition)) >= 3);
                                             if (Target != null)
                                             {
                                                 QSwitch(true);
