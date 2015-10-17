@@ -64,7 +64,7 @@ namespace SharpShooter.Plugins
             R.Range = 1500 + (500 * R.Level);
 
             if (!ObjectManager.Player.IsDead)
-                if (Orbwalking.CanMove(10))
+                if (Orbwalking.CanMove(100))
                 {
                     switch (MenuProvider.Orbwalker.ActiveMode)
                     {

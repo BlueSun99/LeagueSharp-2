@@ -69,7 +69,7 @@ namespace SharpShooter.Plugins
 
             if (!ObjectManager.Player.IsDead)
             {
-                if (ObjectManager.Player.HasBuff("ryzepassivecharged") ? true : Orbwalking.CanMove(10))
+                if (ObjectManager.Player.HasBuff("ryzepassivecharged") ? true : Orbwalking.CanMove(100))
                 {
                     switch (MenuProvider.Orbwalker.ActiveMode)
                     {

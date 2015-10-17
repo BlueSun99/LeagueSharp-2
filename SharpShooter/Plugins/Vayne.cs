@@ -59,7 +59,7 @@ namespace SharpShooter.Plugins
                 return;
 
             if (!ObjectManager.Player.IsDead)
-                if (Orbwalking.CanMove(10))
+                if (Orbwalking.CanMove(100))
                     switch (MenuProvider.Orbwalker.ActiveMode)
                     {
                         case Orbwalking.OrbwalkingMode.Combo:
