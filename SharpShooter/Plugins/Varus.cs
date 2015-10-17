@@ -112,7 +112,7 @@ namespace SharpShooter.Plugins
                                                     }
                                                     else
                                                     if (MenuProvider.Champion.Combo.UseE ? !E.isReadyPerfectly() : true)
-                                                        if (ELastCastTime + 1000 < Environment.TickCount)
+                                                        if (ELastCastTime + 1500 < Environment.TickCount)
                                                             Q.StartCharging();
                                                 }
                                                 else
