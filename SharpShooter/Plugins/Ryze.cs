@@ -26,7 +26,6 @@ namespace SharpShooter.Plugins
             MenuProvider.Champion.Combo.addUseE();
             MenuProvider.Champion.Combo.addUseR();
             MenuProvider.Champion.Combo.addItem("Ignore Collision", true);
-            MenuProvider.Champion.Combo.addItem("Disable AutoAttack (For Faster Combo)", true);
 
             MenuProvider.Champion.Harass.addUseQ();
             MenuProvider.Champion.Harass.addUseW();
@@ -46,7 +45,7 @@ namespace SharpShooter.Plugins
             MenuProvider.Champion.Misc.addUseAntiGapcloser();
             MenuProvider.Champion.Misc.addUseInterrupter();
             MenuProvider.Champion.Misc.addItem("Auto keep passive stacks (0 = OFF)", new Slider(4, 0, 4));
-            MenuProvider.Champion.Misc.addItem("^ Min Mana", new Slider(50, 0, 100));
+            MenuProvider.Champion.Misc.addItem("^ Min Mana", new Slider(70, 0, 100));
 
             MenuProvider.Champion.Drawings.addDrawQrange(System.Drawing.Color.DeepSkyBlue, true);
             MenuProvider.Champion.Drawings.addDrawWrange(System.Drawing.Color.DeepSkyBlue, true);
@@ -70,7 +69,7 @@ namespace SharpShooter.Plugins
 
             if (!ObjectManager.Player.IsDead)
             {
-                if (Orbwalking.CanMove(10))
+                if (ObjectManager.Player.HasBuff("ryzepassivecharged") ? true : Orbwalking.CanMove(10))
                 {
                     switch (MenuProvider.Orbwalker.ActiveMode)
                     {
@@ -178,26 +177,26 @@ namespace SharpShooter.Plugins
                                 break;
                             }
                     }
-
-                    if (MenuProvider.Champion.Misc.getSliderValue("Auto keep passive stacks (0 = OFF)").Value > 0)
-                        if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Misc.getSliderValue("^ Min Mana").Value))
-                            if (!ObjectManager.Player.IsRecalling())
-                                if (Q.Level > 0)
-                                    if (W.Level > 0)
-                                        if (E.Level > 0)
-                                            if (Q.isReadyPerfectly())
-                                            {
-                                                var passive = ObjectManager.Player.GetBuff("ryzepassivestack");
-                                                if (passive != null)
-                                                {
-                                                    if (passive.Count < MenuProvider.Champion.Misc.getSliderValue("Auto keep passive stacks (0 = OFF)").Value)
-                                                        if (passive.EndTime - Game.ClockTime < 0.5)
-                                                            Q.Cast(Game.CursorPos);
-                                                }
-                                                else
-                                                    Q.Cast(Game.CursorPos);
-                                            }
                 }
+
+                if (MenuProvider.Champion.Misc.getSliderValue("Auto keep passive stacks (0 = OFF)").Value > 0)
+                    if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Misc.getSliderValue("^ Min Mana").Value))
+                        if (!ObjectManager.Player.IsRecalling())
+                            if (Q.Level > 0)
+                                if (W.Level > 0)
+                                    if (E.Level > 0)
+                                        if (Q.isReadyPerfectly())
+                                        {
+                                            var passive = ObjectManager.Player.GetBuff("ryzepassivestack");
+                                            if (passive != null)
+                                            {
+                                                if (passive.Count < MenuProvider.Champion.Misc.getSliderValue("Auto keep passive stacks (0 = OFF)").Value)
+                                                    if (passive.EndTime - Game.ClockTime <= 0.5)
+                                                        Q.Cast(Game.CursorPos);
+                                            }
+                                            else
+                                                Q.Cast(Game.CursorPos);
+                                        }
             }
         }
 
@@ -208,9 +207,8 @@ namespace SharpShooter.Plugins
                 {
                     case Orbwalking.OrbwalkingMode.Combo:
                         {
-                            if (MenuProvider.Champion.Combo.getBoolValue("Disable AutoAttack (For Faster Combo)"))
-                                if (!HeroManager.Enemies.Any(x => Orbwalking.InAutoAttackRange(x) && x.isKillableAndValidTarget(ObjectManager.Player.GetAutoAttackDamage(x, true))) || ObjectManager.Player.Mana >= Q.ManaCost)
-                                    args.Process = false;
+                            if (W.isReadyPerfectly())
+                                args.Process = false;
                             break;
                         }
                 }

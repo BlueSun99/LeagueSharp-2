@@ -58,10 +58,9 @@ namespace SharpShooter.Plugins
             MenuProvider.Champion.Drawings.addDrawWrange(System.Drawing.Color.DeepSkyBlue, false);
             MenuProvider.Champion.Drawings.addDrawErange(System.Drawing.Color.DeepSkyBlue, false);
             MenuProvider.Champion.Drawings.addDrawRrange(System.Drawing.Color.DeepSkyBlue, true);
-            MenuProvider.Champion.Drawings.addItem("Draw E Damage Percent", true);
+            MenuProvider.Champion.Drawings.addItem("Draw E Damage Percent", false);
             MenuProvider.Champion.Drawings.addDamageIndicator(GetComboDamage);
             MenuProvider.Champion.Drawings.addDamageIndicatorForJungle(GetJungleDamage);
-            MenuProvider.Champion.Drawings.addItem("DebugMode", false);
 
             Game.OnUpdate += Game_OnUpdate;
             Drawing.OnDraw += Drawing_OnDraw;
@@ -359,9 +358,6 @@ namespace SharpShooter.Plugins
 
         private float GetJungleDamage(Obj_AI_Minion enemy)
         {
-            if (MenuProvider.Champion.Drawings.getBoolValue("DebugMode"))
-                return 50000;
-
             float damage = E.GetDamage(enemy);
             if (ObjectManager.Player.HasBuff("summonerexhaust"))
                 damage *= 0.6f;
