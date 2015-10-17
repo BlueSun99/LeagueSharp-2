@@ -17,17 +17,19 @@ namespace SharpShooter.Plugins
             E = new Spell(SpellSlot.E, 925f, TargetSelector.DamageType.Physical) { MinHitChance = HitChance.High };
             R = new Spell(SpellSlot.R, 1200f, TargetSelector.DamageType.Magical) { MinHitChance = HitChance.High };
 
-            Q.SetSkillshot(0.25f, 70f, 1900f, false, SkillshotType.SkillshotLine);
-            E.SetSkillshot(1.00f, 235f, 1500f, false, SkillshotType.SkillshotCircle);
-            R.SetSkillshot(0.25f, 120f, 1950f, false, SkillshotType.SkillshotLine);
+            Q.SetSkillshot(0.25f, 70f, 1500f, false, SkillshotType.SkillshotLine);
+            E.SetSkillshot(1.0f, 250f, 1750f, false, SkillshotType.SkillshotCircle);
+            R.SetSkillshot(0.25f, 120f, 1200f, false, SkillshotType.SkillshotLine);
 
             Q.SetCharged("VarusQ", "VarusQ", 250, 1600, 1.2f);
 
             MenuProvider.Champion.Combo.addUseQ();
+            MenuProvider.Champion.Combo.addItem("Q Min Charge", new Slider(800, 0, 1600));
             MenuProvider.Champion.Combo.addUseE();
             MenuProvider.Champion.Combo.addUseR();
 
             MenuProvider.Champion.Harass.addUseQ();
+            MenuProvider.Champion.Harass.addItem("Q Min Charge", new Slider(1600, 0, 1600));
             MenuProvider.Champion.Harass.addUseE(false);
             MenuProvider.Champion.Harass.addIfMana(60);
 
@@ -73,26 +75,67 @@ namespace SharpShooter.Plugins
                                 if (MenuProvider.Champion.Combo.UseQ)
                                     if (Q.isReadyPerfectly())
                                     {
-                                        if (Q.IsCharging)
+                                        var killableTarget = HeroManager.Enemies.FirstOrDefault(x => x.IsValidTarget(Q.ChargedMaxRange) && x.isKillableAndValidTarget(Q.GetDamage(x), Q.Range) && Q.GetPrediction(x).Hitchance >= Q.MinHitChance);
+                                        if (killableTarget != null)
                                         {
-                                            if (Q.Range >= Q.ChargedMaxRange)
-                                                Q.CastOnBestTarget(0, false, true);
-                                            else
+                                            if (Q.IsCharging)
                                             {
-                                                var killableTarget = HeroManager.Enemies.FirstOrDefault(x => x.isKillableAndValidTarget(Q.GetDamage(x), Q.Range));
-                                                if (killableTarget != null)
+                                                if (killableTarget.IsValidTarget(Q.Range))
                                                     Q.Cast(killableTarget, false, true);
                                             }
+                                            else
+                                                Q.StartCharging();
+                                        }
 
+                                        if (W.Level > 0)
+                                        {
+                                            var Target = HeroManager.Enemies.FirstOrDefault(x => x.IsValidTarget(Q.ChargedMaxRange) && x.GetBuffCount("varuswdebuff") >= 3);
+                                            if (Target != null)
+                                            {
+                                                if (Q.IsCharging)
+                                                {
+                                                    if (Q.Range >= MenuProvider.Champion.Combo.getSliderValue("Q Min Charge").Value)
+                                                    {
+                                                        if (Target.IsValidTarget(Q.Range))
+                                                            Q.Cast(Target, false, true);
+                                                    }
+                                                }
+                                                else
+                                                    if (MenuProvider.Champion.Combo.UseE ? !E.isReadyPerfectly() : true)
+                                                    Q.StartCharging();
+                                            }
                                         }
                                         else
-                                        if (TargetSelector.GetTarget(Q.ChargedMaxRange, Q.DamageType) != null)
-                                            Q.StartCharging();
+                                        {
+                                            if (Q.IsCharging)
+                                            {
+                                                if (Q.Range >= MenuProvider.Champion.Combo.getSliderValue("Q Min Charge").Value)
+                                                    Q.CastOnBestTarget(0, false, true);
+                                            }
+                                            else
+                                            if (TargetSelector.GetTarget(Q.ChargedMaxRange, Q.DamageType) != null)
+                                                Q.StartCharging();
+                                        }
                                     }
 
                                 if (MenuProvider.Champion.Combo.UseE)
                                     if (E.isReadyPerfectly())
-                                        E.CastOnBestTarget(0, false, true);
+                                    {
+                                        var killableTarget = HeroManager.Enemies.FirstOrDefault(x => x.isKillableAndValidTarget(E.GetDamage(x), E.Range));
+                                        if (killableTarget != null)
+                                            E.Cast(killableTarget, false, true);
+
+                                        if (W.Level > 0)
+                                        {
+                                            var Target = HeroManager.Enemies.FirstOrDefault(x => x.IsValidTarget(E.Range) && x.GetBuffCount("varuswdebuff") >= 3);
+                                            if (Target != null)
+                                                E.Cast(Target, false, true);
+                                            else
+                                                E.CastIfWillHit(E.GetTarget(), 3, false);
+                                        }
+                                        else
+                                            E.CastOnBestTarget(0, false, true);
+                                    }
 
                                 if (MenuProvider.Champion.Combo.UseR)
                                     if (R.isReadyPerfectly())
@@ -177,7 +220,7 @@ namespace SharpShooter.Plugins
                                     if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Jungleclear.IfMana))
                                         if (E.isReadyPerfectly())
                                         {
-                                            var Target = MinionManager.GetMinions(600, MinionTypes.All, MinionTeam.Neutral).FirstOrDefault(x => x.IsValidTarget(600));
+                                            var Target = MinionManager.GetMinions(600, MinionTypes.All, MinionTeam.Neutral).FirstOrDefault(x => x.IsValidTarget(600) && x.GetBuffCount("varuswdebuff") >= 3);
                                             if (Target != null)
                                                 E.Cast(Target);
                                         }
@@ -198,15 +241,20 @@ namespace SharpShooter.Plugins
         {
             if (MenuProvider.Champion.Misc.UseAntiGapcloser)
                 if (gapcloser.End.Distance(ObjectManager.Player.Position) <= 200)
-                    if (gapcloser.Sender.IsValidTarget(R.Range))
-                        if (R.isReadyPerfectly())
+                    if (R.isReadyPerfectly())
+                    {
+                        if (gapcloser.Sender.IsValidTarget(R.Range))
                             R.Cast(gapcloser.Sender);
+                    }
+                    else
+                    if (gapcloser.Sender.IsValidTarget(E.Range))
+                        E.Cast(gapcloser.Sender, false, true);
         }
 
         private void Interrupter2_OnInterruptableTarget(Obj_AI_Hero sender, Interrupter2.InterruptableTargetEventArgs args)
         {
             if (MenuProvider.Champion.Misc.UseInterrupter)
-                if (args.DangerLevel >= Interrupter2.DangerLevel.Medium)
+                if (args.DangerLevel >= Interrupter2.DangerLevel.High)
                     if (sender.IsValidTarget(R.Range))
                         if (R.isReadyPerfectly())
                             R.CastOnUnit(sender);
