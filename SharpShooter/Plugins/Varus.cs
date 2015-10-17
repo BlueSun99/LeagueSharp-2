@@ -86,35 +86,37 @@ namespace SharpShooter.Plugins
                                             else
                                                 Q.StartCharging();
                                         }
-
-                                        if (W.Level > 0)
+                                        else
                                         {
-                                            var Target = HeroManager.Enemies.FirstOrDefault(x => x.IsValidTarget(Q.ChargedMaxRange) && x.GetBuffCount("varuswdebuff") >= 3);
-                                            if (Target != null)
+                                            if (W.Level > 0)
+                                            {
+                                                var Target = HeroManager.Enemies.FirstOrDefault(x => x.IsValidTarget(Q.ChargedMaxRange) && x.GetBuffCount("varuswdebuff") >= 3);
+                                                if (Target != null)
+                                                {
+                                                    if (Q.IsCharging)
+                                                    {
+                                                        if (Q.Range >= MenuProvider.Champion.Combo.getSliderValue("Q Min Charge").Value)
+                                                        {
+                                                            if (Target.IsValidTarget(Q.Range))
+                                                                Q.Cast(Target, false, true);
+                                                        }
+                                                    }
+                                                    else
+                                                        if (MenuProvider.Champion.Combo.UseE ? !E.isReadyPerfectly() : true)
+                                                        Q.StartCharging();
+                                                }
+                                            }
+                                            else
                                             {
                                                 if (Q.IsCharging)
                                                 {
                                                     if (Q.Range >= MenuProvider.Champion.Combo.getSliderValue("Q Min Charge").Value)
-                                                    {
-                                                        if (Target.IsValidTarget(Q.Range))
-                                                            Q.Cast(Target, false, true);
-                                                    }
+                                                        Q.CastOnBestTarget(0, false, true);
                                                 }
                                                 else
-                                                    if (MenuProvider.Champion.Combo.UseE ? !E.isReadyPerfectly() : true)
+                                                if (TargetSelector.GetTarget(Q.ChargedMaxRange, Q.DamageType) != null)
                                                     Q.StartCharging();
                                             }
-                                        }
-                                        else
-                                        {
-                                            if (Q.IsCharging)
-                                            {
-                                                if (Q.Range >= MenuProvider.Champion.Combo.getSliderValue("Q Min Charge").Value)
-                                                    Q.CastOnBestTarget(0, false, true);
-                                            }
-                                            else
-                                            if (TargetSelector.GetTarget(Q.ChargedMaxRange, Q.DamageType) != null)
-                                                Q.StartCharging();
                                         }
                                     }
 
@@ -124,17 +126,19 @@ namespace SharpShooter.Plugins
                                         var killableTarget = HeroManager.Enemies.FirstOrDefault(x => x.isKillableAndValidTarget(E.GetDamage(x), E.Range));
                                         if (killableTarget != null)
                                             E.Cast(killableTarget, false, true);
-
-                                        if (W.Level > 0)
-                                        {
-                                            var Target = HeroManager.Enemies.FirstOrDefault(x => x.IsValidTarget(E.Range) && x.GetBuffCount("varuswdebuff") >= 3);
-                                            if (Target != null)
-                                                E.Cast(Target, false, true);
-                                            else
-                                                E.CastIfWillHit(E.GetTarget(), 3, false);
-                                        }
                                         else
-                                            E.CastOnBestTarget(0, false, true);
+                                        {
+                                            if (W.Level > 0)
+                                            {
+                                                var Target = HeroManager.Enemies.FirstOrDefault(x => x.IsValidTarget(E.Range) && x.GetBuffCount("varuswdebuff") >= 3);
+                                                if (Target != null)
+                                                    E.Cast(Target, false, true);
+                                                else
+                                                    E.CastIfWillHit(E.GetTarget(), 3, false);
+                                            }
+                                            else
+                                                E.CastOnBestTarget(0, false, true);
+                                        }
                                     }
 
                                 if (MenuProvider.Champion.Combo.UseR)
