@@ -9,6 +9,7 @@ namespace SharpShooter.Plugins
     public class Varus
     {
         private Spell Q, W, E, R;
+        private int ELastCastTime;
 
         public Varus()
         {
@@ -54,9 +55,17 @@ namespace SharpShooter.Plugins
             AntiGapcloser.OnEnemyGapcloser += AntiGapcloser_OnEnemyGapcloser;
             Interrupter2.OnInterruptableTarget += Interrupter2_OnInterruptableTarget;
             Orbwalking.BeforeAttack += Orbwalking_BeforeAttack;
+            Obj_AI_Base.OnProcessSpellCast += Obj_AI_Base_OnProcessSpellCast;
 
             Console.WriteLine("Sharpshooter: Varus Loaded.");
             Game.PrintChat("<font color = \"#00D8FF\"><b>SharpShooter Reworked:</b></font> <font color = \"#FF007F\">Varus</font> Loaded.");
+        }
+
+        private void Obj_AI_Base_OnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
+        {
+            if (sender.IsMe)
+                if (args.Slot == SpellSlot.E)
+                    ELastCastTime = Environment.TickCount;
         }
 
         private void Game_OnUpdate(EventArgs args)
@@ -87,6 +96,7 @@ namespace SharpShooter.Plugins
                                                 Q.StartCharging();
                                         }
                                         else
+                                        if (ELastCastTime + 1000 < Environment.TickCount)
                                         {
                                             if (W.Level > 0)
                                             {
