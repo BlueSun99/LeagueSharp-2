@@ -28,7 +28,7 @@ namespace SharpShooter
                 addSubMenu("Champion", ObjectManager.Player.ChampionName);
 
                 Champion.addOrbwalker();
-                Champion.addTargetSelector();
+                //Champion.addTargetSelector();
             }
             else
             {

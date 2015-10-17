@@ -54,35 +54,36 @@ namespace SharpShooter.Plugins
         private void Orbwalking_AfterAttack(AttackableUnit unit, AttackableUnit target)
         {
             if (unit.IsMe)
-                switch (MenuProvider.Orbwalker.ActiveMode)
-                {
-                    case Orbwalking.OrbwalkingMode.Combo:
-                        if (Q.isReadyPerfectly())
-                        {
-                            if (MenuProvider.Champion.Combo.UseQ)
-                                if (target.IsValidTarget(Q.Range))
-                                    Q.Cast(target as Obj_AI_Base);
-                        }
-                        else
-                        if (W.isReadyPerfectly())
-                            if (MenuProvider.Champion.Combo.UseW)
-                                if (target.IsValidTarget(W.Range))
-                                    W.Cast(target as Obj_AI_Base);
-                        break;
-                    case Orbwalking.OrbwalkingMode.Mixed:
-                        if (Q.isReadyPerfectly())
-                        {
-                            if (MenuProvider.Champion.Harass.UseQ)
-                                if (target.IsValidTarget(Q.Range))
-                                    Q.Cast(target as Obj_AI_Base);
-                        }
-                        else
-                        if (W.isReadyPerfectly())
-                            if (MenuProvider.Champion.Harass.UseW)
-                                if (target.IsValidTarget(W.Range))
-                                    W.Cast(target as Obj_AI_Base);
-                        break;
-                }
+                if (target.Type == GameObjectType.obj_AI_Hero)
+                    switch (MenuProvider.Orbwalker.ActiveMode)
+                    {
+                        case Orbwalking.OrbwalkingMode.Combo:
+                            if (Q.isReadyPerfectly())
+                            {
+                                if (MenuProvider.Champion.Combo.UseQ)
+                                    if (target.IsValidTarget(Q.Range))
+                                        Q.Cast(target as Obj_AI_Base);
+                            }
+                            else
+                            if (W.isReadyPerfectly())
+                                if (MenuProvider.Champion.Combo.UseW)
+                                    if (target.IsValidTarget(W.Range))
+                                        W.Cast(target as Obj_AI_Base);
+                            break;
+                        case Orbwalking.OrbwalkingMode.Mixed:
+                            if (Q.isReadyPerfectly())
+                            {
+                                if (MenuProvider.Champion.Harass.UseQ)
+                                    if (target.IsValidTarget(Q.Range))
+                                        Q.Cast(target as Obj_AI_Base);
+                            }
+                            else
+                            if (W.isReadyPerfectly())
+                                if (MenuProvider.Champion.Harass.UseW)
+                                    if (target.IsValidTarget(W.Range))
+                                        W.Cast(target as Obj_AI_Base);
+                            break;
+                    }
         }
 
         private void Game_OnUpdate(EventArgs args)

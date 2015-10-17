@@ -22,7 +22,7 @@ namespace SharpShooter.Plugins
             R = new Spell(SpellSlot.R, 2500f, TargetSelector.DamageType.Physical) { MinHitChance = HitChance.High };
 
             W.SetSkillshot(0.6f, 60f, 3300f, true, SkillshotType.SkillshotLine);
-            E.SetSkillshot(1.1f, 1f, 1750f, false, SkillshotType.SkillshotCircle);
+            E.SetSkillshot(1.1f, 100f, 1750f, false, SkillshotType.SkillshotCircle);
             R.SetSkillshot(0.6f, 140f, 1700f, false, SkillshotType.SkillshotLine);
 
             MenuProvider.Champion.Combo.addUseQ();
@@ -135,7 +135,7 @@ namespace SharpShooter.Plugins
                                     {
                                         var Target = HeroManager.Enemies.Where(x => x.IsValidTarget(E.Range) && E.GetPrediction(x).Hitchance >= E.MinHitChance && !x.IsFacing(ObjectManager.Player) && x.IsMoving).OrderBy(x => x.Distance(ObjectManager.Player)).FirstOrDefault();
                                         if (Target != null)
-                                            E.Cast(Target);
+                                            E.Cast(Target, false, true);
                                         else
                                             E.CastWithExtraTrapLogic();
                                     }
@@ -248,7 +248,7 @@ namespace SharpShooter.Plugins
                         {
                             var Target = HeroManager.Enemies.FirstOrDefault(x => x.IsValidTarget(E.Range) && x.isImmobileUntil() > 0.5f);
                             if (Target != null)
-                                E.Cast(Target);
+                                E.Cast(Target, false, true);
                         }
                 }
             }
