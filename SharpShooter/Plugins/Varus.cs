@@ -96,7 +96,6 @@ namespace SharpShooter.Plugins
                                                 Q.StartCharging();
                                         }
                                         else
-                                        if (ELastCastTime + 1000 < Environment.TickCount)
                                         {
                                             if (W.Level > 0)
                                             {
@@ -112,9 +111,14 @@ namespace SharpShooter.Plugins
                                                         }
                                                     }
                                                     else
-                                                        if (MenuProvider.Champion.Combo.UseE ? !E.isReadyPerfectly() : true)
-                                                        Q.StartCharging();
+                                                    if (MenuProvider.Champion.Combo.UseE ? !E.isReadyPerfectly() : true)
+                                                        if (ELastCastTime + 1000 < Environment.TickCount)
+                                                            Q.StartCharging();
                                                 }
+                                                else
+                                                if (Q.IsCharging)
+                                                    if (Q.Range >= MenuProvider.Champion.Combo.getSliderValue("Q Min Charge").Value)
+                                                        Q.CastOnBestTarget(0, false, true);
                                             }
                                             else
                                             {
