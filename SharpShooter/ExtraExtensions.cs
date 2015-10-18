@@ -21,6 +21,11 @@ namespace SharpShooter
             if (ObjectManager.Player.HasBuff("summonerexhaust"))
                 CalculatedDamage *= 0.6;
 
+            if (Target.ChampionName == "Blitzcrank")
+                if (!Target.HasBuff("manabarriercooldown"))
+                    if (Target.Health + Target.HPRegenRate + Target.PhysicalShield + (Target.Mana / 2) > CalculatedDamage)
+                        return false;
+
             if (Target.HasBuff("FerociousHowl"))
                 CalculatedDamage *= 0.3;
 
@@ -58,6 +63,11 @@ namespace SharpShooter
 
             if (ObjectManager.Player.HasBuff("summonerexhaust"))
                 CalculatedDamage *= 0.6;
+
+            if (Target.CharData.BaseSkinName == "Blitzcrank")
+                if (!Target.HasBuff("manabarriercooldown"))
+                    if (Target.Health + Target.HPRegenRate + Target.PhysicalShield + (Target.Mana / 2) > CalculatedDamage)
+                        return false;
 
             if (Target.HasBuff("FerociousHowl"))
                 CalculatedDamage *= 0.3;
