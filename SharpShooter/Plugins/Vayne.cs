@@ -14,7 +14,7 @@ namespace SharpShooter.Plugins
 
         public Vayne()
         {
-            Q = new Spell(SpellSlot.Q, 300f);
+            Q = new Spell(SpellSlot.Q, 915f);
             W = new Spell(SpellSlot.W);
             E = new Spell(SpellSlot.E, 650f) { Width = 1f };
             R = new Spell(SpellSlot.R);
