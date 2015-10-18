@@ -87,11 +87,8 @@ namespace SharpShooter.Plugins
                                 if (MenuProvider.Champion.Combo.UseQ)
                                     if (Q.isReadyPerfectly())
                                     {
-                                        var Target = TargetSelector.GetTarget(Q.Range, Q.DamageType);
-                                        if (Target != null)
-                                            Q.CastOnBestTarget();
+                                        Q.CastOnBestTarget();
                                     }
-                                Q.CastOnBestTarget();
 
                                 if (MenuProvider.Champion.Combo.UseR)
                                     if (R.isReadyPerfectly())
