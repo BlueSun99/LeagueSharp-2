@@ -14,7 +14,7 @@ namespace SharpShooter.Plugins
 
         public Vayne()
         {
-            Q = new Spell(SpellSlot.Q);
+            Q = new Spell(SpellSlot.Q, 300f);
             W = new Spell(SpellSlot.W);
             E = new Spell(SpellSlot.E, 650f) { Width = 1f };
             R = new Spell(SpellSlot.R);
@@ -38,7 +38,9 @@ namespace SharpShooter.Plugins
             MenuProvider.Champion.Misc.addItem("Auto Q when using R", true);
             MenuProvider.Champion.Misc.addItem("Q Stealth duration (ms)", new Slider(1000, 0, 1000));
 
+            MenuProvider.Champion.Drawings.addDrawQrange(System.Drawing.Color.DeepSkyBlue, true);
             MenuProvider.Champion.Drawings.addDrawErange(System.Drawing.Color.DeepSkyBlue, false);
+            MenuProvider.Champion.Drawings.addItem("Draw E Crash Prediction", new Circle(false, System.Drawing.Color.YellowGreen));
             MenuProvider.Champion.Drawings.addDamageIndicator(GetComboDamage);
 
             Game.OnUpdate += Game_OnUpdate;
@@ -71,11 +73,11 @@ namespace SharpShooter.Plugins
                                             var Prediction = E.GetPrediction(enemy);
                                             if (Prediction.Hitchance >= HitChance.High)
                                             {
-                                                var FinalPosition = Prediction.UnitPosition.To2D().Extend(ObjectManager.Player.ServerPosition.To2D(), 400).To3D();
+                                                var FinalPosition = Prediction.UnitPosition.To2D().Extend(ObjectManager.Player.ServerPosition.To2D(), -400).To3D();
                                                 for (int i = 1; i < 400; i += 50)
                                                 {
                                                     Vector3 loc3 = Prediction.UnitPosition.Extend(ObjectManager.Player.ServerPosition, -i);
-                                                    if (loc3.IsWall() || FinalPosition.IsWall())
+                                                    if (FinalPosition.IsWall() || loc3.IsWall())
                                                     {
                                                         E.CastOnUnit(enemy);
                                                         break;
@@ -179,8 +181,30 @@ namespace SharpShooter.Plugins
         {
             if (!ObjectManager.Player.IsDead)
             {
+                if (MenuProvider.Champion.Drawings.DrawQrange.Active && Q.isReadyPerfectly())
+                    Render.Circle.DrawCircle(ObjectManager.Player.Position, Q.Range, MenuProvider.Champion.Drawings.DrawQrange.Color);
+
                 if (MenuProvider.Champion.Drawings.DrawErange.Active && E.isReadyPerfectly())
                     Render.Circle.DrawCircle(ObjectManager.Player.Position, E.Range, MenuProvider.Champion.Drawings.DrawErange.Color);
+
+                var DrawECrashPrediction = MenuProvider.Champion.Drawings.getCircleValue("Draw E Crash Prediction");
+                if (DrawECrashPrediction.Active)
+                {
+                    foreach (var enemy in HeroManager.Enemies.Where(x => x.IsValidTarget(E.Range)))
+                    {
+                        var Prediction = E.GetPrediction(enemy);
+
+                        var FinalPosition = Prediction.UnitPosition.To2D().Extend(ObjectManager.Player.ServerPosition.To2D(), -400).To3D();
+                        for (int i = 1; i < 400; i += 50)
+                        {
+                            Vector3 loc3 = Prediction.UnitPosition.Extend(ObjectManager.Player.ServerPosition, -i);
+                            if (FinalPosition.IsWall() || loc3.IsWall())
+                            {
+                                Render.Circle.DrawCircle(loc3, 50, DrawECrashPrediction.Color, 3, true);
+                            }
+                        }
+                    }
+                }
             }
         }
 

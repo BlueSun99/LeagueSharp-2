@@ -32,6 +32,7 @@ namespace SharpShooter.Plugins
 
             MenuProvider.Champion.Drawings.addDrawQrange(System.Drawing.Color.DeepSkyBlue, true);
             MenuProvider.Champion.Drawings.addDrawRrange(System.Drawing.Color.DeepSkyBlue, true);
+            MenuProvider.Champion.Drawings.addItem("Draw Q Target", new Circle(true, System.Drawing.Color.DeepSkyBlue));
             MenuProvider.Champion.Drawings.addDamageIndicator(GetComboDamage);
 
             Game.OnUpdate += Game_OnUpdate;
@@ -87,7 +88,9 @@ namespace SharpShooter.Plugins
                                 if (MenuProvider.Champion.Combo.UseQ)
                                     if (Q.isReadyPerfectly())
                                     {
-                                        Q.CastOnBestTarget();
+                                        var Target = TargetSelector.GetTarget(Q.Range, Q.DamageType);
+                                        if (Target != null)
+                                            Q.Cast(Target);
                                     }
 
                                 if (MenuProvider.Champion.Combo.UseR)
@@ -146,6 +149,14 @@ namespace SharpShooter.Plugins
 
                 if (MenuProvider.Champion.Drawings.DrawRrange.Active && R.isReadyPerfectly())
                     Render.Circle.DrawCircle(ObjectManager.Player.Position, R.Range, MenuProvider.Champion.Drawings.DrawRrange.Color);
+
+                var DrawQTarget = MenuProvider.Champion.Drawings.getCircleValue("Draw Q Target");
+                if (DrawQTarget.Active)
+                {
+                    var Target = TargetSelector.GetTarget(Q.Range, Q.DamageType);
+                    if (Target != null)
+                        Render.Circle.DrawCircle(Target.Position, Target.BoundingRadius, DrawQTarget.Color, 3, true);
+                }
             }
         }
 
