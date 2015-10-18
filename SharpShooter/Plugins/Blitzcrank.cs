@@ -86,7 +86,12 @@ namespace SharpShooter.Plugins
                             {
                                 if (MenuProvider.Champion.Combo.UseQ)
                                     if (Q.isReadyPerfectly())
-                                        Q.CastOnBestTarget();
+                                    {
+                                        var Target = TargetSelector.GetTarget(Q.Range, Q.DamageType);
+                                        if (Target != null)
+                                            Q.CastOnBestTarget();
+                                    }
+                                Q.CastOnBestTarget();
 
                                 if (MenuProvider.Champion.Combo.UseR)
                                     if (R.isReadyPerfectly())
@@ -97,7 +102,11 @@ namespace SharpShooter.Plugins
                                                 R.Cast(Target);
 
                                             if (Target.HasBuff("rocketgrab2"))
+                                            {
                                                 R.Cast(Target);
+                                                if (MenuProvider.Champion.Combo.UseE)
+                                                    E.Cast();
+                                            }
                                         }
                                 break;
                             }
