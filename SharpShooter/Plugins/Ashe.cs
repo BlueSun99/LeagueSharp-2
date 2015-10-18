@@ -78,7 +78,7 @@ namespace SharpShooter.Plugins
                                         foreach (var Target in HeroManager.Enemies.Where(x => x.IsValidTarget(R.Range) && R.GetPrediction(x).Hitchance >= HitChance.High))
                                         {
                                             //R Logics
-                                            if (Target.isKillableAndValidTarget(Damage.GetSpellDamage(ObjectManager.Player, Target, SpellSlot.R), R.Range) && !Orbwalking.InAutoAttackRange(Target))
+                                            if (Target.isKillableAndValidTarget(R.GetDamage(Target), R.Range) && !Orbwalking.InAutoAttackRange(Target))
                                                 R.Cast(Target);//killable
 
                                             if (Target.IsValidTarget(600f))
