@@ -859,7 +859,7 @@ namespace SharpShooter
                 if (_config.Item("AACircle").GetValue<Circle>().Active)
                 {
                     Render.Circle.DrawCircle(
-                        Player.Position, GetRealAutoAttackRange(null) + 65,
+                        Player.Position, GetRealAutoAttackRange(null),
                         _config.Item("AACircle").GetValue<Circle>().Color,
                         _config.Item("AALineWidth").GetValue<Slider>().Value);
                 }
