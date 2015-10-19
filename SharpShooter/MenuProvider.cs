@@ -14,6 +14,7 @@ namespace SharpShooter
         /// 메인메뉴의 LeagueSharp.Common.Menu형식 객체입니다. 이 객체에 직접 접근하면 LeagueSharp.Common.Menu클래스의 메소드를 이용해 메인메뉴를 수정 할 수 있습니다.
         /// </summary>
         internal static Menu MenuInstance;
+        internal static Menu ChampionMenuInstance { get { return MenuInstance.SubMenu("Champion"); } }
         internal static Orbwalking.Orbwalker Orbwalker;
 
         /// <summary>

@@ -20,6 +20,11 @@ namespace SharpShooter.Plugins
             Q.SetSkillshot(0.25f, 70f, 1800f, true, SkillshotType.SkillshotLine);
 
             MenuProvider.Champion.Combo.addUseQ();
+
+            MenuProvider.MenuInstance.SubMenu("Champion").SubMenu("Combo").AddSubMenu(new Menu("Q WhiteList", "Q WhiteList"));
+            foreach (var enemy in HeroManager.Enemies)
+                MenuProvider.ChampionMenuInstance.SubMenu("Combo").SubMenu("Q WhiteList").AddItem(new MenuItem("Combo.Q WhiteList." + enemy.ChampionName, enemy.ChampionName, true)).SetValue(true);
+
             MenuProvider.Champion.Combo.addUseE();
             MenuProvider.Champion.Combo.addUseR();
 
@@ -88,7 +93,7 @@ namespace SharpShooter.Plugins
                                 if (MenuProvider.Champion.Combo.UseQ)
                                     if (Q.isReadyPerfectly())
                                     {
-                                        var Target = TargetSelector.GetTarget(Q.Range, Q.DamageType);
+                                        var Target = HeroManager.Enemies.Where(x => x.IsValidTarget(Q.Range) && Q.GetPrediction(x).Hitchance >= Q.MinHitChance && MenuProvider.MenuInstance.Item("Combo.Q WhiteList." + x.ChampionName, true).GetValue<bool>()).OrderByDescending(x => TargetSelector.GetPriority(x)).FirstOrDefault();
                                         if (Target != null)
                                             Q.Cast(Target);
                                     }
@@ -103,9 +108,11 @@ namespace SharpShooter.Plugins
 
                                             if (Target.HasBuff("rocketgrab2"))
                                             {
-                                                R.Cast(Target);
                                                 if (MenuProvider.Champion.Combo.UseE)
-                                                    E.Cast();
+                                                    if (E.isReadyPerfectly())
+                                                        E.Cast();
+
+                                                R.Cast(Target);
                                             }
                                         }
                                 break;
@@ -153,9 +160,9 @@ namespace SharpShooter.Plugins
                 var DrawQTarget = MenuProvider.Champion.Drawings.getCircleValue("Draw Q Target");
                 if (DrawQTarget.Active)
                 {
-                    var Target = TargetSelector.GetTarget(Q.Range, Q.DamageType);
+                    var Target = HeroManager.Enemies.Where(x => x.IsValidTarget(Q.Range) && Q.GetPrediction(x).Hitchance >= Q.MinHitChance && MenuProvider.MenuInstance.Item("Combo.Q WhiteList." + x.ChampionName, true).GetValue<bool>()).OrderByDescending(x => TargetSelector.GetPriority(x)).FirstOrDefault();
                     if (Target != null)
-                        Render.Circle.DrawCircle(Target.Position, Target.BoundingRadius, DrawQTarget.Color, 3, true);
+                        Render.Circle.DrawCircle(Target.Position, 70, DrawQTarget.Color, 3, true);
                 }
             }
         }
