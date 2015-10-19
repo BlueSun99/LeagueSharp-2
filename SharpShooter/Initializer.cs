@@ -17,6 +17,7 @@ namespace SharpShooter
                 MenuProvider.Champion.Drawings.addItem(" ");
                 OrbwalkerTargetIndicator.Load();
                 LasthitIndicator.Load();
+                AutoQuit.Load();
             }
 
             Console.WriteLine("SharpShooter: Initialized.");

@@ -80,6 +80,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Activator.cs" />
+    <Compile Include="AutoQuit.cs" />
     <Compile Include="DamageIndicator.cs" />
     <Compile Include="DamageIndicatorForJungle.cs" />
     <Compile Include="Orbwalker.cs" />

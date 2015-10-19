@@ -2,7 +2,6 @@
 using System.Linq;
 
 using LeagueSharp;
-using LeagueSharp.Common;
 
 using Color = System.Drawing.Color;
 using System.Collections.Generic;
