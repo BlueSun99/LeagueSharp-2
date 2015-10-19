@@ -255,12 +255,13 @@ namespace SharpShooter.Plugins
                         }
 
                     if (MenuProvider.Champion.Harass.AutoHarass)
-                        if (MenuProvider.Champion.Harass.UseW)
-                        {
-                            var Target = TargetSelector.GetTargetNoCollision(W);
-                            if (Target != null)
-                                W.Cast(Target);
-                        }
+                        if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Harass.IfMana))
+                            if (MenuProvider.Champion.Harass.UseW)
+                            {
+                                var Target = TargetSelector.GetTargetNoCollision(W);
+                                if (Target != null)
+                                    W.Cast(Target);
+                            }
                 }
             }
         }
