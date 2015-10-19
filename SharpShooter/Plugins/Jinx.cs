@@ -22,11 +22,11 @@ namespace SharpShooter.Plugins
             R = new Spell(SpellSlot.R, 2500f, TargetSelector.DamageType.Physical) { MinHitChance = HitChance.High };
 
             W.SetSkillshot(0.6f, 60f, 3300f, true, SkillshotType.SkillshotLine);
-            E.SetSkillshot(1.1f, 100f, 1750f, false, SkillshotType.SkillshotCircle);
+            E.SetSkillshot(1.2f, 1f, 1750f, false, SkillshotType.SkillshotCircle);
             R.SetSkillshot(0.6f, 140f, 1700f, false, SkillshotType.SkillshotLine);
 
             MenuProvider.Champion.Combo.addUseQ();
-            MenuProvider.Champion.Combo.addItem("Switch to FISHBONES If will hit enemy Number >=", new Slider(3, 2, 6));
+            //MenuProvider.Champion.Combo.addItem("Switch to FISHBONES If will hit enemy Number >=", new Slider(3, 2, 6));
             MenuProvider.Champion.Combo.addUseW();
             MenuProvider.Champion.Combo.addUseE();
             MenuProvider.Champion.Combo.addUseR();
@@ -92,7 +92,7 @@ namespace SharpShooter.Plugins
                             {
                                 if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Laneclear.IfMana))
                                 {
-                                    if (MinionManager.GetMinions(float.MaxValue).Count(x => x.IsValidTarget(200, true, args.Target.Position) && x.Health <= ObjectManager.Player.GetAutoAttackDamage(x) + Q.GetDamage(x)) >= 3)
+                                    if (MinionManager.GetMinions(float.MaxValue).Count(x => x.IsValidTarget(200, true, args.Target.Position) && x.Health <= ObjectManager.Player.GetAutoAttackDamage(x) + Q.GetDamage(x)) >= 2)
                                         QSwitch(true);
                                     else
                                         QSwitch(false);
@@ -145,7 +145,7 @@ namespace SharpShooter.Plugins
                                         if (ObjectManager.Player.CountEnemiesInRange(2000f) > 0)
                                         {
                                             var Target = HeroManager.Enemies.Where(x => x.IsValidTarget(ObjectManager.Player.GetRealAutoAttackRange(x, GetQRange))).OrderByDescending(a => TargetSelector.GetPriority(a)).FirstOrDefault();
-                                            QSwitch(Target.IsValidTarget(ObjectManager.Player.GetRealAutoAttackRange(Target, defaultRange)));
+                                            QSwitch(!Target.IsValidTarget(ObjectManager.Player.GetRealAutoAttackRange(Target, defaultRange)));
                                         }
                                         else
                                             QSwitch(false);
@@ -196,7 +196,7 @@ namespace SharpShooter.Plugins
                                             if (ObjectManager.Player.CountEnemiesInRange(2000f) > 0)
                                             {
                                                 var Target = HeroManager.Enemies.Where(x => x.IsValidTarget(ObjectManager.Player.GetRealAutoAttackRange(x, GetQRange))).OrderByDescending(a => TargetSelector.GetPriority(a)).FirstOrDefault();
-                                                QSwitch(Target.IsValidTarget(ObjectManager.Player.GetRealAutoAttackRange(Target, defaultRange)));
+                                                QSwitch(!Target.IsValidTarget(ObjectManager.Player.GetRealAutoAttackRange(Target, defaultRange)));
                                             }
                                             else
                                                 QSwitch(false);
