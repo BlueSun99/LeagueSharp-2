@@ -33,6 +33,7 @@ namespace SharpShooter.Plugins
 
             MenuProvider.Champion.Harass.addUseQ();
             MenuProvider.Champion.Harass.addUseW();
+            MenuProvider.Champion.Harass.addAutoHarass();
             MenuProvider.Champion.Harass.addIfMana(60);
 
             MenuProvider.Champion.Lasthit.addUseQ();
@@ -249,6 +250,14 @@ namespace SharpShooter.Plugins
                             var Target = HeroManager.Enemies.FirstOrDefault(x => x.IsValidTarget(E.Range) && x.isImmobileUntil() > 0.5f);
                             if (Target != null)
                                 E.Cast(Target, false, true);
+                        }
+
+                    if (MenuProvider.Champion.Harass.AutoHarass)
+                        if (MenuProvider.Champion.Harass.UseW)
+                        {
+                            var Target = TargetSelector.GetTargetNoCollision(W);
+                            if (Target != null)
+                                W.Cast(Target);
                         }
                 }
             }
