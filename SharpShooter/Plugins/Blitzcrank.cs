@@ -25,6 +25,7 @@ namespace SharpShooter.Plugins
             foreach (var enemy in HeroManager.Enemies)
                 MenuProvider.ChampionMenuInstance.SubMenu("Combo").SubMenu("Q WhiteList").AddItem(new MenuItem("Combo.Q WhiteList." + enemy.ChampionName, enemy.ChampionName, true)).SetValue(true);
 
+            MenuProvider.Champion.Combo.addUseW();
             MenuProvider.Champion.Combo.addUseE();
             MenuProvider.Champion.Combo.addUseR();
 
@@ -98,6 +99,10 @@ namespace SharpShooter.Plugins
                                             Q.Cast(Target);
                                     }
 
+                                if (MenuProvider.Champion.Combo.UseW)
+                                    if (HeroManager.Enemies.Any(x => x.HasBuff("rocketgrab2")))
+                                        W.Cast();
+
                                 if (MenuProvider.Champion.Combo.UseR)
                                     if (R.isReadyPerfectly())
                                         foreach (var Target in HeroManager.Enemies.Where(x => x.IsValidTarget(R.Range)))
@@ -149,6 +154,9 @@ namespace SharpShooter.Plugins
 
         private void Drawing_OnDraw(EventArgs args)
         {
+            if (UnderClocking.NeedtoUnderClocking())
+                return;
+
             if (!ObjectManager.Player.IsDead)
             {
                 if (MenuProvider.Champion.Drawings.DrawQrange.Active && Q.isReadyPerfectly())
