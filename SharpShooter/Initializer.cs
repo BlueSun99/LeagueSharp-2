@@ -12,13 +12,15 @@ namespace SharpShooter
 
             MenuProvider.initialize();
 
-            if(PluginLoader.LoadPlugin(ObjectManager.Player.ChampionName))
+            if (PluginLoader.LoadPlugin(ObjectManager.Player.ChampionName))
             {
                 MenuProvider.Champion.Drawings.addItem(" ");
                 OrbwalkerTargetIndicator.Load();
                 LasthitIndicator.Load();
-                AutoQuit.Load();
+
             }
+
+            AutoQuit.Load();
 
             Console.WriteLine("SharpShooter: Initialized.");
         }
