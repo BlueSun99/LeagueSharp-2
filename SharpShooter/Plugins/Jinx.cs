@@ -72,38 +72,58 @@ namespace SharpShooter.Plugins
         private void Orbwalking_BeforeAttack(Orbwalking.BeforeAttackEventArgs args)
         {
             if (args.Unit.IsMe)
+            {
                 switch (MenuProvider.Orbwalker.ActiveMode)
                 {
-                    case Orbwalking.OrbwalkingMode.LastHit:
-                        if (args.Target.IsValidTarget(ObjectManager.Player.GetRealAutoAttackRange(args.Target, defaultRange)))
-                            QSwitch(false);
-                        break;
                     case Orbwalking.OrbwalkingMode.Mixed:
-                        if (args.Target.Type == GameObjectType.obj_AI_Minion || args.Target.IsValidTarget(ObjectManager.Player.GetRealAutoAttackRange(args.Target, defaultRange)) || !ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Harass.IfMana))
+                        if (MenuProvider.Champion.Harass.UseQ)
+                            if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Harass.IfMana))
+                                QSwitch(!args.Target.IsValidTarget(ObjectManager.Player.GetRealAutoAttackRange(args.Target, defaultRange)));
+                            else
+                                QSwitch(false);
+                        else
                             QSwitch(false);
+
                         break;
                     case Orbwalking.OrbwalkingMode.LaneClear:
-                        if (MenuProvider.Champion.Laneclear.UseQ)
-                            if (MinionManager.GetMinions(float.MaxValue).Any(x => x.NetworkId == args.Target.NetworkId))
+                        if (MinionManager.GetMinions(float.MaxValue).Any(x => x.NetworkId == args.Target.NetworkId))
+                        {
+                            if (MenuProvider.Champion.Laneclear.UseQ)
+                            {
                                 if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Laneclear.IfMana))
                                 {
-                                    QSwitch(MinionManager.GetMinions(float.MaxValue).Count(x => x.IsValidTarget(200, true, x.ServerPosition)) >= 3);
+                                    if (MinionManager.GetMinions(float.MaxValue).Count(x => x.IsValidTarget(200, true, args.Target.Position) && x.Health <= ObjectManager.Player.GetAutoAttackDamage(x) + Q.GetDamage(x)) >= 3)
+                                        QSwitch(true);
+                                    else
+                                        QSwitch(false);
                                 }
                                 else
                                     QSwitch(false);
+                            }
+                            else
+                                QSwitch(false);
+                        }
 
-                        if (MenuProvider.Champion.Jungleclear.UseQ)
-                            if (MinionManager.GetMinions(float.MaxValue, MinionTypes.All, MinionTeam.Neutral).Any(x => x.NetworkId == args.Target.NetworkId))
-                                if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Jungleclear.IfMana))
-                                    QSwitch(MinionManager.GetMinions(float.MaxValue, MinionTypes.All, MinionTeam.Neutral).Count(x => x.IsValidTarget(200, true, x.ServerPosition)) >= 2);
+                        if (MinionManager.GetMinions(float.MaxValue, MinionTypes.All, MinionTeam.Neutral).Any(x => x.NetworkId == args.Target.NetworkId))
+                        {
+                            if (MenuProvider.Champion.Jungleclear.UseQ)
+                            {
+                                if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Laneclear.IfMana))
+                                {
+                                    if (MinionManager.GetMinions(float.MaxValue, MinionTypes.All, MinionTeam.Neutral).Count(x => x.IsValidTarget(200, true, args.Target.Position)) >= 2)
+                                        QSwitch(true);
+                                    else
+                                        QSwitch(false);
+                                }
                                 else
                                     QSwitch(false);
-                        break;
-                    case Orbwalking.OrbwalkingMode.Combo:
-                        if (MenuProvider.Champion.Combo.UseQ)
-                            QSwitch(args.Target.Position.CountEnemiesInRange(200) >= MenuProvider.Champion.Combo.getSliderValue("Switch to FISHBONES If will hit enemy Number >=").Value);
+                            }
+                            else
+                                QSwitch(false);
+                        }
                         break;
                 }
+            }
         }
 
         private void Game_OnUpdate(EventArgs args)
@@ -120,8 +140,18 @@ namespace SharpShooter.Plugins
                         case Orbwalking.OrbwalkingMode.Combo:
                             {
                                 if (MenuProvider.Champion.Combo.UseQ)
+                                {
                                     if (Q.isReadyPerfectly())
-                                        QSwitch(!HeroManager.Enemies.Any(x => x.IsValidTarget(ObjectManager.Player.GetRealAutoAttackRange(x, defaultRange))));
+                                        if (ObjectManager.Player.CountEnemiesInRange(2000f) > 0)
+                                        {
+                                            var Target = HeroManager.Enemies.Where(x => x.IsValidTarget(ObjectManager.Player.GetRealAutoAttackRange(x, GetQRange))).OrderByDescending(a => TargetSelector.GetPriority(a)).FirstOrDefault();
+                                            QSwitch(Target.IsValidTarget(ObjectManager.Player.GetRealAutoAttackRange(Target, defaultRange)));
+                                        }
+                                        else
+                                            QSwitch(false);
+                                }
+                                else
+                                    QSwitch(false);
 
                                 if (MenuProvider.Champion.Combo.UseW)
                                     if (W.isReadyPerfectly())
@@ -145,7 +175,7 @@ namespace SharpShooter.Plugins
                                     if (R.isReadyPerfectly())
                                         if (WCastTime + 1060 <= Environment.TickCount)
                                         {
-                                            var Target = HeroManager.Enemies.FirstOrDefault(x => x.CountAlliesInRange(500) < 2 && HealthPrediction.GetHealthPrediction(x, 5000) > 0 && ObjectManager.Player.Distance(x) >= GetQRange && x.isKillableAndValidTarget(GetRDamage(x), R.Range) && R.GetPrediction(x).Hitchance >= HitChance.High);
+                                            var Target = HeroManager.Enemies.FirstOrDefault(x => !x.IsZombie && x.CountAlliesInRange(500) < 2 && HealthPrediction.GetHealthPrediction(x, 5000) > 0 && ObjectManager.Player.Distance(x) >= GetQRange && x.isKillableAndValidTarget(GetRDamage(x), R.Range) && R.GetPrediction(x).Hitchance >= HitChance.High);
                                             if (Target != null)
                                             {
                                                 var prediction = R.GetPrediction(Target);
@@ -160,11 +190,21 @@ namespace SharpShooter.Plugins
                         case Orbwalking.OrbwalkingMode.Mixed:
                             {
                                 if (MenuProvider.Champion.Combo.UseQ)
+                                {
                                     if (Q.isReadyPerfectly())
                                         if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Harass.IfMana))
-                                            QSwitch(!HeroManager.Enemies.Any(x => x.IsValidTarget(ObjectManager.Player.GetRealAutoAttackRange(x, defaultRange))));
+                                            if (ObjectManager.Player.CountEnemiesInRange(2000f) > 0)
+                                            {
+                                                var Target = HeroManager.Enemies.Where(x => x.IsValidTarget(ObjectManager.Player.GetRealAutoAttackRange(x, GetQRange))).OrderByDescending(a => TargetSelector.GetPriority(a)).FirstOrDefault();
+                                                QSwitch(Target.IsValidTarget(ObjectManager.Player.GetRealAutoAttackRange(Target, defaultRange)));
+                                            }
+                                            else
+                                                QSwitch(false);
                                         else
                                             QSwitch(false);
+                                }
+                                else
+                                    QSwitch(false);
 
                                 if (MenuProvider.Champion.Harass.UseW)
                                     if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Harass.IfMana))
@@ -180,22 +220,17 @@ namespace SharpShooter.Plugins
                         case Orbwalking.OrbwalkingMode.LaneClear:
                             {
                                 if (MenuProvider.Champion.Laneclear.UseQ)
+                                {
                                     if (Q.isReadyPerfectly())
                                         if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Laneclear.IfMana))
                                         {
-                                            var Target = MinionManager.GetMinions(float.MaxValue).FirstOrDefault(x => x.isKillableAndValidTarget(ObjectManager.Player.GetAutoAttackDamage(x, false) + Q.GetDamage(x)) && x.IsValidTarget(ObjectManager.Player.GetRealAutoAttackRange(x, GetQRange)) && MinionManager.GetMinions(float.MaxValue).Count(m => m.IsValidTarget(200, true, x.ServerPosition)) >= 3);
-                                            if (Target != null)
-                                            {
-                                                QSwitch(true);
 
-                                                if (Orbwalking.InAutoAttackRange(Target))
-                                                    MenuProvider.Orbwalker.ForceTarget(Target);
-                                            }
-                                            else
-                                                QSwitch(false);
                                         }
                                         else
                                             QSwitch(false);
+                                }
+                                else
+                                    QSwitch(false);
 
                                 //Jungleclear
                                 if (MenuProvider.Champion.Jungleclear.UseW)
@@ -212,6 +247,7 @@ namespace SharpShooter.Plugins
                         case Orbwalking.OrbwalkingMode.LastHit:
                             {
                                 if (MenuProvider.Champion.Lasthit.UseQ)
+                                {
                                     if (Q.isReadyPerfectly())
                                         if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Lasthit.IfMana))
                                         {
@@ -219,13 +255,19 @@ namespace SharpShooter.Plugins
                                             if (Target != null)
                                             {
                                                 QSwitch(true);
-                                                MenuProvider.Orbwalker.ForceTarget(Target);
+
+                                                if (Orbwalking.InAutoAttackRange(Target))
+                                                    MenuProvider.Orbwalker.ForceTarget(Target);
                                             }
                                             else
                                                 QSwitch(false);
                                         }
                                         else
                                             QSwitch(false);
+                                }
+                                else
+                                    QSwitch(false);
+
                                 break;
                             }
                     }
@@ -235,7 +277,7 @@ namespace SharpShooter.Plugins
                         if (R.isReadyPerfectly())
                             if (WCastTime + 1060 <= Environment.TickCount)
                             {
-                                var Target = HeroManager.Enemies.FirstOrDefault(x => x.CountAlliesInRange(500) < 2 && HealthPrediction.GetHealthPrediction(x, 5000) > 0 && ObjectManager.Player.Distance(x) >= GetQRange && x.isKillableAndValidTarget(GetRDamage(x), R.Range) && R.GetPrediction(x).Hitchance >= HitChance.High);
+                                var Target = HeroManager.Enemies.FirstOrDefault(x => !x.IsZombie && x.CountAlliesInRange(500) < 2 && HealthPrediction.GetHealthPrediction(x, 5000) > 0 && ObjectManager.Player.Distance(x) >= GetQRange && x.isKillableAndValidTarget(GetRDamage(x), R.Range) && R.GetPrediction(x).Hitchance >= HitChance.High);
                                 if (Target != null)
                                 {
                                     var prediction = R.GetPrediction(Target);
@@ -255,13 +297,15 @@ namespace SharpShooter.Plugins
                         }
 
                     if (MenuProvider.Champion.Harass.AutoHarass)
-                        if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Harass.IfMana))
+                        if (!ObjectManager.Player.IsRecalling())
                             if (MenuProvider.Champion.Harass.UseW)
-                            {
-                                var Target = TargetSelector.GetTargetNoCollision(W);
-                                if (Target != null)
-                                    W.Cast(Target);
-                            }
+                                if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Harass.IfMana))
+                                {
+                                    var Target = TargetSelector.GetTargetNoCollision(W);
+                                    if (Target != null)
+                                        if (ObjectManager.Player.UnderTurret(true) ? !Target.UnderTurret(true) : true)
+                                            W.Cast(Target);
+                                }
                 }
             }
         }
@@ -291,8 +335,8 @@ namespace SharpShooter.Plugins
 
         private void Drawing_OnDraw(EventArgs args)
         {
-            if (MenuProvider.Champion.Drawings.DrawQrange.Active && Q.isReadyPerfectly())
-                Render.Circle.DrawCircle(ObjectManager.Player.Position, GetQRange + 120, MenuProvider.Champion.Drawings.DrawQrange.Color);
+            if (MenuProvider.Champion.Drawings.DrawQrange.Active && Q.isReadyPerfectly() && !isQActive)
+                Render.Circle.DrawCircle(ObjectManager.Player.Position, GetQRange + 115, MenuProvider.Champion.Drawings.DrawQrange.Color);
 
             if (MenuProvider.Champion.Drawings.DrawWrange.Active && W.isReadyPerfectly())
                 Render.Circle.DrawCircle(ObjectManager.Player.Position, W.Range, MenuProvider.Champion.Drawings.DrawWrange.Color);
@@ -346,18 +390,18 @@ namespace SharpShooter.Plugins
         private void QSwitch(bool activate)
         {
             if (Q.isReadyPerfectly())
-                //if (!ObjectManager.Player.IsWindingUp)
-                switch (activate)
-                {
-                    case true:
-                        if (!ObjectManager.Player.HasBuff("JinxQ"))
-                            Q.Cast();
-                        break;
-                    case false:
-                        if (ObjectManager.Player.HasBuff("JinxQ"))
-                            Q.Cast();
-                        break;
-                }
+                if (!ObjectManager.Player.IsWindingUp)
+                    switch (activate)
+                    {
+                        case true:
+                            if (!ObjectManager.Player.HasBuff("JinxQ"))
+                                Q.Cast();
+                            break;
+                        case false:
+                            if (ObjectManager.Player.HasBuff("JinxQ"))
+                                Q.Cast();
+                            break;
+                    }
         }
 
         private double GetRDamage(Obj_AI_Base Target)

@@ -168,12 +168,22 @@ namespace SharpShooter.Plugins
                         if (Q.isReadyPerfectly())
                             if (MenuProvider.Champion.Harass.UseQ)
                                 if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Harass.IfMana))
-                                    Q.CastOnBestTarget();
+                                {
+                                    var Target = TargetSelector.GetTarget(Q.Range, Q.DamageType);
+                                    if (Target != null)
+                                        if (ObjectManager.Player.UnderTurret(true) ? !Target.UnderTurret(true) : true)
+                                            Q.Cast(Target);
+                                }
 
                         if (W.isReadyPerfectly())
                             if (MenuProvider.Champion.Harass.UseW)
                                 if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Harass.IfMana))
-                                    W.CastOnBestTarget();
+                                {
+                                    var Target = TargetSelector.GetTarget(W.Range, W.DamageType);
+                                    if (Target != null)
+                                        if (ObjectManager.Player.UnderTurret(true) ? !Target.UnderTurret(true) : true)
+                                            W.Cast(Target);
+                                }
                     }
                 }
             }
