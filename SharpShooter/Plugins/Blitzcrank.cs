@@ -45,37 +45,12 @@ namespace SharpShooter.Plugins
             Drawing.OnDraw += Drawing_OnDraw;
             AntiGapcloser.OnEnemyGapcloser += AntiGapcloser_OnEnemyGapcloser;
             Interrupter2.OnInterruptableTarget += Interrupter2_OnInterruptableTarget;
+            Orbwalking.BeforeAttack += Orbwalking_BeforeAttack;
             Orbwalking.AfterAttack += Orbwalking_AfterAttack;
             Obj_AI_Base.OnProcessSpellCast += Obj_AI_Base_OnProcessSpellCast;
 
             Console.WriteLine("Sharpshooter: Blitzcrank Loaded.");
             Game.PrintChat("<font color = \"#00D8FF\"><b>SharpShooter Reworked:</b></font> <font color = \"#FF007F\">Blitzcrank</font> Loaded.");
-        }
-
-        private void Obj_AI_Base_OnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
-        {
-            if (sender.IsMe)
-                if (args.Slot == SpellSlot.E)
-                    Orbwalking.ResetAutoAttackTimer();
-        }
-
-        private void Orbwalking_AfterAttack(AttackableUnit unit, AttackableUnit target)
-        {
-            if (unit.IsMe)
-                if (target.Type == GameObjectType.obj_AI_Hero)
-                    switch (MenuProvider.Orbwalker.ActiveMode)
-                    {
-                        case Orbwalking.OrbwalkingMode.Combo:
-                            if (MenuProvider.Champion.Combo.UseE)
-                                if (E.isReadyPerfectly())
-                                    E.Cast();
-                            break;
-                        case Orbwalking.OrbwalkingMode.Mixed:
-                            if (MenuProvider.Champion.Harass.UseE)
-                                if (E.isReadyPerfectly())
-                                    E.Cast();
-                            break;
-                    }
         }
 
         private void Game_OnUpdate(EventArgs args)
@@ -152,11 +127,49 @@ namespace SharpShooter.Plugins
                             R.Cast();
         }
 
+        private void Obj_AI_Base_OnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
+        {
+            if (sender.IsMe)
+                if (args.Slot == SpellSlot.E)
+                    Orbwalking.ResetAutoAttackTimer();
+        }
+
+        private void Orbwalking_BeforeAttack(Orbwalking.BeforeAttackEventArgs args)
+        {
+            if (args.Unit.IsMe)
+                switch (MenuProvider.Orbwalker.ActiveMode)
+                {
+                    case Orbwalking.OrbwalkingMode.Combo:
+                        if (MenuProvider.Champion.Combo.UseW)
+                            if (args.Target.Type == GameObjectType.obj_AI_Hero)
+                                if (W.isReadyPerfectly())
+                                    W.Cast();
+                        break;
+                }
+        }
+
+        private void Orbwalking_AfterAttack(AttackableUnit unit, AttackableUnit target)
+        {
+            if (unit.IsMe)
+                switch (MenuProvider.Orbwalker.ActiveMode)
+                {
+                    case Orbwalking.OrbwalkingMode.Combo:
+                        if (MenuProvider.Champion.Combo.UseE)
+                            if (target.Type == GameObjectType.obj_AI_Hero)
+                                if (E.isReadyPerfectly())
+                                    E.Cast();
+                        break;
+                    case Orbwalking.OrbwalkingMode.Mixed:
+                        if (MenuProvider.Champion.Harass.UseE)
+                            if (target.Type == GameObjectType.obj_AI_Hero)
+                                if (E.isReadyPerfectly())
+                                    E.Cast();
+                        break;
+                }
+        }
+
         private void Drawing_OnDraw(EventArgs args)
         {
-            if (UnderClocking.NeedtoUnderClocking())
-                return;
-
             if (!ObjectManager.Player.IsDead)
             {
                 if (MenuProvider.Champion.Drawings.DrawQrange.Active && Q.isReadyPerfectly())
@@ -167,11 +180,12 @@ namespace SharpShooter.Plugins
 
                 var DrawQTarget = MenuProvider.Champion.Drawings.getCircleValue("Draw Q Target");
                 if (DrawQTarget.Active)
-                {
-                    var Target = HeroManager.Enemies.Where(x => x.IsValidTarget(Q.Range) && Q.GetPrediction(x).Hitchance >= Q.MinHitChance && MenuProvider.MenuInstance.Item("Combo.Q WhiteList." + x.ChampionName, true).GetValue<bool>()).OrderByDescending(x => TargetSelector.GetPriority(x)).FirstOrDefault();
-                    if (Target != null)
-                        Render.Circle.DrawCircle(Target.Position, 70, DrawQTarget.Color, 3, true);
-                }
+                    if (Q.isReadyPerfectly())
+                    {
+                        var Target = HeroManager.Enemies.Where(x => x.IsValidTarget(Q.Range) && Q.GetPrediction(x).Hitchance >= Q.MinHitChance && MenuProvider.MenuInstance.Item("Combo.Q WhiteList." + x.ChampionName, true).GetValue<bool>()).OrderByDescending(x => TargetSelector.GetPriority(x)).FirstOrDefault();
+                        if (Target != null)
+                            Render.Circle.DrawCircle(Target.Position, 70, DrawQTarget.Color, 3, true);
+                    }
             }
         }
 
