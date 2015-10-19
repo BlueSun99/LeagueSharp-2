@@ -291,7 +291,7 @@ namespace SharpShooter.Plugins
         private void Drawing_OnDraw(EventArgs args)
         {
             if (MenuProvider.Champion.Drawings.DrawQrange.Active && Q.isReadyPerfectly())
-                Render.Circle.DrawCircle(ObjectManager.Player.Position, GetQRange + 180, MenuProvider.Champion.Drawings.DrawQrange.Color);
+                Render.Circle.DrawCircle(ObjectManager.Player.Position, GetQRange + 120, MenuProvider.Champion.Drawings.DrawQrange.Color);
 
             if (MenuProvider.Champion.Drawings.DrawWrange.Active && W.isReadyPerfectly())
                 Render.Circle.DrawCircle(ObjectManager.Player.Position, W.Range, MenuProvider.Champion.Drawings.DrawWrange.Color);
