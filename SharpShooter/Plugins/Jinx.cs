@@ -187,7 +187,9 @@ namespace SharpShooter.Plugins
                                             if (Target != null)
                                             {
                                                 QSwitch(true);
-                                                MenuProvider.Orbwalker.ForceTarget(Target);
+
+                                                if (Orbwalking.InAutoAttackRange(Target))
+                                                    MenuProvider.Orbwalker.ForceTarget(Target);
                                             }
                                             else
                                                 QSwitch(false);
