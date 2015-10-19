@@ -163,7 +163,7 @@ namespace SharpShooter.Plugins
                             }
                     }
 
-                    if (MenuProvider.Champion.Harass.Auto)
+                    if (MenuProvider.Champion.Harass.AutoHarass)
                     {
                         if (Q.isReadyPerfectly())
                             if (MenuProvider.Champion.Harass.UseQ)

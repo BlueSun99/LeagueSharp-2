@@ -457,7 +457,7 @@ namespace SharpShooter
                 /// <summary>
                 /// 'Auto Harass' 항목의 값을 반환합니다.
                 /// </summary>
-                internal static bool Auto
+                internal static bool AutoHarass
                 {
                     get
                     {
