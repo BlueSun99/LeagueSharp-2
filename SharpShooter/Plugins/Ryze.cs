@@ -186,17 +186,18 @@ namespace SharpShooter.Plugins
                                 if (W.Level > 0)
                                     if (E.Level > 0)
                                         if (Q.isReadyPerfectly())
-                                        {
-                                            var passive = ObjectManager.Player.GetBuff("ryzepassivestack");
-                                            if (passive != null)
+                                            if (!ObjectManager.Player.HasBuff("ryzepassivecharged"))
                                             {
-                                                if (passive.Count < MenuProvider.Champion.Misc.getSliderValue("Auto keep passive stacks (0 = OFF)").Value)
-                                                    if (passive.EndTime - Game.ClockTime <= 0.5)
-                                                        Q.Cast(Game.CursorPos);
+                                                var passive = ObjectManager.Player.GetBuff("ryzepassivestack");
+                                                if (passive != null)
+                                                {
+                                                    if (passive.Count < MenuProvider.Champion.Misc.getSliderValue("Auto keep passive stacks (0 = OFF)").Value)
+                                                        if (passive.EndTime - Game.ClockTime <= 0.5)
+                                                            Q.Cast(Game.CursorPos);
+                                                }
+                                                else
+                                                    Q.Cast(Game.CursorPos);
                                             }
-                                            else
-                                                Q.Cast(Game.CursorPos);
-                                        }
             }
         }
 
