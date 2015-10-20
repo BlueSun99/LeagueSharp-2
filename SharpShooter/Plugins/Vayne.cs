@@ -16,10 +16,10 @@ namespace SharpShooter.Plugins
         {
             Q = new Spell(SpellSlot.Q, 915f);
             W = new Spell(SpellSlot.W);
-            E = new Spell(SpellSlot.E, 650f) { Width = 1f, MinHitChance = HitChance.VeryHigh };
+            E = new Spell(SpellSlot.E, 700f) { Width = 1f, MinHitChance = HitChance.VeryHigh };
             R = new Spell(SpellSlot.R);
 
-            E.SetTargetted(0.14f, 1700f);
+            E.SetTargetted(0.375f, 12000f);
 
             MenuProvider.Champion.Combo.addUseQ();
             MenuProvider.Champion.Combo.addUseE();
@@ -61,20 +61,22 @@ namespace SharpShooter.Plugins
                 return;
 
             if (!ObjectManager.Player.IsDead)
-                if (Orbwalking.CanMove(100))
-                    switch (MenuProvider.Orbwalker.ActiveMode)
-                    {
-                        case Orbwalking.OrbwalkingMode.Combo:
-                            {
-                                if (MenuProvider.Champion.Combo.UseE)
-                                    if (E.isReadyPerfectly())
-                                        foreach (var enemy in HeroManager.Enemies.Where(x => x.IsValidTarget(E.Range)))
+                switch (MenuProvider.Orbwalker.ActiveMode)
+                {
+                    case Orbwalking.OrbwalkingMode.Combo:
+                        {
+                            if (MenuProvider.Champion.Combo.UseE)
+                                if (E.isReadyPerfectly())
+                                    foreach (var enemy in HeroManager.Enemies.Where(x => x.IsValidTarget(E.Range)))
+                                    {
+                                        var Prediction = E.GetPrediction(enemy);
+                                        if (Prediction.Hitchance >= E.MinHitChance)
                                         {
-                                            var Prediction = E.GetPrediction(enemy);
-                                            if (Prediction.Hitchance >= HitChance.High)
-                                            {
-                                                var FinalPosition = Prediction.UnitPosition.To2D().Extend(ObjectManager.Player.ServerPosition.To2D(), -400).To3D();
-                                                for (int i = 1; i < 400; i += 50)
+                                            var FinalPosition = Prediction.UnitPosition.To2D().Extend(ObjectManager.Player.ServerPosition.To2D(), -450).To3D();
+                                            if (FinalPosition.IsWall())
+                                                E.CastOnUnit(enemy);
+                                            else
+                                                for (int i = 1; i < 450; i += 50)
                                                 {
                                                     Vector3 loc3 = Prediction.UnitPosition.Extend(ObjectManager.Player.ServerPosition, -i);
                                                     if (FinalPosition.IsWall() || loc3.IsWall())
@@ -83,11 +85,11 @@ namespace SharpShooter.Plugins
                                                         break;
                                                     }
                                                 }
-                                            }
                                         }
-                                break;
-                            }
-                    }
+                                    }
+                            break;
+                        }
+                }
         }
 
         private void Obj_AI_Base_OnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
@@ -123,7 +125,8 @@ namespace SharpShooter.Plugins
                                 if (Q.isReadyPerfectly())
                                     if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Harass.IfMana))
                                         if (ObjectManager.Player.Position.Extend(Game.CursorPos, 700).CountEnemiesInRange(700) <= 1)
-                                            Q.Cast(Game.CursorPos);
+                                            if (Target.Type == GameObjectType.obj_AI_Hero)
+                                                Q.Cast(Game.CursorPos);
                             break;
                         }
                     case Orbwalking.OrbwalkingMode.LaneClear:
@@ -193,12 +196,10 @@ namespace SharpShooter.Plugins
                     foreach (var enemy in HeroManager.Enemies.Where(x => x.IsValidTarget(E.Range)))
                     {
                         var Prediction = E.GetPrediction(enemy);
-
-                        var FinalPosition = Prediction.UnitPosition.To2D().Extend(ObjectManager.Player.ServerPosition.To2D(), -400).To3D();
-                        for (int i = 1; i < 400; i += 50)
+                        for (int i = 1; i < 450; i += 50)
                         {
                             Vector3 loc3 = Prediction.UnitPosition.Extend(ObjectManager.Player.ServerPosition, -i);
-                            if (FinalPosition.IsWall() || loc3.IsWall())
+                            if (loc3.IsWall())
                             {
                                 Render.Circle.DrawCircle(loc3, 50, DrawECrashPrediction.Color, 3, true);
                             }
