@@ -250,8 +250,7 @@ namespace SharpShooter.Plugins
             float damage = 0;
 
             if (!ObjectManager.Player.IsWindingUp)
-                if (!MenuProvider.Champion.Combo.getBoolValue("Disable AutoAttack (For Faster Combo)"))
-                    damage += (float)ObjectManager.Player.GetAutoAttackDamage(enemy, true);
+                damage += (float)ObjectManager.Player.GetAutoAttackDamage(enemy, true);
 
             if (Q.isReadyPerfectly())
                 damage += Q.GetDamage(enemy);
