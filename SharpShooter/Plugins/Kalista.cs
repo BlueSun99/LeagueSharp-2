@@ -27,7 +27,7 @@ namespace SharpShooter.Plugins
 
             MenuProvider.Champion.Combo.addUseQ();
             MenuProvider.Champion.Combo.addUseE();
-            MenuProvider.Champion.Combo.addItem("Attack Minion For Chasing", true);
+            MenuProvider.Champion.Combo.addItem("Attack Minion For Chasing", false);
 
             MenuProvider.Champion.Harass.addUseQ();
             MenuProvider.Champion.Harass.addIfMana();
@@ -50,7 +50,7 @@ namespace SharpShooter.Plugins
             MenuProvider.Champion.Misc.addItem("Auto Steal Siege minion & Super minion (With E)", true);
             MenuProvider.Champion.Misc.addItem("Auto E Harass (With E)", true);
             MenuProvider.Champion.Misc.addItem("^ Don't do this if in ComboMode", true);
-            MenuProvider.Champion.Misc.addItem("Auto W on Dragon or Baron (With W)", true);
+            MenuProvider.Champion.Misc.addItem("Auto W on Dragon or Baron (With W)", false);
             MenuProvider.Champion.Misc.addItem("Cast W on Dragon", new KeyBind('J', KeyBindType.Press));
             MenuProvider.Champion.Misc.addItem("Cast W on Baron", new KeyBind('K', KeyBindType.Press));
 

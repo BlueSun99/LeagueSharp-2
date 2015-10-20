@@ -16,10 +16,10 @@ namespace SharpShooter.Plugins
         {
             Q = new Spell(SpellSlot.Q, 915f);
             W = new Spell(SpellSlot.W);
-            E = new Spell(SpellSlot.E, 650f) { Width = 1f };
+            E = new Spell(SpellSlot.E, 650f) { Width = 1f, MinHitChance = HitChance.VeryHigh };
             R = new Spell(SpellSlot.R);
 
-            E.SetTargetted(0.14f, 1600f);
+            E.SetTargetted(0.14f, 1700f);
 
             MenuProvider.Champion.Combo.addUseQ();
             MenuProvider.Champion.Combo.addUseE();
