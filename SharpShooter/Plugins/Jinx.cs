@@ -92,7 +92,7 @@ namespace SharpShooter.Plugins
                             {
                                 if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Laneclear.IfMana))
                                 {
-                                    if (MinionManager.GetMinions(float.MaxValue).Count(x => x.IsValidTarget(200, true, args.Target.Position) && x.Health <= ObjectManager.Player.GetAutoAttackDamage(x) + Q.GetDamage(x)) >= 2)
+                                    if (MinionManager.GetMinions(float.MaxValue).Count(x => x.IsValidTarget(200, true, args.Target.Position) && (x.Health > ObjectManager.Player.GetAutoAttackDamage(x) * 2 || x.Health <= ObjectManager.Player.GetAutoAttackDamage(x) + Q.GetDamage(x))) >= 3)
                                         QSwitch(true);
                                     else
                                         QSwitch(false);

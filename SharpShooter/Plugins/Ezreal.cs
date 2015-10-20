@@ -113,12 +113,13 @@ namespace SharpShooter.Plugins
 
                                 if (MenuProvider.Champion.Combo.UseR)
                                     if (R.isReadyPerfectly())
-                                    {
-                                        var KillableTarget = HeroManager.Enemies.FirstOrDefault(x => !Orbwalking.InAutoAttackRange(x) && x.isKillableAndValidTarget(R.GetDamage(x), R.Range));
-                                        if (KillableTarget != null)
-                                            R.Cast(KillableTarget, false, true);
-                                        R.CastIfWillHit(TargetSelector.GetTarget(R.Range, R.DamageType), 3);
-                                    }
+                                        if (ObjectManager.Player.CountEnemiesInRange(700) == 0)
+                                        {
+                                            var KillableTarget = HeroManager.Enemies.FirstOrDefault(x => !Orbwalking.InAutoAttackRange(x) && x.isKillableAndValidTarget(R.GetDamage(x), R.Range) && R.GetPrediction(x).Hitchance >= R.MinHitChance);
+                                            if (KillableTarget != null)
+                                                R.Cast(KillableTarget, false, true);
+                                            R.CastIfWillHit(TargetSelector.GetTarget(R.Range, R.DamageType), 3);
+                                        }
                                 break;
                             }
                         case Orbwalking.OrbwalkingMode.Mixed:
