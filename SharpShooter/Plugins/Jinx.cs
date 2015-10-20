@@ -103,7 +103,7 @@ namespace SharpShooter.Plugins
                             else
                                 QSwitch(false);
                         }
-
+                        else
                         if (MinionManager.GetMinions(float.MaxValue, MinionTypes.All, MinionTeam.Neutral).Any(x => x.NetworkId == args.Target.NetworkId))
                         {
                             if (MenuProvider.Champion.Jungleclear.UseQ)
@@ -120,6 +120,10 @@ namespace SharpShooter.Plugins
                             }
                             else
                                 QSwitch(false);
+                        }
+                        else
+                        {
+                            QSwitch(false);
                         }
                         break;
                 }
