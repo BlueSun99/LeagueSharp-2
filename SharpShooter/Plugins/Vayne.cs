@@ -19,7 +19,7 @@ namespace SharpShooter.Plugins
             E = new Spell(SpellSlot.E, 700f) { Width = 1f, MinHitChance = HitChance.VeryHigh };
             R = new Spell(SpellSlot.R);
 
-            E.SetTargetted(0.375f, 12000f);
+            E.SetTargetted(0.375f, float.MaxValue);
 
             MenuProvider.Champion.Combo.addUseQ();
             MenuProvider.Champion.Combo.addUseE();
@@ -33,14 +33,14 @@ namespace SharpShooter.Plugins
             MenuProvider.Champion.Jungleclear.addUseQ();
             MenuProvider.Champion.Jungleclear.addIfMana(20);
 
-            MenuProvider.Champion.Misc.addUseAntiGapcloser();
+            MenuProvider.Champion.Misc.addUseAntiGapcloser(false);
             MenuProvider.Champion.Misc.addUseInterrupter();
             MenuProvider.Champion.Misc.addItem("Auto Q when using R", true);
             MenuProvider.Champion.Misc.addItem("Q Stealth duration (ms)", new Slider(1000, 0, 1000));
 
             MenuProvider.Champion.Drawings.addDrawQrange(System.Drawing.Color.DeepSkyBlue, true);
-            MenuProvider.Champion.Drawings.addDrawErange(System.Drawing.Color.DeepSkyBlue, false);
-            MenuProvider.Champion.Drawings.addItem("Draw E Crash Prediction", new Circle(false, System.Drawing.Color.YellowGreen));
+            MenuProvider.Champion.Drawings.addDrawErange(System.Drawing.Color.DeepSkyBlue, true);
+            MenuProvider.Champion.Drawings.addItem("Draw E Crash Prediction", new Circle(true, System.Drawing.Color.YellowGreen));
             MenuProvider.Champion.Drawings.addDamageIndicator(GetComboDamage);
 
             Game.OnUpdate += Game_OnUpdate;
@@ -72,14 +72,14 @@ namespace SharpShooter.Plugins
                                         var Prediction = E.GetPrediction(enemy);
                                         if (Prediction.Hitchance >= E.MinHitChance)
                                         {
-                                            var FinalPosition = Prediction.UnitPosition.To2D().Extend(ObjectManager.Player.ServerPosition.To2D(), -450).To3D();
+                                            var FinalPosition = Prediction.UnitPosition.Extend(ObjectManager.Player.Position, -400);
                                             if (FinalPosition.IsWall())
                                                 E.CastOnUnit(enemy);
                                             else
-                                                for (int i = 1; i < 450; i += 50)
+                                                for (int i = 1; i < 400; i += 50)
                                                 {
-                                                    Vector3 loc3 = Prediction.UnitPosition.Extend(ObjectManager.Player.ServerPosition, -i);
-                                                    if (FinalPosition.IsWall() || loc3.IsWall())
+                                                    Vector3 loc3 = Prediction.UnitPosition.Extend(ObjectManager.Player.Position, -i);
+                                                    if (loc3.IsWall())
                                                     {
                                                         E.CastOnUnit(enemy);
                                                         break;
@@ -126,25 +126,29 @@ namespace SharpShooter.Plugins
                                     if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Harass.IfMana))
                                         if (ObjectManager.Player.Position.Extend(Game.CursorPos, 700).CountEnemiesInRange(700) <= 1)
                                             if (Target.Type == GameObjectType.obj_AI_Hero)
-                                                Q.Cast(Game.CursorPos);
+                                                if (!ObjectManager.Player.Position.Extend(Game.CursorPos, 300).UnderTurret(true))
+                                                    Q.Cast(Game.CursorPos);
                             break;
                         }
                     case Orbwalking.OrbwalkingMode.LaneClear:
                         {
                             //Lane
-                            if (MenuProvider.Champion.Laneclear.UseQ)
-                                if (Q.isReadyPerfectly())
+                            if (MinionManager.GetMinions(float.MaxValue).Any(x => x.NetworkId == Target.NetworkId))
+                                if (MenuProvider.Champion.Laneclear.UseQ)
                                     if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Laneclear.IfMana))
-                                        if (ObjectManager.Player.Position.Extend(Game.CursorPos, 700).CountEnemiesInRange(700) <= 1)
-                                            if (MinionManager.GetMinions(Orbwalking.GetRealAutoAttackRange(ObjectManager.Player)).Any(x => x.NetworkId == Target.NetworkId))
-                                                Q.Cast(Game.CursorPos);
+                                        if (Q.isReadyPerfectly())
+                                            if (ObjectManager.Player.Position.Extend(Game.CursorPos, 700).CountEnemiesInRange(700) <= 1)
+                                                if (!ObjectManager.Player.Position.Extend(Game.CursorPos, 300).UnderTurret(true))
+                                                    if (MinionManager.GetMinions(ObjectManager.Player.Position.Extend(Game.CursorPos, 300), 615, MinionTypes.All, MinionTeam.Enemy).Any(x => x.NetworkId != Target.NetworkId && x.isKillableAndValidTarget(ObjectManager.Player.GetAutoAttackDamage(x) + Q.GetDamage(x))))
+                                                        Q.Cast(Game.CursorPos);
 
-                            //Jugnle
-                            if (MenuProvider.Champion.Jungleclear.UseQ)
-                                if (Q.isReadyPerfectly())
+                            //Jungle
+                            if (MinionManager.GetMinions(float.MaxValue, MinionTypes.All, MinionTeam.Neutral).Any(x => x.NetworkId == Target.NetworkId))
+                                if (MenuProvider.Champion.Jungleclear.UseQ)
                                     if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Jungleclear.IfMana))
-                                        if (MinionManager.GetMinions(Orbwalking.GetRealAutoAttackRange(ObjectManager.Player), MinionTypes.All, MinionTeam.Neutral).Any(x => x.NetworkId == Target.NetworkId))
+                                        if (Q.isReadyPerfectly())
                                             Q.Cast(Game.CursorPos);
+
                             break;
                         }
                 }
@@ -158,7 +162,8 @@ namespace SharpShooter.Plugins
                 if (buff != null)
                     if (buff.IsValidBuff())
                         if (buff.EndTime - Game.Time > (buff.EndTime - buff.StartTime) - (MenuProvider.Champion.Misc.getSliderValue("Q Stealth duration (ms)").Value / 1000))
-                            args.Process = false;
+                            if (!ObjectManager.Player.Position.UnderTurret(true))
+                                args.Process = false;
             }
         }
 
@@ -196,13 +201,11 @@ namespace SharpShooter.Plugins
                     foreach (var enemy in HeroManager.Enemies.Where(x => x.IsValidTarget(E.Range)))
                     {
                         var Prediction = E.GetPrediction(enemy);
-                        for (int i = 1; i < 450; i += 50)
+                        for (int i = 1; i < 400; i += 50)
                         {
-                            Vector3 loc3 = Prediction.UnitPosition.Extend(ObjectManager.Player.ServerPosition, -i);
+                            Vector3 loc3 = Prediction.UnitPosition.Extend(ObjectManager.Player.Position, -i);
                             if (loc3.IsWall())
-                            {
-                                Render.Circle.DrawCircle(loc3, 50, DrawECrashPrediction.Color, 3, true);
-                            }
+                                Render.Circle.DrawCircle(loc3, 30, DrawECrashPrediction.Color, 5, false);
                         }
                     }
                 }
