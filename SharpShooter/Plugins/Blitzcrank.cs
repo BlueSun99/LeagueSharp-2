@@ -9,6 +9,7 @@ namespace SharpShooter.Plugins
     public class Blitzcrank
     {
         private Spell Q, W, E, R;
+        private bool DontAutoAttack;
 
         public Blitzcrank()
         {
@@ -48,6 +49,7 @@ namespace SharpShooter.Plugins
             Orbwalking.BeforeAttack += Orbwalking_BeforeAttack;
             Orbwalking.AfterAttack += Orbwalking_AfterAttack;
             Obj_AI_Base.OnProcessSpellCast += Obj_AI_Base_OnProcessSpellCast;
+            Obj_AI_Base.OnPlayAnimation += Obj_AI_Base_OnPlayAnimation;
 
             Console.WriteLine("Sharpshooter: Blitzcrank Loaded.");
             Game.PrintChat("<font color = \"#00D8FF\"><b>SharpShooter Reworked:</b></font> <font color = \"#FF007F\">Blitzcrank</font> Loaded.");
@@ -134,9 +136,27 @@ namespace SharpShooter.Plugins
                     Orbwalking.ResetAutoAttackTimer();
         }
 
+        private void Obj_AI_Base_OnPlayAnimation(Obj_AI_Base sender, GameObjectPlayAnimationEventArgs args)
+        {
+            if (sender.IsMe)
+            {
+                if (args.Animation == "Spell1" || args.Animation == "Spell4")
+                    DontAutoAttack = true;
+                else
+                    DontAutoAttack = false;
+            }
+        }
+
         private void Orbwalking_BeforeAttack(Orbwalking.BeforeAttackEventArgs args)
         {
             if (args.Unit.IsMe)
+            {
+                if (DontAutoAttack)
+                {
+                    args.Process = false;
+                    return;
+                }
+
                 switch (MenuProvider.Orbwalker.ActiveMode)
                 {
                     case Orbwalking.OrbwalkingMode.Combo:
@@ -146,6 +166,7 @@ namespace SharpShooter.Plugins
                                     W.Cast();
                         break;
                 }
+            }
         }
 
         private void Orbwalking_AfterAttack(AttackableUnit unit, AttackableUnit target)
