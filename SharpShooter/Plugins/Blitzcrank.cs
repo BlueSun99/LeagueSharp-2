@@ -39,7 +39,8 @@ namespace SharpShooter.Plugins
 
             MenuProvider.Champion.Drawings.addDrawQrange(System.Drawing.Color.DeepSkyBlue, true);
             MenuProvider.Champion.Drawings.addDrawRrange(System.Drawing.Color.DeepSkyBlue, true);
-            MenuProvider.Champion.Drawings.addItem("Draw Q Target", new Circle(true, System.Drawing.Color.DeepSkyBlue));
+            MenuProvider.Champion.Drawings.addItem("Draw Q Target Mark", new Circle(true, System.Drawing.Color.DeepSkyBlue));
+            MenuProvider.Champion.Drawings.addItem("Draw Whitelisted Target Mark", new Circle(true, System.Drawing.Color.White));
             MenuProvider.Champion.Drawings.addDamageIndicator(GetComboDamage);
 
             Game.OnUpdate += Game_OnUpdate;
@@ -82,6 +83,7 @@ namespace SharpShooter.Plugins
 
                                 if (MenuProvider.Champion.Combo.UseR)
                                     if (R.isReadyPerfectly())
+                                    {
                                         foreach (var Target in HeroManager.Enemies.Where(x => x.IsValidTarget(R.Range)))
                                         {
                                             //R Logics
@@ -96,7 +98,14 @@ namespace SharpShooter.Plugins
 
                                                 R.Cast(Target);
                                             }
+
+                                            if (Target.isImmobileUntil() <= 0.5f)
+                                                R.Cast();
                                         }
+
+                                        if (ObjectManager.Player.CountEnemiesInRange(R.Range) >= 2)
+                                            R.Cast();
+                                    }
                                 break;
                             }
                         case Orbwalking.OrbwalkingMode.Mixed:
@@ -175,16 +184,20 @@ namespace SharpShooter.Plugins
                 switch (MenuProvider.Orbwalker.ActiveMode)
                 {
                     case Orbwalking.OrbwalkingMode.Combo:
-                        if (MenuProvider.Champion.Combo.UseE)
-                            if (target.Type == GameObjectType.obj_AI_Hero)
+                        if (target.Type == GameObjectType.obj_AI_Hero)
+                        {
+                            if (MenuProvider.Champion.Combo.UseE)
                                 if (E.isReadyPerfectly())
                                     E.Cast();
+                        }
                         break;
                     case Orbwalking.OrbwalkingMode.Mixed:
-                        if (MenuProvider.Champion.Harass.UseE)
-                            if (target.Type == GameObjectType.obj_AI_Hero)
+                        if (target.Type == GameObjectType.obj_AI_Hero)
+                        {
+                            if (MenuProvider.Champion.Harass.UseE)
                                 if (E.isReadyPerfectly())
                                     E.Cast();
+                        }
                         break;
                 }
         }
@@ -199,14 +212,26 @@ namespace SharpShooter.Plugins
                 if (MenuProvider.Champion.Drawings.DrawRrange.Active && R.isReadyPerfectly())
                     Render.Circle.DrawCircle(ObjectManager.Player.Position, R.Range, MenuProvider.Champion.Drawings.DrawRrange.Color);
 
-                var DrawQTarget = MenuProvider.Champion.Drawings.getCircleValue("Draw Q Target");
-                if (DrawQTarget.Active)
+                var DrawQTargetMark = MenuProvider.Champion.Drawings.getCircleValue("Draw Q Target Mark");
+                if (DrawQTargetMark.Active)
                     if (Q.isReadyPerfectly())
                     {
                         var Target = HeroManager.Enemies.Where(x => x.IsValidTarget(Q.Range) && Q.GetPrediction(x).Hitchance >= Q.MinHitChance && MenuProvider.MenuInstance.Item("Combo.Q WhiteList." + x.ChampionName, true).GetValue<bool>()).OrderByDescending(x => TargetSelector.GetPriority(x)).FirstOrDefault();
                         if (Target != null)
-                            Render.Circle.DrawCircle(Target.Position, 70, DrawQTarget.Color, 3, true);
+                            Render.Circle.DrawCircle(Target.Position, 70, DrawQTargetMark.Color, 3, false);
                     }
+
+                var DrawWhitelistedTargetMark = MenuProvider.Champion.Drawings.getCircleValue("Draw Whitelisted Target Mark");
+                if (DrawWhitelistedTargetMark.Active)
+                {
+                    if (Q.isReadyPerfectly())
+                    {
+                        foreach (var Target in HeroManager.Enemies.Where(x => x.IsValidTarget() && MenuProvider.MenuInstance.Item("Combo.Q WhiteList." + x.ChampionName, true).GetValue<bool>()))
+                        {
+                            Render.Circle.DrawCircle(Target.Position, 30, DrawWhitelistedTargetMark.Color, 10, false);
+                        }
+                    }
+                }
             }
         }
 
