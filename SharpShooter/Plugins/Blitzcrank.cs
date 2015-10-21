@@ -99,8 +99,9 @@ namespace SharpShooter.Plugins
                                                 R.Cast(Target);
                                             }
 
-                                            if (Target.isImmobileUntil() <= 0.5f)
-                                                R.Cast();
+                                            if (Target.isImmobileUntil() > 0f)
+                                                if (Target.isImmobileUntil() <= 0.25f)
+                                                    R.Cast();
                                         }
 
                                         if (ObjectManager.Player.CountEnemiesInRange(R.Range) >= 2)
