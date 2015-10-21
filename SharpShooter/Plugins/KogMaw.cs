@@ -15,7 +15,7 @@ namespace SharpShooter.Plugins
             Q = new Spell(SpellSlot.Q, 950f) { MinHitChance = HitChance.High };
             W = new Spell(SpellSlot.W);
             E = new Spell(SpellSlot.E, 1260f) { MinHitChance = HitChance.High };
-            R = new Spell(SpellSlot.R) { MinHitChance = HitChance.High };
+            R = new Spell(SpellSlot.R) { MinHitChance = HitChance.VeryHigh };
 
             Q.SetSkillshot(0.25f, 70f, 1650f, true, SkillshotType.SkillshotLine);
             E.SetSkillshot(0.50f, 120f, 1400f, false, SkillshotType.SkillshotLine);
