@@ -78,7 +78,14 @@ namespace SharpShooter.Plugins
                     case Orbwalking.OrbwalkingMode.Mixed:
                         if (MenuProvider.Champion.Harass.UseQ)
                             if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Harass.IfMana))
-                                QSwitch(!args.Target.IsValidTarget(ObjectManager.Player.GetRealAutoAttackRange(args.Target, defaultRange)));
+                            {
+                                if (args.Target.IsValidTarget(ObjectManager.Player.GetRealAutoAttackRange(args.Target, defaultRange)))
+                                    if (isQActive)
+                                    {
+                                        QSwitch(false);
+                                        args.Process = false;
+                                    }
+                            }
                             else
                                 QSwitch(false);
                         else
