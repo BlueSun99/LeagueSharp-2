@@ -228,7 +228,7 @@ namespace SharpShooter.Plugins
                     {
                         foreach (var Target in HeroManager.Enemies.Where(x => x.IsValidTarget() && MenuProvider.MenuInstance.Item("Combo.Q WhiteList." + x.ChampionName, true).GetValue<bool>()))
                         {
-                            Render.Circle.DrawCircle(Target.Position, 30, DrawWhitelistedTargetMark.Color, 10, false);
+                            Render.Circle.DrawCircle(Target.Position, 30, DrawWhitelistedTargetMark.Color, 5, false);
                         }
                     }
                 }

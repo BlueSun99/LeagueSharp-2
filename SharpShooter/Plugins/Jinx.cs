@@ -175,7 +175,7 @@ namespace SharpShooter.Plugins
                                 if (MenuProvider.Champion.Combo.UseE)
                                     if (E.isReadyPerfectly())
                                     {
-                                        var Target = HeroManager.Enemies.Where(x => x.IsValidTarget(E.Range) && E.GetPrediction(x).Hitchance >= E.MinHitChance && !x.IsFacing(ObjectManager.Player) && x.IsMoving).OrderBy(x => x.Distance(ObjectManager.Player)).FirstOrDefault();
+                                        var Target = HeroManager.Enemies.Where(x => x.IsValidTarget(600) && E.GetPrediction(x).Hitchance >= E.MinHitChance && !x.IsFacing(ObjectManager.Player) && x.IsMoving).OrderBy(x => x.Distance(ObjectManager.Player)).FirstOrDefault();
                                         if (Target != null)
                                             E.Cast(Target, false, true);
                                         else
