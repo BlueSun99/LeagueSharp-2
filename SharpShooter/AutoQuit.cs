@@ -1,5 +1,4 @@
-﻿using System;
-using LeagueSharp;
+﻿using LeagueSharp;
 using LeagueSharp.Common;
 
 namespace SharpShooter
@@ -16,8 +15,12 @@ namespace SharpShooter
         {
             if (MenuProvider.MenuInstance.Item("QuitTheGameAfterGameOver").GetValue<bool>())
             {
-                System.Threading.Thread.Sleep(3000);
-                Game.Quit();
+                System.Threading.Tasks.Task.Run(
+                async () =>
+                {
+                    await System.Threading.Tasks.Task.Delay(3000);
+                    Game.Quit();
+                });
             }
         }
     }
