@@ -22,6 +22,7 @@ namespace SharpShooter.Plugins
             E.SetSkillshot(0.125f, 80f, 2000f, true, SkillshotType.SkillshotLine);
 
             MenuProvider.Champion.Combo.addUseQ();
+            MenuProvider.Champion.Combo.addItem("Don't Use Q in AutoAttack Range", true);
             MenuProvider.Champion.Combo.addUseW();
             MenuProvider.Champion.Combo.addUseE();
             MenuProvider.Champion.Combo.addUseR();
@@ -72,7 +73,8 @@ namespace SharpShooter.Plugins
                             {
                                 if (MenuProvider.Champion.Combo.UseQ)
                                     if (Q.isReadyPerfectly())
-                                        Q.CastOnBestTarget(0, false, true);
+                                        if (MenuProvider.Champion.Combo.getBoolValue("Don't Use Q in AutoAttack Range") ? HeroManager.Enemies.Count(x => x.IsValidTarget() && Orbwalking.InAutoAttackRange(x)) == 0 : true)
+                                            Q.CastOnBestTarget();
 
                                 if (MenuProvider.Champion.Combo.UseW)
                                     if (W.isReadyPerfectly())

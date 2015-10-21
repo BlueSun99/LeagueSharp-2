@@ -49,7 +49,7 @@ namespace SharpShooter.Plugins
             MenuProvider.Champion.Misc.addItem("Auto Balista Combo (With R)", true);
             MenuProvider.Champion.Misc.addItem("Auto Steal Siege minion & Super minion (With E)", true);
             MenuProvider.Champion.Misc.addItem("Auto E Harass (With E)", true);
-            MenuProvider.Champion.Misc.addItem("^ Don't do this if in ComboMode", true);
+            MenuProvider.Champion.Misc.addItem("^ Don't do this in ComboMode", true);
             MenuProvider.Champion.Misc.addItem("Auto W on Dragon or Baron (With W)", false);
             MenuProvider.Champion.Misc.addItem("Cast W on Dragon", new KeyBind('J', KeyBindType.Press));
             MenuProvider.Champion.Misc.addItem("Cast W on Baron", new KeyBind('K', KeyBindType.Press));
@@ -240,7 +240,7 @@ namespace SharpShooter.Plugins
 
                 if (MenuProvider.Champion.Misc.getBoolValue("Auto E Harass (With E)"))
                     if (E.isReadyPerfectly())
-                        if (!(MenuProvider.Champion.Misc.getBoolValue("^ Don't do this if in ComboMode") && MenuProvider.Orbwalker.ActiveMode == Orbwalking.OrbwalkingMode.Combo))
+                        if (!(MenuProvider.Champion.Misc.getBoolValue("^ Don't do this in ComboMode") && MenuProvider.Orbwalker.ActiveMode == Orbwalking.OrbwalkingMode.Combo))
                             if (ObjectManager.Player.Mana - E.ManaCost >= E.ManaCost)
                                 if (HeroManager.Enemies.Any(x => x.IsValidTarget(E.Range) && E.GetDamage(x) > 10))
                                     if (MinionManager.GetMinions(E.Range, MinionTypes.All, MinionTeam.NotAlly).Any(x => HealthPrediction.GetHealthPrediction(x, 500) > 0 && x.isKillableAndValidTarget(E.GetDamage(x), E.Range)))
