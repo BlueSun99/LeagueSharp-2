@@ -23,7 +23,7 @@ namespace SharpShooter
 
             if (Target.ChampionName == "Blitzcrank")
                 if (!Target.HasBuff("manabarriercooldown"))
-                    if (Target.Health + Target.HPRegenRate + Target.PhysicalShield + (Target.Mana / 2) > CalculatedDamage)
+                    if (Target.Health + Target.HPRegenRate + Target.PhysicalShield + (Target.Mana / 2) + Target.PARRegenRate > CalculatedDamage)
                         return false;
 
             if (Target.HasBuff("FerociousHowl"))
@@ -66,7 +66,7 @@ namespace SharpShooter
 
             if (Target.CharData.BaseSkinName == "Blitzcrank")
                 if (!Target.HasBuff("manabarriercooldown"))
-                    if (Target.Health + Target.HPRegenRate + Target.PhysicalShield + (Target.Mana / 2) > CalculatedDamage)
+                    if (Target.Health + Target.HPRegenRate + Target.PhysicalShield + (Target.Mana / 2) + Target.PARRegenRate > CalculatedDamage)
                         return false;
 
             if (Target.HasBuff("FerociousHowl"))
