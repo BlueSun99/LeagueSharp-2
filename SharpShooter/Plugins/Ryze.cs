@@ -101,17 +101,17 @@ namespace SharpShooter.Plugins
                             }
                         case Orbwalking.OrbwalkingMode.Mixed:
                             {
-                                if (MenuProvider.Champion.Combo.UseQ)
+                                if (MenuProvider.Champion.Harass.UseQ)
                                     if (Q.isReadyPerfectly())
                                         if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Harass.IfMana))
                                             Q.CastOnBestTarget();
 
-                                if (MenuProvider.Champion.Combo.UseW)
+                                if (MenuProvider.Champion.Harass.UseW)
                                     if (W.isReadyPerfectly())
                                         if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Harass.IfMana))
                                             W.CastOnBestTarget();
 
-                                if (MenuProvider.Champion.Combo.UseE)
+                                if (MenuProvider.Champion.Harass.UseE)
                                     if (E.isReadyPerfectly())
                                         if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Harass.IfMana))
                                             E.CastOnBestTarget();
