@@ -56,6 +56,7 @@ namespace SharpShooter
             SupportedChampions.addItem("16. Teemo");
             SupportedChampions.addItem("17. Ryze");
             SupportedChampions.addItem("18. Blitzcrank");
+            SupportedChampions.addItem("19. Karthus");
 
             MenuInstance.AddToMainMenu();
 
