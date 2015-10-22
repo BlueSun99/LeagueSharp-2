@@ -26,7 +26,7 @@ namespace SharpShooter.Plugins
             R.SetSkillshot(0.6f, 140f, 1700f, false, SkillshotType.SkillshotLine);
 
             MenuProvider.Champion.Combo.addUseQ();
-            //MenuProvider.Champion.Combo.addItem("Switch to FISHBONES If will hit enemy Number >=", new Slider(3, 2, 6));
+            MenuProvider.Champion.Combo.addItem("Switch to Rocket If will hit enemy Number >=", new Slider(3, 2, 6));
             MenuProvider.Champion.Combo.addUseW();
             MenuProvider.Champion.Combo.addUseE();
             MenuProvider.Champion.Combo.addUseR();
@@ -156,7 +156,11 @@ namespace SharpShooter.Plugins
                                         if (ObjectManager.Player.CountEnemiesInRange(2000f) > 0)
                                         {
                                             var Target = HeroManager.Enemies.Where(x => x.IsValidTarget(ObjectManager.Player.GetRealAutoAttackRange(x, GetQRange))).OrderByDescending(a => TargetSelector.GetPriority(a)).FirstOrDefault();
-                                            QSwitch(!Target.IsValidTarget(ObjectManager.Player.GetRealAutoAttackRange(Target, defaultRange)));
+
+                                            if (Target.CountEnemiesInRange(200) >= MenuProvider.Champion.Combo.getSliderValue("Switch to Rocket If will hit enemy Number >=").Value)
+                                                QSwitch(true);
+                                            else
+                                                QSwitch(!Target.IsValidTarget(ObjectManager.Player.GetRealAutoAttackRange(Target, defaultRange)));
                                         }
                                         else
                                             QSwitch(false);
