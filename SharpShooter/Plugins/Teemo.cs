@@ -93,7 +93,7 @@ namespace SharpShooter.Plugins
                                     if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Laneclear.IfMana))
                                         if (Q.isReadyPerfectly())
                                         {
-                                            var Target = MinionManager.GetMinions(Q.Range).FirstOrDefault(x => x.isKillableAndValidTarget(Q.GetDamage(x), Q.Range) && (x.CharData.BaseSkinName.Contains("siege") || x.CharData.BaseSkinName.Contains("super")));
+                                            var Target = MinionManager.GetMinions(Q.Range).FirstOrDefault(x => x.isKillableAndValidTarget(Q.GetDamage(x), TargetSelector.DamageType.Magical, Q.Range) && (x.CharData.BaseSkinName.Contains("siege") || x.CharData.BaseSkinName.Contains("super")));
                                             if (Target != null)
                                                 Q.CastOnUnit(Target);
                                         }

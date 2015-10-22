@@ -95,7 +95,7 @@ namespace SharpShooter.Plugins
                                             }
                                             else
                                             {
-                                                var killableTarget = HeroManager.Enemies.FirstOrDefault(x => x.isKillableAndValidTarget(Q.GetDamage(x), Q.Range));
+                                                var killableTarget = HeroManager.Enemies.FirstOrDefault(x => x.isKillableAndValidTarget(Q.GetDamage(x), TargetSelector.DamageType.Physical, Q.Range));
                                                 if (killableTarget != null)
                                                     Q.CastOnUnit(killableTarget);
                                             }
@@ -116,7 +116,7 @@ namespace SharpShooter.Plugins
                                             }
                                             else
                                             {
-                                                var killableTarget = HeroManager.Enemies.FirstOrDefault(x => x.isKillableAndValidTarget(W.GetDamage(x), W.Range) && W.GetPrediction(x).Hitchance >= HitChance.High);
+                                                var killableTarget = HeroManager.Enemies.FirstOrDefault(x => x.isKillableAndValidTarget(W.GetDamage(x), TargetSelector.DamageType.Physical, W.Range) && W.GetPrediction(x).Hitchance >= HitChance.High);
                                                 if (killableTarget != null)
                                                     W.Cast(killableTarget);
                                             }
@@ -170,7 +170,7 @@ namespace SharpShooter.Plugins
                                                 }
                                                 else
                                                 {
-                                                    var killableTarget = HeroManager.Enemies.FirstOrDefault(x => x.isKillableAndValidTarget(W.GetDamage(x), W.Range) && W.GetPrediction(x).Hitchance >= HitChance.High);
+                                                    var killableTarget = HeroManager.Enemies.FirstOrDefault(x => x.isKillableAndValidTarget(W.GetDamage(x), TargetSelector.DamageType.Physical, W.Range) && W.GetPrediction(x).Hitchance >= HitChance.High);
                                                     if (killableTarget != null)
                                                         W.Cast(killableTarget);
                                                 }

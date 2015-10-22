@@ -124,7 +124,7 @@ namespace SharpShooter.Plugins
                                     if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Laneclear.IfMana))
                                         if (Q.isReadyPerfectly())
                                         {
-                                            var Target = MinionManager.GetMinions(Q.Range).FirstOrDefault(x => x.isKillableAndValidTarget(Q.GetDamage(x), Q.Range) && Q.GetPrediction(x).Hitchance >= Q.MinHitChance);
+                                            var Target = MinionManager.GetMinions(Q.Range).FirstOrDefault(x => x.isKillableAndValidTarget(Q.GetDamage(x), TargetSelector.DamageType.Magical, Q.Range) && Q.GetPrediction(x).Hitchance >= Q.MinHitChance);
                                             if (Target != null)
                                                 Q.Cast(Target);
                                         }
@@ -133,7 +133,7 @@ namespace SharpShooter.Plugins
                                     if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Laneclear.IfMana))
                                         if (W.isReadyPerfectly())
                                         {
-                                            var Target = MinionManager.GetMinions(W.Range).FirstOrDefault(x => x.isKillableAndValidTarget(W.GetDamage(x), W.Range));
+                                            var Target = MinionManager.GetMinions(W.Range).FirstOrDefault(x => x.isKillableAndValidTarget(W.GetDamage(x), TargetSelector.DamageType.Magical, W.Range));
                                             if (Target != null)
                                                 W.CastOnUnit(Target);
                                         }
@@ -142,7 +142,7 @@ namespace SharpShooter.Plugins
                                     if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Laneclear.IfMana))
                                         if (E.isReadyPerfectly())
                                         {
-                                            var Target = MinionManager.GetMinions(E.Range).FirstOrDefault(x => x.isKillableAndValidTarget(E.GetDamage(x), E.Range));
+                                            var Target = MinionManager.GetMinions(E.Range).FirstOrDefault(x => x.isKillableAndValidTarget(E.GetDamage(x), TargetSelector.DamageType.Magical, E.Range));
                                             if (Target != null)
                                                 E.CastOnUnit(Target);
                                         }

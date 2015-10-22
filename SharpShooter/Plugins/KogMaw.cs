@@ -97,7 +97,7 @@ namespace SharpShooter.Plugins
                                             R.CastOnBestTarget(0, false, true);
                                         else
                                         {
-                                            var killableTarget = HeroManager.Enemies.FirstOrDefault(x => x.isKillableAndValidTarget(R.GetDamage(x), R.Range) && R.GetPrediction(x).Hitchance >= R.MinHitChance);
+                                            var killableTarget = HeroManager.Enemies.FirstOrDefault(x => x.isKillableAndValidTarget(R.GetDamage(x), TargetSelector.DamageType.Magical, R.Range) && R.GetPrediction(x).Hitchance >= R.MinHitChance);
                                             if (killableTarget != null)
                                                 R.Cast(killableTarget, false, true);
                                         }

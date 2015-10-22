@@ -87,7 +87,7 @@ namespace SharpShooter.Plugins
                                         foreach (var Target in HeroManager.Enemies.Where(x => x.IsValidTarget(R.Range)))
                                         {
                                             //R Logics
-                                            if (Target.isKillableAndValidTarget(R.GetDamage(Target), R.Range))
+                                            if (Target.isKillableAndValidTarget(R.GetDamage(Target), TargetSelector.DamageType.Magical, R.Range))
                                                 R.Cast(Target);
 
                                             if (Target.HasBuff("rocketgrab2"))

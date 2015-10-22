@@ -115,7 +115,7 @@ namespace SharpShooter.Plugins
                                     if (R.isReadyPerfectly())
                                         if (ObjectManager.Player.CountEnemiesInRange(700) == 0)
                                         {
-                                            var KillableTarget = HeroManager.Enemies.FirstOrDefault(x => !Orbwalking.InAutoAttackRange(x) && x.isKillableAndValidTarget(R.GetDamage(x), R.Range) && R.GetPrediction(x).Hitchance >= R.MinHitChance);
+                                            var KillableTarget = HeroManager.Enemies.FirstOrDefault(x => !Orbwalking.InAutoAttackRange(x) && x.isKillableAndValidTarget(R.GetDamage(x), TargetSelector.DamageType.Magical, R.Range) && R.GetPrediction(x).Hitchance >= R.MinHitChance);
                                             if (KillableTarget != null)
                                                 R.Cast(KillableTarget, false, true);
                                             R.CastIfWillHit(TargetSelector.GetTarget(R.Range, R.DamageType), 3);
@@ -146,7 +146,7 @@ namespace SharpShooter.Plugins
                                     if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Laneclear.IfMana))
                                         if (Q.isReadyPerfectly())
                                         {
-                                            var Target = MinionManager.GetMinions(Q.Range).OrderBy(x => x.Health).FirstOrDefault(x => x.isKillableAndValidTarget(Q.GetDamage(x), Q.Range) && Q.GetPrediction(x).Hitchance >= Q.MinHitChance);
+                                            var Target = MinionManager.GetMinions(Q.Range).OrderBy(x => x.Health).FirstOrDefault(x => x.isKillableAndValidTarget(Q.GetDamage(x), TargetSelector.DamageType.Physical, Q.Range) && Q.GetPrediction(x).Hitchance >= Q.MinHitChance);
                                             if (Target != null)
                                                 Q.Cast(Target);
                                         }

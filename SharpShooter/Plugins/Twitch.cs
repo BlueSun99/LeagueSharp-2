@@ -61,7 +61,7 @@ namespace SharpShooter.Plugins
 
                                 if (MenuProvider.Champion.Combo.UseE)
                                     if (E.isReadyPerfectly())
-                                        if (HeroManager.Enemies.Any(x => x.IsValidTarget(E.Range) && (x.GetBuffCount("twitchdeadlyvenom") >= 6 || x.isKillableAndValidTarget(E.GetDamage(x)))))
+                                        if (HeroManager.Enemies.Any(x => x.IsValidTarget(E.Range) && (x.GetBuffCount("twitchdeadlyvenom") >= 6 || x.isKillableAndValidTarget(E.GetDamage(x), TargetSelector.DamageType.Physical))))
                                             E.Cast();
                                 break;
                             }
@@ -80,7 +80,7 @@ namespace SharpShooter.Plugins
                                 if (MenuProvider.Champion.Jungleclear.UseE)
                                     if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Jungleclear.IfMana))
                                         if (E.isReadyPerfectly())
-                                            if (MinionManager.GetMinions(E.Range, MinionTypes.All, MinionTeam.Neutral).Any(x => x.IsValidTarget(E.Range) && (x.GetBuffCount("TwitchHideInShadows") >= 6 || x.isKillableAndValidTarget(E.GetDamage(x)))))
+                                            if (MinionManager.GetMinions(E.Range, MinionTypes.All, MinionTeam.Neutral).Any(x => x.IsValidTarget(E.Range) && (x.GetBuffCount("TwitchHideInShadows") >= 6 || x.isKillableAndValidTarget(E.GetDamage(x), TargetSelector.DamageType.Physical))))
                                                 E.Cast();
                                 break;
                             }
@@ -88,7 +88,7 @@ namespace SharpShooter.Plugins
                 }
 
                 if (MenuProvider.Champion.Misc.UseKillsteal)
-                    if (HeroManager.Enemies.Any(x => x.isKillableAndValidTarget(E.GetDamage(x), E.Range)))
+                    if (HeroManager.Enemies.Any(x => x.isKillableAndValidTarget(E.GetDamage(x), TargetSelector.DamageType.Physical, E.Range)))
                         E.Cast();
 
                 if (MenuProvider.Champion.Misc.getKeyBindValue("Stealth Recall").Active)

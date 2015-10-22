@@ -186,7 +186,7 @@ namespace SharpShooter.Plugins
                                     if (R.isReadyPerfectly())
                                         if (WCastTime + 1060 <= Environment.TickCount)
                                         {
-                                            var Target = HeroManager.Enemies.FirstOrDefault(x => !x.IsZombie && x.CountAlliesInRange(500) < 2 && HealthPrediction.GetHealthPrediction(x, 5000) > 0 && ObjectManager.Player.Distance(x) >= GetQRange && x.isKillableAndValidTarget(GetRDamage(x), R.Range) && R.GetPrediction(x).Hitchance >= HitChance.High);
+                                            var Target = HeroManager.Enemies.FirstOrDefault(x => !x.IsZombie && x.CountAlliesInRange(500) < 2 && HealthPrediction.GetHealthPrediction(x, 5000) > 0 && ObjectManager.Player.Distance(x) >= GetQRange && x.isKillableAndValidTarget(GetRDamage(x), TargetSelector.DamageType.Physical, R.Range) && R.GetPrediction(x).Hitchance >= HitChance.High);
                                             if (Target != null)
                                             {
                                                 var prediction = R.GetPrediction(Target);
@@ -262,7 +262,7 @@ namespace SharpShooter.Plugins
                                     if (Q.isReadyPerfectly())
                                         if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Lasthit.IfMana))
                                         {
-                                            var Target = MinionManager.GetMinions(float.MaxValue).FirstOrDefault(x => x.isKillableAndValidTarget(ObjectManager.Player.GetAutoAttackDamage(x, false) + Q.GetDamage(x)) && x.IsValidTarget(ObjectManager.Player.GetRealAutoAttackRange(x, GetQRange)) && !x.IsValidTarget(ObjectManager.Player.GetRealAutoAttackRange(x, defaultRange)));
+                                            var Target = MinionManager.GetMinions(float.MaxValue).FirstOrDefault(x => x.isKillableAndValidTarget(ObjectManager.Player.GetAutoAttackDamage(x, false) + Q.GetDamage(x), TargetSelector.DamageType.Physical) && x.IsValidTarget(ObjectManager.Player.GetRealAutoAttackRange(x, GetQRange)) && !x.IsValidTarget(ObjectManager.Player.GetRealAutoAttackRange(x, defaultRange)));
                                             if (Target != null)
                                             {
                                                 QSwitch(true);
@@ -288,7 +288,7 @@ namespace SharpShooter.Plugins
                         if (R.isReadyPerfectly())
                             if (WCastTime + 1060 <= Environment.TickCount)
                             {
-                                var Target = HeroManager.Enemies.FirstOrDefault(x => !x.IsZombie && x.CountAlliesInRange(500) < 2 && HealthPrediction.GetHealthPrediction(x, 5000) > 0 && ObjectManager.Player.Distance(x) >= GetQRange && x.isKillableAndValidTarget(GetRDamage(x), R.Range) && R.GetPrediction(x).Hitchance >= HitChance.High);
+                                var Target = HeroManager.Enemies.FirstOrDefault(x => !x.IsZombie && x.CountAlliesInRange(500) < 2 && HealthPrediction.GetHealthPrediction(x, 5000) > 0 && ObjectManager.Player.Distance(x) >= GetQRange && x.isKillableAndValidTarget(GetRDamage(x), TargetSelector.DamageType.Physical, R.Range) && R.GetPrediction(x).Hitchance >= HitChance.High);
                                 if (Target != null)
                                 {
                                     var prediction = R.GetPrediction(Target);
@@ -368,7 +368,7 @@ namespace SharpShooter.Plugins
 
             var DrawRKillable = MenuProvider.Champion.Drawings.getCircleValue("Draw R Killable");
             if (DrawRKillable.Active && R.Level > 0)
-                foreach (var Target in HeroManager.Enemies.Where(x => x.isKillableAndValidTarget(GetRDamage(x))))
+                foreach (var Target in HeroManager.Enemies.Where(x => x.isKillableAndValidTarget(GetRDamage(x), TargetSelector.DamageType.Physical)))
                 {
                     var TargetPos = Drawing.WorldToScreen(Target.Position);
                     Render.Circle.DrawCircle(Target.Position, Target.BoundingRadius, DrawRKillable.Color);

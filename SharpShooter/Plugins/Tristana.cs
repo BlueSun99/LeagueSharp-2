@@ -85,7 +85,7 @@ namespace SharpShooter.Plugins
                                 if (MenuProvider.Champion.Combo.UseR)
                                     if (R.isReadyPerfectly())
                                     {
-                                        var Target = HeroManager.Enemies.OrderByDescending(x => x.Health).FirstOrDefault(x => x.isKillableAndValidTarget(R.GetDamage(x), R.Range) && !x.isWillDieByTristanaE());
+                                        var Target = HeroManager.Enemies.OrderByDescending(x => x.Health).FirstOrDefault(x => x.isKillableAndValidTarget(R.GetDamage(x), TargetSelector.DamageType.Physical, R.Range) && !x.isWillDieByTristanaE());
                                         if (Target != null)
                                             R.CastOnUnit(Target);
                                     }
@@ -117,7 +117,7 @@ namespace SharpShooter.Plugins
 
                 if (MenuProvider.Champion.Misc.UseKillsteal)
                 {
-                    var Target = HeroManager.Enemies.OrderByDescending(x => x.Health).FirstOrDefault(x => x.isKillableAndValidTarget(R.GetDamage(x), R.Range) && !x.isWillDieByTristanaE());
+                    var Target = HeroManager.Enemies.OrderByDescending(x => x.Health).FirstOrDefault(x => x.isKillableAndValidTarget(R.GetDamage(x), TargetSelector.DamageType.Physical, R.Range) && !x.isWillDieByTristanaE());
                     if (Target != null)
                         R.CastOnUnit(Target);
                 }
@@ -195,7 +195,7 @@ namespace SharpShooter.Plugins
 
                 var DrawRKillable = MenuProvider.Champion.Drawings.getCircleValue("Draw R Killable");
                 if (DrawRKillable.Active && R.isReadyPerfectly())
-                    foreach (var Target in HeroManager.Enemies.Where(x => x.isKillableAndValidTarget(R.GetDamage(x))))
+                    foreach (var Target in HeroManager.Enemies.Where(x => x.isKillableAndValidTarget(R.GetDamage(x), TargetSelector.DamageType.Magical)))
                     {
                         var TargetPos = Drawing.WorldToScreen(Target.Position);
                         Render.Circle.DrawCircle(Target.Position, Target.BoundingRadius, DrawRKillable.Color);

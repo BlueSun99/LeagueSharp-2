@@ -13,26 +13,71 @@ namespace SharpShooter
             return spell != null && spell.Slot != SpellSlot.Unknown && spell.Instance.State != SpellState.Cooldown && spell.Instance.State != SpellState.Disabled && spell.Instance.State != SpellState.NoMana && spell.Instance.State != SpellState.NotLearned && spell.Instance.State != SpellState.Surpressed && spell.Instance.State != SpellState.Unknown && spell.Instance.State == SpellState.Ready;
         }
 
-        internal static bool isKillableAndValidTarget(this Obj_AI_Hero Target, double CalculatedDamage, float distance = float.MaxValue)
+        internal static bool isKillableAndValidTarget(this Obj_AI_Hero Target, double CalculatedDamage, TargetSelector.DamageType damageType, float distance = float.MaxValue)
         {
-            if (Target == null || !Target.IsValidTarget(distance) || Target.Health <= 0 || Target.HasBuffOfType(BuffType.SpellImmunity) || Target.HasBuffOfType(BuffType.SpellShield) || Target.CharData.BaseSkinName == "gangplankbarrel")
+            if (Target == null || !Target.IsValidTarget(distance) || Target.Health <= 0 || Target.CharData.BaseSkinName == "gangplankbarrel")
                 return false;
+
+            if (Target.HasBuff("kindrednodeathbuff"))
+            {
+                return false;
+            }
+
+            // Tryndamere's Undying Rage (R)
+            if (Target.HasBuff("Undying Rage") && Target.Health <= Target.MaxHealth * 0.10f)
+            {
+                return false;
+            }
+
+            // Kayle's Intervention (R)
+            if (Target.HasBuff("JudicatorIntervention"))
+            {
+                return false;
+            }
+
+            // Poppy's Diplomatic Immunity (R)
+            if (Target.HasBuff("DiplomaticImmunity") && !ObjectManager.Player.HasBuff("poppyulttargetmark"))
+            {
+                //TODO: Get the actual target mark buff name
+                return false;
+            }
+
+            // Banshee's Veil (PASSIVE)
+            if (Target.HasBuff("BansheesVeil"))
+            {
+                // TODO: Get exact Banshee's Veil buff name.
+                return false;
+            }
+
+            // Sivir's Spell Shield (E)
+            if (Target.HasBuff("SivirShield"))
+            {
+                // TODO: Get exact Sivir's Spell Shield buff name
+                return false;
+            }
+
+            // Nocturne's Shroud of Darkness (W)
+            if (Target.HasBuff("ShroudofDarkness"))
+            {
+                // TODO: Get exact Nocturne's Shourd of Darkness buff name
+                return false;
+            }
 
             if (ObjectManager.Player.HasBuff("summonerexhaust"))
                 CalculatedDamage *= 0.6;
 
             if (Target.ChampionName == "Blitzcrank")
                 if (!Target.HasBuff("manabarriercooldown"))
-                    if (Target.Health + Target.HPRegenRate + Target.PhysicalShield + (Target.Mana / 2) + Target.PARRegenRate > CalculatedDamage)
+                    if (Target.Health + Target.HPRegenRate + (damageType == TargetSelector.DamageType.Physical ? Target.PhysicalShield : Target.MagicalShield) + (Target.Mana / 2) + Target.PARRegenRate > CalculatedDamage)
                         return false;
 
             if (Target.HasBuff("FerociousHowl"))
                 CalculatedDamage *= 0.3;
 
-            return Target.Health + Target.HPRegenRate + Target.PhysicalShield < CalculatedDamage;
+            return Target.Health + Target.HPRegenRate + (damageType == TargetSelector.DamageType.Physical ? Target.PhysicalShield : Target.MagicalShield) < CalculatedDamage;
         }
 
-        internal static bool isKillableAndValidTarget(this Obj_AI_Minion Target, double CalculatedDamage, float distance = float.MaxValue)
+        internal static bool isKillableAndValidTarget(this Obj_AI_Minion Target, double CalculatedDamage, TargetSelector.DamageType damageType, float distance = float.MaxValue)
         {
             if (Target == null || !Target.IsValidTarget(distance) || Target.Health <= 0 || Target.HasBuffOfType(BuffType.SpellImmunity) || Target.HasBuffOfType(BuffType.SpellShield) || Target.CharData.BaseSkinName == "gangplankbarrel")
                 return false;
@@ -53,20 +98,65 @@ namespace SharpShooter
             if (Target.CharData.BaseSkinName.ToLowerInvariant().Contains("baron") && ObjectManager.Player.HasBuff("barontarget"))
                 CalculatedDamage *= 0.5;
 
-            return Target.Health + Target.HPRegenRate + Target.PhysicalShield < CalculatedDamage;
+            return Target.Health + Target.HPRegenRate + (damageType == TargetSelector.DamageType.Physical ? Target.PhysicalShield : Target.MagicalShield) < CalculatedDamage;
         }
 
-        internal static bool isKillableAndValidTarget(this Obj_AI_Base Target, double CalculatedDamage, float distance = float.MaxValue)
+        internal static bool isKillableAndValidTarget(this Obj_AI_Base Target, double CalculatedDamage, TargetSelector.DamageType damageType, float distance = float.MaxValue)
         {
-            if (Target == null || !Target.IsValidTarget(distance) || Target.Health <= 0 || Target.HasBuffOfType(BuffType.SpellImmunity) || Target.HasBuffOfType(BuffType.SpellShield) || Target.CharData.BaseSkinName == "gangplankbarrel")
+            if (Target == null || !Target.IsValidTarget(distance) || Target.Health <= 0 || Target.CharData.BaseSkinName == "gangplankbarrel")
                 return false;
+
+            if (Target.HasBuff("kindrednodeathbuff"))
+            {
+                return false;
+            }
+
+            // Tryndamere's Undying Rage (R)
+            if (Target.HasBuff("Undying Rage") && Target.Health <= Target.MaxHealth * 0.10f)
+            {
+                return false;
+            }
+
+            // Kayle's Intervention (R)
+            if (Target.HasBuff("JudicatorIntervention"))
+            {
+                return false;
+            }
+
+            // Poppy's Diplomatic Immunity (R)
+            if (Target.HasBuff("DiplomaticImmunity") && !ObjectManager.Player.HasBuff("poppyulttargetmark"))
+            {
+                //TODO: Get the actual target mark buff name
+                return false;
+            }
+
+            // Banshee's Veil (PASSIVE)
+            if (Target.HasBuff("BansheesVeil"))
+            {
+                // TODO: Get exact Banshee's Veil buff name.
+                return false;
+            }
+
+            // Sivir's Spell Shield (E)
+            if (Target.HasBuff("SivirShield"))
+            {
+                // TODO: Get exact Sivir's Spell Shield buff name
+                return false;
+            }
+
+            // Nocturne's Shroud of Darkness (W)
+            if (Target.HasBuff("ShroudofDarkness"))
+            {
+                // TODO: Get exact Nocturne's Shourd of Darkness buff name
+                return false;
+            }
 
             if (ObjectManager.Player.HasBuff("summonerexhaust"))
                 CalculatedDamage *= 0.6;
 
             if (Target.CharData.BaseSkinName == "Blitzcrank")
                 if (!Target.HasBuff("manabarriercooldown"))
-                    if (Target.Health + Target.HPRegenRate + Target.PhysicalShield + (Target.Mana / 2) + Target.PARRegenRate > CalculatedDamage)
+                    if (Target.Health + Target.HPRegenRate + (damageType == TargetSelector.DamageType.Physical ? Target.PhysicalShield : Target.MagicalShield) + (Target.Mana / 2) + Target.PARRegenRate > CalculatedDamage)
                         return false;
 
             if (Target.HasBuff("FerociousHowl"))
@@ -86,7 +176,7 @@ namespace SharpShooter
             if (Target.CharData.BaseSkinName.ToLowerInvariant().Contains("baron") && ObjectManager.Player.HasBuff("barontarget"))
                 CalculatedDamage *= 0.5;
 
-            return Target.Health + Target.HPRegenRate + Target.PhysicalShield < CalculatedDamage;
+            return Target.Health + Target.HPRegenRate + (damageType == TargetSelector.DamageType.Physical ? Target.PhysicalShield : Target.MagicalShield) < CalculatedDamage;
         }
 
         internal static bool isManaPercentOkay(this Obj_AI_Hero hero, int ManaPercent)
@@ -110,7 +200,7 @@ namespace SharpShooter
         {
             if (ObjectManager.Player.ChampionName == "Tristana")
                 if (target.HasBuff("tristanaecharge"))
-                    if (target.isKillableAndValidTarget((float)(Damage.GetSpellDamage(ObjectManager.Player, target, SpellSlot.E) * (target.GetBuffCount("tristanaecharge") * 0.30)) + Damage.GetSpellDamage(ObjectManager.Player, target, SpellSlot.E)))
+                    if (target.isKillableAndValidTarget((float)(Damage.GetSpellDamage(ObjectManager.Player, target, SpellSlot.E) * (target.GetBuffCount("tristanaecharge") * 0.30) + Damage.GetSpellDamage(ObjectManager.Player, target, SpellSlot.E)), TargetSelector.DamageType.Physical))
                         return true;
             return false;
         }

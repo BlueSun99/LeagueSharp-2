@@ -82,7 +82,7 @@ namespace SharpShooter.Plugins
                                 if (MenuProvider.Champion.Combo.UseR)
                                     if (R.isReadyPerfectly())
                                     {
-                                        var RKillableTarget = HeroManager.Enemies.FirstOrDefault(x => x.isKillableAndValidTarget(R.GetDamage(x), R.Range));
+                                        var RKillableTarget = HeroManager.Enemies.FirstOrDefault(x => x.isKillableAndValidTarget(R.GetDamage(x), TargetSelector.DamageType.Physical, R.Range));
                                         if (RKillableTarget != null)
                                             R.Cast(RKillableTarget, false, true);
                                         R.CastIfWillHit(TargetSelector.GetTarget(R.Range, R.DamageType), MenuProvider.Champion.Combo.getSliderValue("Cast R if Will Hit >=").Value);
@@ -119,11 +119,11 @@ namespace SharpShooter.Plugins
 
                 if (MenuProvider.Champion.Misc.UseKillsteal)
                 {
-                    var QTarget = HeroManager.Enemies.OrderByDescending(x => Q.GetPrediction(x).Hitchance).FirstOrDefault(x => x.isKillableAndValidTarget(Q.GetDamage(x), Q.Range));
+                    var QTarget = HeroManager.Enemies.OrderByDescending(x => Q.GetPrediction(x).Hitchance).FirstOrDefault(x => x.isKillableAndValidTarget(Q.GetDamage(x), TargetSelector.DamageType.Physical, Q.Range));
                     if (QTarget != null)
                         Q.Cast(QTarget, false, true);
 
-                    var RTarget = HeroManager.Enemies.OrderByDescending(x => R.GetPrediction(x).Hitchance).FirstOrDefault(x => x.isKillableAndValidTarget(R.GetDamage(x), R.Range));
+                    var RTarget = HeroManager.Enemies.OrderByDescending(x => R.GetPrediction(x).Hitchance).FirstOrDefault(x => x.isKillableAndValidTarget(R.GetDamage(x), TargetSelector.DamageType.Physical, R.Range));
                     if (RTarget != null)
                         R.Cast(RTarget, false, true);
                 }
@@ -181,7 +181,7 @@ namespace SharpShooter.Plugins
 
                 var DrawRKillable = MenuProvider.Champion.Drawings.getCircleValue("Draw R Killable");
                 if (DrawRKillable.Active && R.Level > 0)
-                    foreach (var Target in HeroManager.Enemies.Where(x => x.isKillableAndValidTarget(R.GetDamage(x))))
+                    foreach (var Target in HeroManager.Enemies.Where(x => x.isKillableAndValidTarget(R.GetDamage(x), TargetSelector.DamageType.Physical)))
                     {
                         var TargetPos = Drawing.WorldToScreen(Target.Position);
                         Render.Circle.DrawCircle(Target.Position, Target.BoundingRadius, DrawRKillable.Color);

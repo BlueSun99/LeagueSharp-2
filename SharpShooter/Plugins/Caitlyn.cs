@@ -86,7 +86,7 @@ namespace SharpShooter.Plugins
                                 if (MenuProvider.Champion.Combo.UseE)
                                     if (E.isReadyPerfectly())
                                     {
-                                        var Target = HeroManager.Enemies.FirstOrDefault(x => !Orbwalking.InAutoAttackRange(x) && x.isKillableAndValidTarget(E.GetDamage(x), E.Range) && E.GetPrediction(x).Hitchance >= HitChance.High);
+                                        var Target = HeroManager.Enemies.FirstOrDefault(x => !Orbwalking.InAutoAttackRange(x) && x.isKillableAndValidTarget(E.GetDamage(x), TargetSelector.DamageType.Physical, E.Range) && E.GetPrediction(x).Hitchance >= HitChance.High);
                                         if (Target != null)
                                             E.Cast(Target);
                                     }
@@ -94,7 +94,7 @@ namespace SharpShooter.Plugins
                                 if (MenuProvider.Champion.Combo.UseR)
                                     if (R.isReadyPerfectly())
                                     {
-                                        var Target = HeroManager.Enemies.FirstOrDefault(x => !Orbwalking.InAutoAttackRange(x) && x.isKillableAndValidTarget(R.GetDamage(x), R.Range));
+                                        var Target = HeroManager.Enemies.FirstOrDefault(x => !Orbwalking.InAutoAttackRange(x) && x.isKillableAndValidTarget(R.GetDamage(x), TargetSelector.DamageType.Physical, R.Range));
                                         if (Target != null)
                                             if (ObjectManager.Player.GetEnemiesInRange(1000f).Count(x => Target.NetworkId != Target.NetworkId) == 0)
                                             {
@@ -141,7 +141,7 @@ namespace SharpShooter.Plugins
                     if (MenuProvider.Champion.Misc.getBoolValue("Auto R on Killable Target"))
                         if (R.isReadyPerfectly())
                         {
-                            var Target = HeroManager.Enemies.FirstOrDefault(x => !Orbwalking.InAutoAttackRange(x) && x.isKillableAndValidTarget(R.GetDamage(x), R.Range));
+                            var Target = HeroManager.Enemies.FirstOrDefault(x => !Orbwalking.InAutoAttackRange(x) && x.isKillableAndValidTarget(R.GetDamage(x), TargetSelector.DamageType.Physical, R.Range));
                             if (Target != null)
                                 if (ObjectManager.Player.GetEnemiesInRange(1000f).Count(x => Target.NetworkId != Target.NetworkId) == 0)
                                 {
@@ -198,7 +198,7 @@ namespace SharpShooter.Plugins
 
                 var DrawRKillable = MenuProvider.Champion.Drawings.getCircleValue("Draw R Killable");
                 if (DrawRKillable.Active && R.Level > 0)
-                    foreach (var Target in HeroManager.Enemies.Where(x => x.isKillableAndValidTarget(R.GetDamage(x))))
+                    foreach (var Target in HeroManager.Enemies.Where(x => x.isKillableAndValidTarget(R.GetDamage(x), TargetSelector.DamageType.Physical)))
                     {
                         var TargetPos = Drawing.WorldToScreen(Target.Position);
                         Render.Circle.DrawCircle(Target.Position, Target.BoundingRadius, DrawRKillable.Color);

@@ -139,7 +139,7 @@ namespace SharpShooter.Plugins
                                         if (Q.isReadyPerfectly())
                                             if (ObjectManager.Player.Position.Extend(Game.CursorPos, 700).CountEnemiesInRange(700) <= 1)
                                                 if (!ObjectManager.Player.Position.Extend(Game.CursorPos, 300).UnderTurret(true))
-                                                    if (MinionManager.GetMinions(ObjectManager.Player.Position.Extend(Game.CursorPos, 300), 615, MinionTypes.All, MinionTeam.Enemy).Any(x => x.NetworkId != Target.NetworkId && x.isKillableAndValidTarget(ObjectManager.Player.GetAutoAttackDamage(x) + Q.GetDamage(x))))
+                                                    if (MinionManager.GetMinions(ObjectManager.Player.Position.Extend(Game.CursorPos, 300), 615, MinionTypes.All, MinionTeam.Enemy).Any(x => x.NetworkId != Target.NetworkId && x.isKillableAndValidTarget(ObjectManager.Player.GetAutoAttackDamage(x) + Q.GetDamage(x), TargetSelector.DamageType.Physical)))
                                                         Q.Cast(Game.CursorPos);
 
                             //Jungle

@@ -107,7 +107,7 @@ namespace SharpShooter.Plugins
                                                         Q.Cast(Target);
                                                     else
                                                     {
-                                                        var killableTarget = HeroManager.Enemies.FirstOrDefault(x => x.isKillableAndValidTarget(Q.GetDamage(x), E.Range) && Q.GetPrediction(x).Hitchance >= Q.MinHitChance);
+                                                        var killableTarget = HeroManager.Enemies.FirstOrDefault(x => x.isKillableAndValidTarget(Q.GetDamage(x), TargetSelector.DamageType.Physical, E.Range) && Q.GetPrediction(x).Hitchance >= Q.MinHitChance);
                                                         if (killableTarget != null)
                                                             Q.Cast(killableTarget);
                                                     }
@@ -115,7 +115,7 @@ namespace SharpShooter.Plugins
 
                                 if (MenuProvider.Champion.Combo.UseE)
                                     if (E.isReadyPerfectly())
-                                        if (HeroManager.Enemies.Any(x => HealthPrediction.GetHealthPrediction(x, 500) > 0 && x.isKillableAndValidTarget(E.GetDamage(x), E.Range)))
+                                        if (HeroManager.Enemies.Any(x => HealthPrediction.GetHealthPrediction(x, 500) > 0 && x.isKillableAndValidTarget(E.GetDamage(x), TargetSelector.DamageType.Physical, E.Range)))
                                             E.Cast();
 
                                 break;
@@ -141,7 +141,7 @@ namespace SharpShooter.Plugins
                                             if (!ObjectManager.Player.IsWindingUp)
                                                 if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Laneclear.IfMana))
                                                 {
-                                                    foreach (var KillableMinion in MinionManager.GetMinions(Q.Range).Where(x => Q.GetPrediction(x).Hitchance >= Q.MinHitChance && x.isKillableAndValidTarget(Damage.GetSpellDamage(ObjectManager.Player, x, SpellSlot.Q), Q.Range)))
+                                                    foreach (var KillableMinion in MinionManager.GetMinions(Q.Range).Where(x => Q.GetPrediction(x).Hitchance >= Q.MinHitChance && x.isKillableAndValidTarget(Damage.GetSpellDamage(ObjectManager.Player, x, SpellSlot.Q), TargetSelector.DamageType.Physical, Q.Range)))
                                                     {
                                                         int killableNumber = 0;
 
@@ -161,7 +161,7 @@ namespace SharpShooter.Plugins
 
                                                         foreach (Obj_AI_Minion CollisionMinion in CollisionMinions)
                                                         {
-                                                            if (CollisionMinion.isKillableAndValidTarget(Damage.GetSpellDamage(ObjectManager.Player, CollisionMinion, SpellSlot.Q), Q.Range))
+                                                            if (CollisionMinion.isKillableAndValidTarget(Damage.GetSpellDamage(ObjectManager.Player, CollisionMinion, SpellSlot.Q), TargetSelector.DamageType.Physical, Q.Range))
                                                                 killableNumber++;
                                                             else
                                                                 break;
@@ -181,7 +181,7 @@ namespace SharpShooter.Plugins
                                 if (MenuProvider.Champion.Laneclear.UseE)
                                     if (E.isReadyPerfectly())
                                         if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Laneclear.IfMana))
-                                            if (MinionManager.GetMinions(E.Range).Count(x => HealthPrediction.GetHealthPrediction(x, 500) > 0 && x.isKillableAndValidTarget(E.GetDamage(x))) >= MenuProvider.Champion.Laneclear.getSliderValue("Cast E if Killable Minion Number >=").Value)
+                                            if (MinionManager.GetMinions(E.Range).Count(x => HealthPrediction.GetHealthPrediction(x, 500) > 0 && x.isKillableAndValidTarget(E.GetDamage(x), TargetSelector.DamageType.Physical)) >= MenuProvider.Champion.Laneclear.getSliderValue("Cast E if Killable Minion Number >=").Value)
                                                 E.Cast();
 
                                 //Jugnle
@@ -198,7 +198,7 @@ namespace SharpShooter.Plugins
                                 if (MenuProvider.Champion.Jungleclear.UseE)
                                     if (E.isReadyPerfectly())
                                         if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Jungleclear.IfMana))
-                                            if (MinionManager.GetMinions(E.Range, MinionTypes.All, MinionTeam.Neutral).Any(x => HealthPrediction.GetHealthPrediction(x, 500) > 0 && x.isKillableAndValidTarget(E.GetDamage(x))))
+                                            if (MinionManager.GetMinions(E.Range, MinionTypes.All, MinionTeam.Neutral).Any(x => HealthPrediction.GetHealthPrediction(x, 500) > 0 && x.isKillableAndValidTarget(E.GetDamage(x), TargetSelector.DamageType.Physical)))
                                                 E.Cast();
 
                                 break;
@@ -208,20 +208,20 @@ namespace SharpShooter.Plugins
 
                 if (MenuProvider.Champion.Misc.getBoolValue("Use Killsteal (With E)"))
                     if (E.isReadyPerfectly())
-                        if (HeroManager.Enemies.Any(x => HealthPrediction.GetHealthPrediction(x, 500) > 0 && x.isKillableAndValidTarget(E.GetDamage(x), E.Range)))
+                        if (HeroManager.Enemies.Any(x => HealthPrediction.GetHealthPrediction(x, 500) > 0 && x.isKillableAndValidTarget(E.GetDamage(x), TargetSelector.DamageType.Physical, E.Range)))
                             E.Cast();
 
                 if (MenuProvider.Champion.Misc.getBoolValue("Use Mobsteal (With E)"))
                 {
                     if (E.isReadyPerfectly())
-                        if (MinionManager.GetMinions(E.Range, MinionTypes.All, MinionTeam.Neutral).Any(x => HealthPrediction.GetHealthPrediction(x, 500) > 0 && x.isKillableAndValidTarget(E.GetDamage(x))))
+                        if (MinionManager.GetMinions(E.Range, MinionTypes.All, MinionTeam.Neutral).Any(x => HealthPrediction.GetHealthPrediction(x, 500) > 0 && x.isKillableAndValidTarget(E.GetDamage(x), TargetSelector.DamageType.Physical)))
                             E.Cast();
                 }
 
                 if (MenuProvider.Champion.Misc.getBoolValue("Auto Steal Siege minion & Super minion (With E)"))
                 {
                     if (E.isReadyPerfectly())
-                        if (MinionManager.GetMinions(E.Range).Any(x => HealthPrediction.GetHealthPrediction(x, 500) > 0 && x.isKillableAndValidTarget(E.GetDamage(x)) && (x.CharData.BaseSkinName.ToLower().Contains("siege") || x.CharData.BaseSkinName.ToLower().Contains("super"))))
+                        if (MinionManager.GetMinions(E.Range).Any(x => HealthPrediction.GetHealthPrediction(x, 500) > 0 && x.isKillableAndValidTarget(E.GetDamage(x), TargetSelector.DamageType.Physical) && (x.CharData.BaseSkinName.ToLower().Contains("siege") || x.CharData.BaseSkinName.ToLower().Contains("super"))))
                             E.Cast();
                 }
 
@@ -243,7 +243,7 @@ namespace SharpShooter.Plugins
                         if (!(MenuProvider.Champion.Misc.getBoolValue("^ Don't do this in ComboMode") && MenuProvider.Orbwalker.ActiveMode == Orbwalking.OrbwalkingMode.Combo))
                             if (ObjectManager.Player.Mana - E.ManaCost >= E.ManaCost)
                                 if (HeroManager.Enemies.Any(x => x.IsValidTarget(E.Range) && E.GetDamage(x) > 10))
-                                    if (MinionManager.GetMinions(E.Range, MinionTypes.All, MinionTeam.NotAlly).Any(x => HealthPrediction.GetHealthPrediction(x, 500) > 0 && x.isKillableAndValidTarget(E.GetDamage(x), E.Range)))
+                                    if (MinionManager.GetMinions(E.Range, MinionTypes.All, MinionTeam.NotAlly).Any(x => HealthPrediction.GetHealthPrediction(x, 500) > 0 && x.isKillableAndValidTarget(E.GetDamage(x), TargetSelector.DamageType.Physical, E.Range)))
                                         E.Cast();
 
                 if (MenuProvider.Champion.Misc.getBoolValue("Auto W on Dragon or Baron (With W)"))
@@ -279,7 +279,7 @@ namespace SharpShooter.Plugins
                 Obj_AI_Minion Minion = minion as Obj_AI_Minion;
                 if (MenuProvider.Champion.Misc.getBoolValue("Use Lasthit Assist (With E)"))
                     if (E.isReadyPerfectly())
-                        if (Minion.isKillableAndValidTarget(E.GetDamage(Minion)))
+                        if (Minion.isKillableAndValidTarget(E.GetDamage(Minion), TargetSelector.DamageType.Physical))
                             if (HealthPrediction.GetHealthPrediction(Minion, 500) > 0)
                                 if (!HeroManager.Enemies.Any(x => Orbwalking.InAutoAttackRange(x)))
                                     E.Cast();
