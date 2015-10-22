@@ -252,7 +252,7 @@ namespace SharpShooter.Plugins
                     if (args.Slot == SpellSlot.Q || args.Slot == SpellSlot.W)
                     {
                         ObjectManager.Player.IssueOrder(GameObjectOrder.MoveTo, Game.CursorPos);
-                        Utility.DelayAction.Add(200, Orbwalking.ResetAutoAttackTimer);
+                        Utility.DelayAction.Add(250, Orbwalking.ResetAutoAttackTimer);
                     }
                 });
             }
@@ -274,7 +274,7 @@ namespace SharpShooter.Plugins
         private void Orbwalking_BeforeAttack(Orbwalking.BeforeAttackEventArgs args)
         {
             if (args.Unit.IsMe)
-                if (ObjectManager.Player.HasBuff("LucianR") || ObjectManager.Player.IsWindingUp)
+                if (ObjectManager.Player.HasBuff("LucianR"))
                     args.Process = false;
         }
 
