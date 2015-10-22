@@ -22,7 +22,7 @@ namespace SharpShooter.Plugins
             MenuProvider.Champion.Combo.addUseQ();
             MenuProvider.Champion.Combo.addUseE();
             MenuProvider.Champion.Combo.addUseR();
-
+            
             MenuProvider.Champion.Harass.addUseE();
             MenuProvider.Champion.Harass.addIfMana(60);
 

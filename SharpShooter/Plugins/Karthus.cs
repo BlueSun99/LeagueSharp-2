@@ -21,10 +21,10 @@ namespace SharpShooter.Plugins
             Q.SetSkillshot(1.0f, 150f, float.MaxValue, false, SkillshotType.SkillshotCircle);
             W.SetSkillshot(0.25f, 1f, float.MaxValue, false, SkillshotType.SkillshotCircle);
 
-
             MenuProvider.Champion.Combo.addUseQ();
             MenuProvider.Champion.Combo.addUseW();
             MenuProvider.Champion.Combo.addUseE();
+            MenuProvider.Champion.Combo.addItem("Disable AutoAttack", true);
 
             MenuProvider.Champion.Harass.addUseQ();
             MenuProvider.Champion.Harass.addUseW(false);
@@ -143,6 +143,9 @@ namespace SharpShooter.Plugins
                 {
                     case Orbwalking.OrbwalkingMode.Combo:
                         {
+                            if (MenuProvider.Champion.Combo.getBoolValue("Disable AutoAttack"))
+                                args.Process = false;
+                            else
                             if (MenuProvider.Champion.Combo.UseQ)
                                 if (Q.isReadyPerfectly())
                                     args.Process = false;
