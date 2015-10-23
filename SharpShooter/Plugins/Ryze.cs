@@ -45,12 +45,14 @@ namespace SharpShooter.Plugins
 
             MenuProvider.Champion.Misc.addUseAntiGapcloser();
             MenuProvider.Champion.Misc.addUseInterrupter();
-            MenuProvider.Champion.Misc.addItem("Auto keep passive stacks", new KeyBind('T', KeyBindType.Toggle, true));
+            MenuProvider.Champion.Misc.addItem("Auto Keep Passive Stacks", new KeyBind('T', KeyBindType.Toggle, true));
             MenuProvider.Champion.Misc.addItem("^ Min Mana", new Slider(70, 0, 100));
 
             MenuProvider.Champion.Drawings.addDrawQrange(System.Drawing.Color.DeepSkyBlue, true);
             MenuProvider.Champion.Drawings.addDrawWrange(System.Drawing.Color.DeepSkyBlue, true);
             MenuProvider.Champion.Drawings.addDrawErange(System.Drawing.Color.DeepSkyBlue, false);
+            MenuProvider.Champion.Drawings.addItem("Draw The Number of Passive Stacks", true);
+            MenuProvider.Champion.Drawings.addItem("Draw Remaining Time of Charged Passive", true);
             MenuProvider.Champion.Drawings.addDamageIndicator(GetComboDamage);
 
             Game.OnUpdate += Game_OnUpdate;
@@ -207,7 +209,7 @@ namespace SharpShooter.Plugins
                     }
                 }
 
-                if (MenuProvider.Champion.Misc.getKeyBindValue("Auto keep passive stacks").Active)
+                if (MenuProvider.Champion.Misc.getKeyBindValue("Auto Keep Passive Stacks").Active)
                     if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Misc.getSliderValue("^ Min Mana").Value))
                         if (!ObjectManager.Player.IsRecalling())
                             if (Q.Level > 0)
@@ -271,6 +273,22 @@ namespace SharpShooter.Plugins
 
                 if (MenuProvider.Champion.Drawings.DrawErange.Active && E.isReadyPerfectly())
                     Render.Circle.DrawCircle(ObjectManager.Player.Position, E.Range, MenuProvider.Champion.Drawings.DrawErange.Color);
+
+                if (MenuProvider.Champion.Drawings.getBoolValue("Draw The Number of Passive Stacks"))
+                {
+                    var PlayerPos = Drawing.WorldToScreen(ObjectManager.Player.Position);
+                    var Buff = ObjectManager.Player.GetBuff("ryzepassivestack");
+                    if (Buff != null)
+                        Drawing.DrawText(PlayerPos.X, PlayerPos.Y - 120, System.Drawing.Color.GreenYellow, Buff.Count.ToString());
+                }
+
+                if (MenuProvider.Champion.Drawings.getBoolValue("Draw Remaining Time of Charged Passive"))
+                {
+                    var PlayerPos = Drawing.WorldToScreen(ObjectManager.Player.Position);
+                    var Buff = ObjectManager.Player.GetBuff("ryzepassivecharged");
+                    if (Buff != null)
+                        Drawing.DrawText(PlayerPos.X, PlayerPos.Y - 120, System.Drawing.Color.GreenYellow, (Buff.EndTime - Game.Time).ToString("0.0"));
+                }
             }
         }
 
