@@ -22,7 +22,7 @@ namespace SharpShooter.Plugins
             E.SetSkillshot(0.125f, 80f, 2000f, true, SkillshotType.SkillshotLine);
 
             MenuProvider.Champion.Combo.addUseQ();
-            MenuProvider.Champion.Combo.addItem("Don't Use Q in AutoAttack Range", true);
+            MenuProvider.Champion.Combo.addItem("Don't Use Q in AutoAttack Range", false);
             MenuProvider.Champion.Combo.addUseW();
             MenuProvider.Champion.Combo.addUseE();
             MenuProvider.Champion.Combo.addUseR();
@@ -175,8 +175,8 @@ namespace SharpShooter.Plugins
                             var Target = HeroManager.Enemies.Where(x => x.IsValidTarget(200, true, Game.CursorPos) && E.GetPrediction(x).Hitchance >= E.MinHitChance).OrderByDescending(x => TargetSelector.GetPriority(x)).FirstOrDefault();
                             if (Target != null)
                             {
-                                E.Cast(Target);
-                                Q.Cast(Target, false, true);
+                                if (E.Cast(Target) == Spell.CastStates.SuccessfullyCasted)
+                                    Q.Cast(Target, false, true);
                             }
                         }
 
