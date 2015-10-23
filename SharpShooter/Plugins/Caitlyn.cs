@@ -90,9 +90,15 @@ namespace SharpShooter.Plugins
                                 if (MenuProvider.Champion.Combo.UseE)
                                     if (E.isReadyPerfectly())
                                     {
-                                        var Target = HeroManager.Enemies.FirstOrDefault(x => !Orbwalking.InAutoAttackRange(x) && x.isKillableAndValidTarget(E.GetDamage(x), TargetSelector.DamageType.Physical, E.Range) && E.GetPrediction(x).Hitchance >= HitChance.High);
-                                        if (Target != null)
-                                            E.Cast(Target);
+                                        var closeTarget = HeroManager.Enemies.FirstOrDefault(x => x.IsMelee && x.IsValidTarget(500) && E.GetPrediction(x).Hitchance >= E.MinHitChance);
+                                        if (closeTarget != null)
+                                            E.Cast(closeTarget);
+                                        else
+                                        {
+                                            var Target = HeroManager.Enemies.FirstOrDefault(x => !Orbwalking.InAutoAttackRange(x) && x.isKillableAndValidTarget(E.GetDamage(x), TargetSelector.DamageType.Physical, E.Range) && E.GetPrediction(x).Hitchance >= HitChance.High);
+                                            if (Target != null)
+                                                E.Cast(Target);
+                                        }
                                     }
 
                                 if (MenuProvider.Champion.Combo.UseR)
