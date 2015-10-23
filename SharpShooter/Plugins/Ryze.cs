@@ -35,6 +35,7 @@ namespace SharpShooter.Plugins
             MenuProvider.Champion.Laneclear.addUseQ(false);
             MenuProvider.Champion.Laneclear.addUseW(false);
             MenuProvider.Champion.Laneclear.addUseE(false);
+            MenuProvider.Champion.Laneclear.addItem("Use Burst Laneclear if R is Activated", true);
             MenuProvider.Champion.Laneclear.addIfMana(60);
 
             MenuProvider.Champion.Jungleclear.addUseQ();
@@ -124,27 +125,54 @@ namespace SharpShooter.Plugins
                                     if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Laneclear.IfMana))
                                         if (Q.isReadyPerfectly())
                                         {
-                                            var Target = MinionManager.GetMinions(Q.Range).FirstOrDefault(x => x.isKillableAndValidTarget(Q.GetDamage(x), TargetSelector.DamageType.Magical, Q.Range) && Q.GetPrediction(x).Hitchance >= Q.MinHitChance);
-                                            if (Target != null)
-                                                Q.Cast(Target);
+                                            if (MenuProvider.Champion.Laneclear.getBoolValue("Use Burst Laneclear if R is Activated") && ObjectManager.Player.HasBuff("ryzepassivecharged"))
+                                            {
+                                                var Target = MinionManager.GetMinions(Q.Range).FirstOrDefault(x => x.IsValidTarget(Q.Range) && Q.GetPrediction(x).Hitchance >= Q.MinHitChance);
+                                                if (Target != null)
+                                                    Q.Cast(Target);
+                                            }
+                                            else
+                                            {
+                                                var Target = MinionManager.GetMinions(Q.Range).FirstOrDefault(x => x.isKillableAndValidTarget(Q.GetDamage(x), TargetSelector.DamageType.Magical, Q.Range) && Q.GetPrediction(x).Hitchance >= Q.MinHitChance);
+                                                if (Target != null)
+                                                    Q.Cast(Target);
+                                            }
                                         }
 
                                 if (MenuProvider.Champion.Laneclear.UseW)
                                     if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Laneclear.IfMana))
                                         if (W.isReadyPerfectly())
                                         {
-                                            var Target = MinionManager.GetMinions(W.Range).FirstOrDefault(x => x.isKillableAndValidTarget(W.GetDamage(x), TargetSelector.DamageType.Magical, W.Range));
-                                            if (Target != null)
-                                                W.CastOnUnit(Target);
+                                            if (MenuProvider.Champion.Laneclear.getBoolValue("Use Burst Laneclear if R is Activated") && ObjectManager.Player.HasBuff("ryzepassivecharged"))
+                                            {
+                                                var Target = MinionManager.GetMinions(W.Range).FirstOrDefault(x => x.IsValidTarget(W.Range));
+                                                if (Target != null)
+                                                    W.CastOnUnit(Target);
+                                            }
+                                            else
+                                            {
+                                                var Target = MinionManager.GetMinions(W.Range).FirstOrDefault(x => x.isKillableAndValidTarget(W.GetDamage(x), TargetSelector.DamageType.Magical, W.Range));
+                                                if (Target != null)
+                                                    W.CastOnUnit(Target);
+                                            }
                                         }
 
                                 if (MenuProvider.Champion.Laneclear.UseE)
                                     if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Laneclear.IfMana))
                                         if (E.isReadyPerfectly())
                                         {
-                                            var Target = MinionManager.GetMinions(E.Range).FirstOrDefault(x => x.isKillableAndValidTarget(E.GetDamage(x), TargetSelector.DamageType.Magical, E.Range));
-                                            if (Target != null)
-                                                E.CastOnUnit(Target);
+                                            if (MenuProvider.Champion.Laneclear.getBoolValue("Use Burst Laneclear if R is Activated") && ObjectManager.Player.HasBuff("ryzepassivecharged"))
+                                            {
+                                                var Target = MinionManager.GetMinions(E.Range).FirstOrDefault(x => x.IsValidTarget(E.Range));
+                                                if (Target != null)
+                                                    E.CastOnUnit(Target);
+                                            }
+                                            else
+                                            {
+                                                var Target = MinionManager.GetMinions(E.Range).FirstOrDefault(x => x.isKillableAndValidTarget(E.GetDamage(x), TargetSelector.DamageType.Magical, E.Range));
+                                                if (Target != null)
+                                                    E.CastOnUnit(Target);
+                                            }
                                         }
 
                                 //Jungleclear
