@@ -15,7 +15,7 @@ namespace SharpShooter.Plugins
         {
             Q = new Spell(SpellSlot.Q, 925f, TargetSelector.DamageType.Magical) { MinHitChance = HitChance.High };
             W = new Spell(SpellSlot.W);
-            E = new Spell(SpellSlot.E, 175f, TargetSelector.DamageType.Physical);
+            E = new Spell(SpellSlot.E);
             R = new Spell(SpellSlot.R, 550f, TargetSelector.DamageType.Magical);
 
             Q.SetSkillshot(0.25f, 70f, 1800f, true, SkillshotType.SkillshotLine);
