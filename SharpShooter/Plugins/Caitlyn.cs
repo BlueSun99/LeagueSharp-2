@@ -55,9 +55,22 @@ namespace SharpShooter.Plugins
             Drawing.OnDraw += Drawing_OnDraw;
             AntiGapcloser.OnEnemyGapcloser += AntiGapcloser_OnEnemyGapcloser;
             Interrupter2.OnInterruptableTarget += Interrupter2_OnInterruptableTarget;
+            Obj_AI_Base.OnProcessSpellCast += Obj_AI_Base_OnProcessSpellCast;
 
             Console.WriteLine("Sharpshooter: Caitlyn Loaded.");
             Game.PrintChat("<font color = \"#00D8FF\"><b>SharpShooter Reworked:</b></font> <font color = \"#FF007F\">Caitlyn</font> Loaded.");
+        }
+
+        private void Obj_AI_Base_OnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
+        {
+            if (!sender.IsMe)
+                if (args.SData.IsAutoAttack())
+                    if (sender.Type == GameObjectType.obj_AI_Hero)
+                        if (sender.IsMelee)
+                            if (MenuProvider.Orbwalker.ActiveMode == Orbwalking.OrbwalkingMode.Combo)
+                                if (MenuProvider.Champion.Combo.UseE)
+                                    if (E.isReadyPerfectly())
+                                        E.Cast(sender);
         }
 
         private void Game_OnUpdate(EventArgs args)
@@ -90,15 +103,9 @@ namespace SharpShooter.Plugins
                                 if (MenuProvider.Champion.Combo.UseE)
                                     if (E.isReadyPerfectly())
                                     {
-                                        var closeTarget = HeroManager.Enemies.FirstOrDefault(x => x.IsMelee && x.IsValidTarget(500) && E.GetPrediction(x).Hitchance >= E.MinHitChance);
-                                        if (closeTarget != null)
-                                            E.Cast(closeTarget);
-                                        else
-                                        {
-                                            var Target = HeroManager.Enemies.FirstOrDefault(x => !Orbwalking.InAutoAttackRange(x) && x.isKillableAndValidTarget(E.GetDamage(x), TargetSelector.DamageType.Physical, E.Range) && E.GetPrediction(x).Hitchance >= HitChance.High);
-                                            if (Target != null)
-                                                E.Cast(Target);
-                                        }
+                                        var Target = HeroManager.Enemies.FirstOrDefault(x => !Orbwalking.InAutoAttackRange(x) && x.isKillableAndValidTarget(E.GetDamage(x), TargetSelector.DamageType.Physical, E.Range) && E.GetPrediction(x).Hitchance >= HitChance.High);
+                                        if (Target != null)
+                                            E.Cast(Target);
                                     }
 
                                 if (MenuProvider.Champion.Combo.UseR)
