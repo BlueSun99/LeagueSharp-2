@@ -31,6 +31,9 @@ namespace SharpShooter.Plugins
             MenuProvider.Champion.Harass.addUseE(false);
             MenuProvider.Champion.Harass.addIfMana(60);
 
+            MenuProvider.Champion.Lasthit.addUseQ();
+            MenuProvider.Champion.Lasthit.addIfMana();
+
             MenuProvider.Champion.Laneclear.addUseQ(false);
             MenuProvider.Champion.Laneclear.addIfMana(60);
 
@@ -122,6 +125,18 @@ namespace SharpShooter.Plugins
                                         }
                                 break;
                             }
+                        case Orbwalking.OrbwalkingMode.LastHit:
+                            {
+                                if (MenuProvider.Champion.Lasthit.UseQ)
+                                    if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Jungleclear.IfMana))
+                                        if (Q.isReadyPerfectly())
+                                        {
+                                            var Target = MinionManager.GetMinions(Q.Range).FirstOrDefault(x => x.isKillableAndValidTarget(Q.GetDamage(x, 1), Q.DamageType, Q.Range));
+                                            if (Target != null)
+                                                Q.Cast(Target);
+                                        }
+                            }
+                            break;
                     }
                 }
 
