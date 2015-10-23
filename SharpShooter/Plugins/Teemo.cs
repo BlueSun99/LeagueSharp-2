@@ -93,7 +93,8 @@ namespace SharpShooter.Plugins
                             {
                                 if (MenuProvider.Champion.Combo.UseQ)
                                     if (Q.isReadyPerfectly())
-                                        Q.CastOnBestTarget();
+                                        if (!HeroManager.Enemies.Any(x => Orbwalking.InAutoAttackRange(x)))
+                                            Q.CastOnBestTarget();
 
                                 if (MenuProvider.Champion.Combo.UseW)
                                     if (W.isReadyPerfectly())
@@ -113,7 +114,8 @@ namespace SharpShooter.Plugins
                             {
                                 if (MenuProvider.Champion.Harass.UseQ)
                                     if (Q.isReadyPerfectly())
-                                        Q.CastOnBestTarget();
+                                        if (!HeroManager.Enemies.Any(x => Orbwalking.InAutoAttackRange(x)))
+                                            Q.CastOnBestTarget();
                                 break;
                             }
                         case Orbwalking.OrbwalkingMode.LaneClear:
