@@ -46,10 +46,12 @@ namespace SharpShooter.Plugins
             MenuProvider.Champion.Jungleclear.addUseW();
             MenuProvider.Champion.Jungleclear.addIfMana(20);
 
+            MenuProvider.Champion.Misc.addWHitchanceSelector(HitChance.VeryHigh);
             MenuProvider.Champion.Misc.addUseAntiGapcloser();
             MenuProvider.Champion.Misc.addUseInterrupter();
             MenuProvider.Champion.Misc.addItem("Auto E on Immobile Target", true);
             MenuProvider.Champion.Misc.addItem("Auto R on Killable Target", true);
+
             MenuProvider.Champion.Drawings.addDrawQrange(System.Drawing.Color.DeepSkyBlue, false);
             MenuProvider.Champion.Drawings.addDrawWrange(System.Drawing.Color.DeepSkyBlue, true);
             MenuProvider.Champion.Drawings.addDrawErange(System.Drawing.Color.DeepSkyBlue, false);
@@ -69,78 +71,12 @@ namespace SharpShooter.Plugins
             Game.PrintChat("<font color = \"#00D8FF\"><b>SharpShooter Reworked:</b></font> <font color = \"#FF007F\">Jinx</font> Loaded.");
         }
 
-        private void Orbwalking_BeforeAttack(Orbwalking.BeforeAttackEventArgs args)
-        {
-            if (args.Unit.IsMe)
-            {
-                switch (MenuProvider.Orbwalker.ActiveMode)
-                {
-                    case Orbwalking.OrbwalkingMode.Mixed:
-                        if (MenuProvider.Champion.Harass.UseQ)
-                            if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Harass.IfMana))
-                            {
-                                if (args.Target.IsValidTarget(ObjectManager.Player.GetRealAutoAttackRange(args.Target, defaultRange)))
-                                    if (isQActive)
-                                    {
-                                        QSwitch(false);
-                                        args.Process = false;
-                                    }
-                            }
-                            else
-                                QSwitch(false);
-                        else
-                            QSwitch(false);
-
-                        break;
-                    case Orbwalking.OrbwalkingMode.LaneClear:
-                        if (MinionManager.GetMinions(float.MaxValue).Any(x => x.NetworkId == args.Target.NetworkId))
-                        {
-                            if (MenuProvider.Champion.Laneclear.UseQ)
-                            {
-                                if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Laneclear.IfMana))
-                                {
-                                    if (MinionManager.GetMinions(float.MaxValue).Count(x => x.IsValidTarget(200, true, args.Target.Position) && (x.Health > ObjectManager.Player.GetAutoAttackDamage(x) * 2 || x.Health <= ObjectManager.Player.GetAutoAttackDamage(x) + Q.GetDamage(x))) >= 3)
-                                        QSwitch(true);
-                                    else
-                                        QSwitch(false);
-                                }
-                                else
-                                    QSwitch(false);
-                            }
-                            else
-                                QSwitch(false);
-                        }
-                        else
-                        if (MinionManager.GetMinions(float.MaxValue, MinionTypes.All, MinionTeam.Neutral).Any(x => x.NetworkId == args.Target.NetworkId))
-                        {
-                            if (MenuProvider.Champion.Jungleclear.UseQ)
-                            {
-                                if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Laneclear.IfMana))
-                                {
-                                    if (MinionManager.GetMinions(float.MaxValue, MinionTypes.All, MinionTeam.Neutral).Count(x => x.IsValidTarget(200, true, args.Target.Position)) >= 2)
-                                        QSwitch(true);
-                                    else
-                                        QSwitch(false);
-                                }
-                                else
-                                    QSwitch(false);
-                            }
-                            else
-                                QSwitch(false);
-                        }
-                        else
-                        {
-                            QSwitch(false);
-                        }
-                        break;
-                }
-            }
-        }
-
         private void Game_OnUpdate(EventArgs args)
         {
             if (UnderClocking.NeedtoUnderClocking())
                 return;
+
+            W.MinHitChance = MenuProvider.Champion.Misc.WSelectedHitchance;
 
             if (!ObjectManager.Player.IsDead)
             {
@@ -347,6 +283,75 @@ namespace SharpShooter.Plugins
                 if (args.Slot == SpellSlot.W)
                     WCastTime = Environment.TickCount;
         }
+
+        private void Orbwalking_BeforeAttack(Orbwalking.BeforeAttackEventArgs args)
+        {
+            if (args.Unit.IsMe)
+            {
+                switch (MenuProvider.Orbwalker.ActiveMode)
+                {
+                    case Orbwalking.OrbwalkingMode.Mixed:
+                        if (MenuProvider.Champion.Harass.UseQ)
+                            if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Harass.IfMana))
+                            {
+                                if (args.Target.IsValidTarget(ObjectManager.Player.GetRealAutoAttackRange(args.Target, defaultRange)))
+                                    if (isQActive)
+                                    {
+                                        QSwitch(false);
+                                        args.Process = false;
+                                    }
+                            }
+                            else
+                                QSwitch(false);
+                        else
+                            QSwitch(false);
+
+                        break;
+                    case Orbwalking.OrbwalkingMode.LaneClear:
+                        if (MinionManager.GetMinions(float.MaxValue).Any(x => x.NetworkId == args.Target.NetworkId))
+                        {
+                            if (MenuProvider.Champion.Laneclear.UseQ)
+                            {
+                                if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Laneclear.IfMana))
+                                {
+                                    if (MinionManager.GetMinions(float.MaxValue).Count(x => x.IsValidTarget(200, true, args.Target.Position) && (x.Health > ObjectManager.Player.GetAutoAttackDamage(x) * 2 || x.Health <= ObjectManager.Player.GetAutoAttackDamage(x) + Q.GetDamage(x))) >= 3)
+                                        QSwitch(true);
+                                    else
+                                        QSwitch(false);
+                                }
+                                else
+                                    QSwitch(false);
+                            }
+                            else
+                                QSwitch(false);
+                        }
+                        else
+                        if (MinionManager.GetMinions(float.MaxValue, MinionTypes.All, MinionTeam.Neutral).Any(x => x.NetworkId == args.Target.NetworkId))
+                        {
+                            if (MenuProvider.Champion.Jungleclear.UseQ)
+                            {
+                                if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Laneclear.IfMana))
+                                {
+                                    if (MinionManager.GetMinions(float.MaxValue, MinionTypes.All, MinionTeam.Neutral).Count(x => x.IsValidTarget(200, true, args.Target.Position)) >= 2)
+                                        QSwitch(true);
+                                    else
+                                        QSwitch(false);
+                                }
+                                else
+                                    QSwitch(false);
+                            }
+                            else
+                                QSwitch(false);
+                        }
+                        else
+                        {
+                            QSwitch(false);
+                        }
+                        break;
+                }
+            }
+        }
+
 
         private void Drawing_OnDraw(EventArgs args)
         {

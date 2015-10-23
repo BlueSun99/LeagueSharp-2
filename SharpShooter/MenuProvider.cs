@@ -256,6 +256,11 @@ namespace SharpShooter
                     return MenuInstance.Item("Combo." + DisplayName, ChampUniq).GetValue<Slider>();
                 }
 
+                internal static StringList getStringListValue(string DisplayName, bool ChampUniq = true)
+                {
+                    return MenuInstance.Item("Combo." + DisplayName, ChampUniq).GetValue<StringList>();
+                }
+
                 /// <summary>
                 /// Combo 메뉴에 'Use Q' 항목을 추가합니다..
                 /// </summary>
@@ -1191,36 +1196,6 @@ namespace SharpShooter
                 }
 
                 /// <summary>
-                /// Misc 메뉴에 Hitchance Selector를 추가합니다.
-                /// </summary>
-                /// <param name="defaultHitchance">항목의 초기값을 기입하십시오.</param>
-                internal static void addHitchanceSelector(HitChance defaultHitchance = HitChance.High)
-                {
-                    int defaultindex;
-
-                    switch (defaultHitchance)
-                    {
-                        case HitChance.Low:
-                            defaultindex = 0;
-                            break;
-                        case HitChance.Medium:
-                            defaultindex = 1;
-                            break;
-                        case HitChance.High:
-                            defaultindex = 2;
-                            break;
-                        case HitChance.VeryHigh:
-                            defaultindex = 3;
-                            break;
-                        default:
-                            defaultindex = 2;
-                            break;
-                    }
-
-                    addItem("Hitchance", new StringList(new string[] { "Low", "Medium", "High", "Very High" }, defaultindex));
-                }
-
-                /// <summary>
                 /// 'Use Anti-Gacploser' 항목의 값을 가져옵니다.
                 /// </summary>
                 internal static bool UseAntiGapcloser
@@ -1253,14 +1228,175 @@ namespace SharpShooter
                     }
                 }
 
-                /// <summary>
-                /// Hitchance Selector에서 선택된 Hitchance를 가져옵니다.
-                /// </summary>
-                internal static HitChance SelectedHitchance
+                internal static void addQHitchanceSelector(HitChance defaultHitchance = HitChance.High)
+                {
+                    int defaultindex;
+
+                    switch (defaultHitchance)
+                    {
+                        case HitChance.Low:
+                            defaultindex = 0;
+                            break;
+                        case HitChance.Medium:
+                            defaultindex = 1;
+                            break;
+                        case HitChance.High:
+                            defaultindex = 2;
+                            break;
+                        case HitChance.VeryHigh:
+                            defaultindex = 3;
+                            break;
+                        default:
+                            defaultindex = 2;
+                            break;
+                    }
+
+                    addItem("Q Hitchance", new StringList(new string[] { "Low", "Medium", "High", "Very High" }, defaultindex));
+                }
+
+                internal static void addWHitchanceSelector(HitChance defaultHitchance = HitChance.High)
+                {
+                    int defaultindex;
+
+                    switch (defaultHitchance)
+                    {
+                        case HitChance.Low:
+                            defaultindex = 0;
+                            break;
+                        case HitChance.Medium:
+                            defaultindex = 1;
+                            break;
+                        case HitChance.High:
+                            defaultindex = 2;
+                            break;
+                        case HitChance.VeryHigh:
+                            defaultindex = 3;
+                            break;
+                        default:
+                            defaultindex = 2;
+                            break;
+                    }
+
+                    addItem("W Hitchance", new StringList(new string[] { "Low", "Medium", "High", "Very High" }, defaultindex));
+                }
+
+                internal static void addEHitchanceSelector(HitChance defaultHitchance = HitChance.High)
+                {
+                    int defaultindex;
+
+                    switch (defaultHitchance)
+                    {
+                        case HitChance.Low:
+                            defaultindex = 0;
+                            break;
+                        case HitChance.Medium:
+                            defaultindex = 1;
+                            break;
+                        case HitChance.High:
+                            defaultindex = 2;
+                            break;
+                        case HitChance.VeryHigh:
+                            defaultindex = 3;
+                            break;
+                        default:
+                            defaultindex = 2;
+                            break;
+                    }
+
+                    addItem("E Hitchance", new StringList(new string[] { "Low", "Medium", "High", "Very High" }, defaultindex));
+                }
+
+                internal static void addRHitchanceSelector(HitChance defaultHitchance = HitChance.High)
+                {
+                    int defaultindex;
+
+                    switch (defaultHitchance)
+                    {
+                        case HitChance.Low:
+                            defaultindex = 0;
+                            break;
+                        case HitChance.Medium:
+                            defaultindex = 1;
+                            break;
+                        case HitChance.High:
+                            defaultindex = 2;
+                            break;
+                        case HitChance.VeryHigh:
+                            defaultindex = 3;
+                            break;
+                        default:
+                            defaultindex = 2;
+                            break;
+                    }
+
+                    addItem("R Hitchance", new StringList(new string[] { "Low", "Medium", "High", "Very High" }, defaultindex));
+                }
+
+                internal static HitChance QSelectedHitchance
                 {
                     get
                     {
-                        switch (getStringListValue("Hitchance").SelectedValue)
+                        switch (getStringListValue("Q Hitchance").SelectedValue)
+                        {
+                            case "Low":
+                                return HitChance.Low;
+                            case "Medium":
+                                return HitChance.Medium;
+                            case "High":
+                                return HitChance.High;
+                            case "Very High":
+                                return HitChance.VeryHigh;
+                            default:
+                                return HitChance.High;
+                        }
+                    }
+                }
+
+                internal static HitChance WSelectedHitchance
+                {
+                    get
+                    {
+                        switch (getStringListValue("W Hitchance").SelectedValue)
+                        {
+                            case "Low":
+                                return HitChance.Low;
+                            case "Medium":
+                                return HitChance.Medium;
+                            case "High":
+                                return HitChance.High;
+                            case "Very High":
+                                return HitChance.VeryHigh;
+                            default:
+                                return HitChance.High;
+                        }
+                    }
+                }
+
+                internal static HitChance ESelectedHitchance
+                {
+                    get
+                    {
+                        switch (getStringListValue("E Hitchance").SelectedValue)
+                        {
+                            case "Low":
+                                return HitChance.Low;
+                            case "Medium":
+                                return HitChance.Medium;
+                            case "High":
+                                return HitChance.High;
+                            case "Very High":
+                                return HitChance.VeryHigh;
+                            default:
+                                return HitChance.High;
+                        }
+                    }
+                }
+
+                internal static HitChance RSelectedHitchance
+                {
+                    get
+                    {
+                        switch (getStringListValue("R Hitchance").SelectedValue)
                         {
                             case "Low":
                                 return HitChance.Low;

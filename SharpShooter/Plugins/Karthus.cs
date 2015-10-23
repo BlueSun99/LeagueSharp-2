@@ -37,6 +37,7 @@ namespace SharpShooter.Plugins
             MenuProvider.Champion.Jungleclear.addUseQ();
             MenuProvider.Champion.Jungleclear.addIfMana(20);
 
+            MenuProvider.Champion.Misc.addQHitchanceSelector(HitChance.VeryHigh);
             MenuProvider.Champion.Misc.addUseAntiGapcloser();
             MenuProvider.Champion.Misc.addItem("Ping Notify on R Killable Targets", true);
 
@@ -59,6 +60,8 @@ namespace SharpShooter.Plugins
         {
             if (UnderClocking.NeedtoUnderClocking())
                 return;
+
+            Q.MinHitChance = MenuProvider.Champion.Misc.QSelectedHitchance;
 
             if (!ObjectManager.Player.IsDead)
             {

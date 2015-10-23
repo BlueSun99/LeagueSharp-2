@@ -20,12 +20,11 @@ namespace SharpShooter.Plugins
 
             Q.SetSkillshot(0.25f, 70f, 1800f, true, SkillshotType.SkillshotLine);
 
-            MenuProvider.Champion.Combo.addUseQ();
-
             MenuProvider.MenuInstance.SubMenu("Champion").SubMenu("Combo").AddSubMenu(new Menu("Q WhiteList", "Q WhiteList"));
             foreach (var enemy in HeroManager.Enemies)
                 MenuProvider.ChampionMenuInstance.SubMenu("Combo").SubMenu("Q WhiteList").AddItem(new MenuItem("Combo.Q WhiteList." + enemy.ChampionName, enemy.ChampionName, true)).SetValue(true);
 
+            MenuProvider.Champion.Combo.addUseQ();
             MenuProvider.Champion.Combo.addUseW();
             MenuProvider.Champion.Combo.addUseE();
             MenuProvider.Champion.Combo.addUseR();
@@ -34,6 +33,7 @@ namespace SharpShooter.Plugins
             MenuProvider.Champion.Harass.addUseE();
             MenuProvider.Champion.Harass.addIfMana(60);
 
+            MenuProvider.Champion.Misc.addQHitchanceSelector(HitChance.High);
             MenuProvider.Champion.Misc.addUseAntiGapcloser();
             MenuProvider.Champion.Misc.addUseInterrupter();
 
@@ -60,6 +60,8 @@ namespace SharpShooter.Plugins
         {
             if (UnderClocking.NeedtoUnderClocking())
                 return;
+
+            Q.MinHitChance = MenuProvider.Champion.Misc.QSelectedHitchance;
 
             if (!ObjectManager.Player.IsDead)
             {
