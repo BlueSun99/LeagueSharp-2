@@ -128,7 +128,7 @@ namespace SharpShooter.Plugins
                         if (Environment.TickCount - LastPingTime >= 1000)
                         {
                             foreach (var Target in HeroManager.Enemies.Where(x => x.isKillableAndValidTarget(R.GetDamage(x), R.DamageType)))
-                                Game.ShowPing(PingCategory.Normal, Target.Position);
+                                Game.ShowPing(PingCategory.Normal, Target.Position, true);
 
                             LastPingTime = Environment.TickCount;
                         }
