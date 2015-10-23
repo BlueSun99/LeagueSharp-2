@@ -28,6 +28,7 @@ namespace SharpShooter.Plugins
             MenuProvider.Champion.Combo.addUseR();
 
             MenuProvider.Champion.Harass.addUseQ();
+            MenuProvider.Champion.Harass.addItem("Use EQ", true);
             MenuProvider.Champion.Harass.addIfMana(60);
 
             MenuProvider.Champion.Laneclear.addUseQ(false);
@@ -114,6 +115,17 @@ namespace SharpShooter.Plugins
                                     if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Harass.IfMana))
                                         if (Q.isReadyPerfectly())
                                             Q.CastOnBestTarget(0, false, true);
+
+                                if (MenuProvider.Champion.Harass.getBoolValue("Use EQ"))
+                                    if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Harass.IfMana))
+                                        if (E.isReadyPerfectly())
+                                            if (Q.isReadyPerfectly())
+                                            {
+                                                var Target = TargetSelector.GetTargetNoCollision(E);
+                                                if (Target != null)
+                                                    if (E.Cast(Target) == Spell.CastStates.SuccessfullyCasted)
+                                                        Q.Cast(Target);
+                                            }
                                 break;
                             }
                         case Orbwalking.OrbwalkingMode.LaneClear:
@@ -172,7 +184,7 @@ namespace SharpShooter.Plugins
                     if (E.isReadyPerfectly())
                         if (Q.isReadyPerfectly())
                         {
-                            var Target = HeroManager.Enemies.Where(x => x.IsValidTarget(200, true, Game.CursorPos) && E.GetPrediction(x).Hitchance >= E.MinHitChance).OrderByDescending(x => TargetSelector.GetPriority(x)).FirstOrDefault();
+                            var Target = HeroManager.Enemies.Where(x => x.IsValidTarget(E.Range) && x.IsValidTarget(200, true, Game.CursorPos) && E.GetPrediction(x).Hitchance >= E.MinHitChance).OrderByDescending(x => TargetSelector.GetPriority(x)).FirstOrDefault();
                             if (Target != null)
                             {
                                 if (E.Cast(Target) == Spell.CastStates.SuccessfullyCasted)
