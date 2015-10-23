@@ -40,6 +40,8 @@ namespace SharpShooter.Plugins
             MenuProvider.Champion.Misc.addUseInterrupter();
             MenuProvider.Champion.Misc.addItem("Auto R on Killable Target", false);
             MenuProvider.Champion.Misc.addItem("Auto W on Immobile Target", true);
+            MenuProvider.Champion.Misc.addItem("Dash to Cursor Position (With E)", new KeyBind('G', KeyBindType.Press));
+            MenuProvider.Champion.Misc.addItem("EQ Combo", new KeyBind('T', KeyBindType.Press));
 
             MenuProvider.Champion.Drawings.addDrawQrange(System.Drawing.Color.DeepSkyBlue, true);
             MenuProvider.Champion.Drawings.addDrawWrange(System.Drawing.Color.DeepSkyBlue, false);
@@ -65,6 +67,7 @@ namespace SharpShooter.Plugins
             R.Range = 1500 + (500 * R.Level);
 
             if (!ObjectManager.Player.IsDead)
+            {
                 if (Orbwalking.CanMove(100))
                 {
                     switch (MenuProvider.Orbwalker.ActiveMode)
@@ -159,6 +162,26 @@ namespace SharpShooter.Plugins
                                 W.Cast(Target);
                         }
                 }
+
+                if (MenuProvider.Champion.Misc.getKeyBindValue("Dash to Cursor Position (With E)").Active)
+                    if (E.isReadyPerfectly())
+                        E.Cast(ObjectManager.Player.Position.Extend(Game.CursorPos, -(E.Range / 2)));
+
+                if (MenuProvider.Champion.Misc.getKeyBindValue("EQ Combo").Active)
+                {
+                    if (E.isReadyPerfectly())
+                        if (Q.isReadyPerfectly())
+                        {
+                            var Target = HeroManager.Enemies.Where(x => x.IsValidTarget(200, true, Game.CursorPos) && E.GetPrediction(x).Hitchance >= E.MinHitChance).OrderByDescending(x => TargetSelector.GetPriority(x)).FirstOrDefault();
+                            if (Target != null)
+                            {
+                                E.Cast(Target);
+                                Q.Cast(Target, false, true);
+                            }
+                        }
+
+                }
+            }
         }
 
         private void AntiGapcloser_OnEnemyGapcloser(ActiveGapcloser gapcloser)
@@ -204,6 +227,36 @@ namespace SharpShooter.Plugins
                         Render.Circle.DrawCircle(Target.Position, Target.BoundingRadius, DrawRKillable.Color);
                         Drawing.DrawText(TargetPos.X, TargetPos.Y - 20, DrawRKillable.Color, "R Killable");
                     }
+
+                if (MenuProvider.Champion.Misc.getKeyBindValue("Dash to Cursor Position (With E)").Active)
+                {
+                    var CursorPos = Drawing.WorldToScreen(Game.CursorPos);
+
+                    if (E.isReadyPerfectly())
+                    {
+                        Drawing.DrawText(CursorPos.X, CursorPos.Y - 40, DrawRKillable.Color, "Dash");
+                        Render.Circle.DrawCircle(Game.CursorPos, 50, System.Drawing.Color.GreenYellow, 3);
+                    }
+                    else
+                    {
+                        Drawing.DrawText(CursorPos.X, CursorPos.Y - 40, DrawRKillable.Color, "Dash is Not Ready");
+                    }
+
+                }
+
+                if (MenuProvider.Champion.Misc.getKeyBindValue("EQ Combo").Active)
+                {
+                    var CursorPos = Drawing.WorldToScreen(Game.CursorPos);
+                    if (E.isReadyPerfectly() && Q.isReadyPerfectly())
+                    {
+                        Drawing.DrawText(CursorPos.X, CursorPos.Y - 50, DrawRKillable.Color, "EQ Combo");
+                        Render.Circle.DrawCircle(Game.CursorPos, 200, System.Drawing.Color.GreenYellow, 3);
+                    }
+                    else
+                    {
+                        Drawing.DrawText(CursorPos.X, CursorPos.Y - 40, DrawRKillable.Color, "EQ Combo is Not Ready");
+                    }
+                }
             }
         }
 
