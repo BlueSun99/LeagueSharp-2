@@ -45,7 +45,7 @@ namespace SharpShooter.Plugins
 
             MenuProvider.Champion.Misc.addUseAntiGapcloser();
             MenuProvider.Champion.Misc.addUseInterrupter();
-            MenuProvider.Champion.Misc.addItem("Auto keep passive stacks (0 = OFF)", new Slider(4, 0, 4));
+            MenuProvider.Champion.Misc.addItem("Auto keep passive stacks", new KeyBind('T', KeyBindType.Toggle, true));
             MenuProvider.Champion.Misc.addItem("^ Min Mana", new Slider(70, 0, 100));
 
             MenuProvider.Champion.Drawings.addDrawQrange(System.Drawing.Color.DeepSkyBlue, true);
@@ -207,7 +207,7 @@ namespace SharpShooter.Plugins
                     }
                 }
 
-                if (MenuProvider.Champion.Misc.getSliderValue("Auto keep passive stacks (0 = OFF)").Value > 0)
+                if (MenuProvider.Champion.Misc.getKeyBindValue("Auto keep passive stacks").Active)
                     if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Misc.getSliderValue("^ Min Mana").Value))
                         if (!ObjectManager.Player.IsRecalling())
                             if (Q.Level > 0)
@@ -219,7 +219,7 @@ namespace SharpShooter.Plugins
                                                 var passive = ObjectManager.Player.GetBuff("ryzepassivestack");
                                                 if (passive != null)
                                                 {
-                                                    if (passive.Count < MenuProvider.Champion.Misc.getSliderValue("Auto keep passive stacks (0 = OFF)").Value)
+                                                    if (passive.Count < 4)
                                                         if (passive.EndTime - Game.ClockTime <= 0.5)
                                                             Q.Cast(Game.CursorPos);
                                                 }
