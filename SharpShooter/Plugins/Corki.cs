@@ -27,6 +27,7 @@ namespace SharpShooter.Plugins
 
             MenuProvider.Champion.Harass.addUseQ();
             MenuProvider.Champion.Harass.addUseR();
+            MenuProvider.Champion.Harass.addItem("Keep R Stacks", new Slider(3, 0, 7));
             MenuProvider.Champion.Harass.addIfMana(60);
 
             MenuProvider.Champion.Laneclear.addUseQ(false);
@@ -34,6 +35,7 @@ namespace SharpShooter.Plugins
 
             MenuProvider.Champion.Jungleclear.addUseQ();
             MenuProvider.Champion.Jungleclear.addUseR();
+            MenuProvider.Champion.Jungleclear.addItem("Keep R Stacks", new Slider(5, 0, 7));
             MenuProvider.Champion.Jungleclear.addIfMana(20);
 
             MenuProvider.Champion.Drawings.addDrawQrange(System.Drawing.Color.DeepSkyBlue, true);
@@ -89,11 +91,12 @@ namespace SharpShooter.Plugins
                                 if (MenuProvider.Champion.Harass.UseR)
                                     if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Harass.IfMana))
                                         if (R.isReadyPerfectly())
-                                        {
-                                            var Target = TargetSelector.GetTargetNoCollision(R);
-                                            if (Target != null)
-                                                R.Cast(Target);
-                                        }
+                                            if (R.Instance.Ammo > MenuProvider.Champion.Harass.getSliderValue("Keep R Stacks").Value)
+                                            {
+                                                var Target = TargetSelector.GetTargetNoCollision(R);
+                                                if (Target != null)
+                                                    R.Cast(Target);
+                                            }
                                 break;
                             }
                         case Orbwalking.OrbwalkingMode.LaneClear:
@@ -122,9 +125,12 @@ namespace SharpShooter.Plugins
                                     if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Jungleclear.IfMana))
                                         if (R.isReadyPerfectly())
                                         {
-                                            var Target = MinionManager.GetMinions(R.Range, MinionTypes.All, MinionTeam.Neutral).FirstOrDefault(x => x.IsValidTarget(R.Range));
-                                            if (Target != null)
-                                                R.Cast(Target);
+                                            if (R.Instance.Ammo > MenuProvider.Champion.Jungleclear.getSliderValue("Keep R Stacks").Value)
+                                            {
+                                                var Target = MinionManager.GetMinions(R.Range, MinionTypes.All, MinionTeam.Neutral).FirstOrDefault(x => x.IsValidTarget(R.Range));
+                                                if (Target != null)
+                                                    R.Cast(Target);
+                                            }
                                         }
                                 break;
                             }
