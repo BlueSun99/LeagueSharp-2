@@ -41,9 +41,39 @@ namespace SharpShooter.Plugins
             Game.OnUpdate += Game_OnUpdate;
             Drawing.OnDraw += Drawing_OnDraw;
             AntiGapcloser.OnEnemyGapcloser += AntiGapcloser_OnEnemyGapcloser;
+            Orbwalking.AfterAttack += Orbwalking_AfterAttack;
 
             Console.WriteLine("Sharpshooter: Teemo Loaded.");
             Game.PrintChat("<font color = \"#00D8FF\"><b>SharpShooter Reworked:</b></font> <font color = \"#FF007F\">Teemo</font> Loaded.");
+        }
+
+        private void Orbwalking_AfterAttack(AttackableUnit unit, AttackableUnit target)
+        {
+            if (unit.IsMe)
+                if (target.Type == GameObjectType.obj_AI_Hero)
+                    switch (MenuProvider.Orbwalker.ActiveMode)
+                    {
+                        case Orbwalking.OrbwalkingMode.LastHit:
+                            break;
+                        case Orbwalking.OrbwalkingMode.Mixed:
+                            break;
+                        case Orbwalking.OrbwalkingMode.LaneClear:
+                            break;
+                        case Orbwalking.OrbwalkingMode.Combo:
+                            if (MenuProvider.Champion.Combo.UseQ)
+                                if (target.IsValidTarget(Q.Range))
+                                    if (Q.isReadyPerfectly())
+                                        Q.CastOnUnit(target as Obj_AI_Base);
+                            break;
+                        case Orbwalking.OrbwalkingMode.None:
+                            if (MenuProvider.Champion.Harass.UseQ)
+                                if (target.IsValidTarget(Q.Range))
+                                    if (Q.isReadyPerfectly())
+                                        Q.CastOnUnit(target as Obj_AI_Base);
+                            break;
+                        default:
+                            break;
+                    }
         }
 
         private void Game_OnUpdate(EventArgs args)
