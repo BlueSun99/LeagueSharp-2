@@ -48,6 +48,7 @@ namespace SharpShooter.Plugins
             MenuProvider.Champion.Misc.addItem("Use Soulbound Saver (With R)", true);
             MenuProvider.Champion.Misc.addItem("Auto Balista Combo (With R)", true);
             MenuProvider.Champion.Misc.addItem("Auto Steal Siege minion & Super minion (With E)", true);
+            MenuProvider.Champion.Misc.addItem("^ Use only if Blitzcrank Distance >=", new Slider(0, 0, 1500));
             MenuProvider.Champion.Misc.addItem("Auto E Harass (With E)", true);
             MenuProvider.Champion.Misc.addItem("^ Don't do this in ComboMode", true);
             MenuProvider.Champion.Misc.addItem("Auto W on Dragon or Baron (With W)", false);
@@ -233,7 +234,8 @@ namespace SharpShooter.Plugins
                         {
                             var GrabTarget = HeroManager.Enemies.FirstOrDefault(x => !x.IsDead && x.HasBuff("rocketgrab2"));
                             if (GrabTarget != null)
-                                if (ObjectManager.Player.Distance(GrabTarget) > MyBlitzcrank.Distance(GrabTarget))
+                                if (ObjectManager.Player.Distance(GrabTarget) > MyBlitzcrank.Distance(GrabTarget)
+                                    && MenuProvider.Champion.Laneclear.getSliderValue("^ Use only if Blitzcrank Distance >=").Value >= ObjectManager.Player.Distance(MyBlitzcrank))
                                     R.Cast();
                         }
                     }
