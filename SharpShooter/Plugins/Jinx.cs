@@ -188,7 +188,7 @@ namespace SharpShooter.Plugins
                                     if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Jungleclear.IfMana))
                                         if (W.isReadyPerfectly())
                                         {
-                                            var Target = MinionManager.GetMinions(600, MinionTypes.All, MinionTeam.Neutral).FirstOrDefault(x => x.IsValidTarget(600) && W.GetPrediction(x).Hitchance >= W.MinHitChance);
+                                            var Target = MinionManager.GetMinions(600, MinionTypes.All, MinionTeam.Neutral, MinionOrderTypes.MaxHealth).FirstOrDefault(x => x.IsValidTarget(600) && W.GetPrediction(x).Hitchance >= W.MinHitChance);
                                             if (Target != null)
                                                 W.Cast(Target);
                                         }
@@ -326,13 +326,13 @@ namespace SharpShooter.Plugins
                                 QSwitch(false);
                         }
                         else
-                        if (MinionManager.GetMinions(float.MaxValue, MinionTypes.All, MinionTeam.Neutral).Any(x => x.NetworkId == args.Target.NetworkId))
+                        if (MinionManager.GetMinions(float.MaxValue, MinionTypes.All, MinionTeam.Neutral, MinionOrderTypes.MaxHealth).Any(x => x.NetworkId == args.Target.NetworkId))
                         {
                             if (MenuProvider.Champion.Jungleclear.UseQ)
                             {
                                 if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Laneclear.IfMana))
                                 {
-                                    if (MinionManager.GetMinions(float.MaxValue, MinionTypes.All, MinionTeam.Neutral).Count(x => x.IsValidTarget(200, true, args.Target.Position)) >= 2)
+                                    if (MinionManager.GetMinions(float.MaxValue, MinionTypes.All, MinionTeam.Neutral, MinionOrderTypes.MaxHealth).Count(x => x.IsValidTarget(200, true, args.Target.Position)) >= 2)
                                         QSwitch(true);
                                     else
                                         QSwitch(false);

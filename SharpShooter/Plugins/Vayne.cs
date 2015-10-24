@@ -143,7 +143,7 @@ namespace SharpShooter.Plugins
                                                         Q.Cast(Game.CursorPos);
 
                             //Jungle
-                            if (MinionManager.GetMinions(float.MaxValue, MinionTypes.All, MinionTeam.Neutral).Any(x => x.NetworkId == Target.NetworkId))
+                            if (MinionManager.GetMinions(float.MaxValue, MinionTypes.All, MinionTeam.Neutral, MinionOrderTypes.MaxHealth).Any(x => x.NetworkId == Target.NetworkId))
                                 if (MenuProvider.Champion.Jungleclear.UseQ)
                                     if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Jungleclear.IfMana))
                                         if (Q.isReadyPerfectly())

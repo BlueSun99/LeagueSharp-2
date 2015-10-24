@@ -72,7 +72,7 @@ namespace SharpShooter.Plugins
                                     if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Jungleclear.IfMana))
                                         if (W.isReadyPerfectly())
                                         {
-                                            var FarmLocation = W.GetCircularFarmLocation(MinionManager.GetMinions(E.Range, MinionTypes.All, MinionTeam.Neutral));
+                                            var FarmLocation = W.GetCircularFarmLocation(MinionManager.GetMinions(E.Range, MinionTypes.All, MinionTeam.Neutral, MinionOrderTypes.MaxHealth));
                                             if (FarmLocation.MinionsHit >= 1)
                                                 W.Cast(FarmLocation.Position);
                                         }
@@ -80,7 +80,7 @@ namespace SharpShooter.Plugins
                                 if (MenuProvider.Champion.Jungleclear.UseE)
                                     if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Jungleclear.IfMana))
                                         if (E.isReadyPerfectly())
-                                            if (MinionManager.GetMinions(E.Range, MinionTypes.All, MinionTeam.Neutral).Any(x => x.IsValidTarget(E.Range) && (x.GetBuffCount("TwitchHideInShadows") >= 6 || x.isKillableAndValidTarget(E.GetDamage(x), TargetSelector.DamageType.Physical))))
+                                            if (MinionManager.GetMinions(E.Range, MinionTypes.All, MinionTeam.Neutral, MinionOrderTypes.MaxHealth).Any(x => x.IsValidTarget(E.Range) && (x.GetBuffCount("TwitchHideInShadows") >= 6 || x.isKillableAndValidTarget(E.GetDamage(x), TargetSelector.DamageType.Physical))))
                                                 E.Cast();
                                 break;
                             }

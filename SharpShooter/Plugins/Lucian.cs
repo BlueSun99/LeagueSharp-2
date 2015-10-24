@@ -205,7 +205,7 @@ namespace SharpShooter.Plugins
                                             if (Q.isReadyPerfectly())
                                                 if (!ObjectManager.Player.IsDashing())
                                                 {
-                                                    var Target = MinionManager.GetMinions(Q.Range, MinionTypes.All, MinionTeam.Neutral).FirstOrDefault(x => x.IsValidTarget(Q.Range));
+                                                    var Target = MinionManager.GetMinions(Q.Range, MinionTypes.All, MinionTeam.Neutral, MinionOrderTypes.MaxHealth).FirstOrDefault(x => x.IsValidTarget(Q.Range));
                                                     if (Target != null)
                                                         Q.CastOnUnit(Target);
                                                 }
@@ -216,7 +216,7 @@ namespace SharpShooter.Plugins
                                             if (W.isReadyPerfectly())
                                                 if (!ObjectManager.Player.IsDashing())
                                                 {
-                                                    var Target = MinionManager.GetMinions(W.Range, MinionTypes.All, MinionTeam.Neutral).FirstOrDefault(x => x.IsValidTarget(W.Range));
+                                                    var Target = MinionManager.GetMinions(W.Range, MinionTypes.All, MinionTeam.Neutral, MinionOrderTypes.MaxHealth).FirstOrDefault(x => x.IsValidTarget(W.Range));
                                                     if (Target != null)
                                                         W.Cast(Target);
                                                 }

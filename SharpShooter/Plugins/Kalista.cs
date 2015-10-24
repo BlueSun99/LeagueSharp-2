@@ -189,7 +189,7 @@ namespace SharpShooter.Plugins
                                     if (Q.isReadyPerfectly())
                                         if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Jungleclear.IfMana))
                                         {
-                                            var QTarget = MinionManager.GetMinions(Q.Range, MinionTypes.All, MinionTeam.Neutral).FirstOrDefault(x => x.IsValidTarget(Q.Range) && Q.GetPrediction(x).Hitchance >= HitChance.High);
+                                            var QTarget = MinionManager.GetMinions(Q.Range, MinionTypes.All, MinionTeam.Neutral, MinionOrderTypes.MaxHealth).FirstOrDefault(x => x.IsValidTarget(Q.Range) && Q.GetPrediction(x).Hitchance >= HitChance.High);
 
                                             if (QTarget != null)
                                                 Q.Cast(QTarget);
@@ -198,7 +198,7 @@ namespace SharpShooter.Plugins
                                 if (MenuProvider.Champion.Jungleclear.UseE)
                                     if (E.isReadyPerfectly())
                                         if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Jungleclear.IfMana))
-                                            if (MinionManager.GetMinions(E.Range, MinionTypes.All, MinionTeam.Neutral).Any(x => HealthPrediction.GetHealthPrediction(x, 500) > 0 && x.isKillableAndValidTarget(E.GetDamage(x), TargetSelector.DamageType.Physical)))
+                                            if (MinionManager.GetMinions(E.Range, MinionTypes.All, MinionTeam.Neutral, MinionOrderTypes.MaxHealth).Any(x => HealthPrediction.GetHealthPrediction(x, 500) > 0 && x.isKillableAndValidTarget(E.GetDamage(x), TargetSelector.DamageType.Physical)))
                                                 E.Cast();
 
                                 break;
@@ -214,7 +214,7 @@ namespace SharpShooter.Plugins
                 if (MenuProvider.Champion.Misc.getBoolValue("Use Mobsteal (With E)"))
                 {
                     if (E.isReadyPerfectly())
-                        if (MinionManager.GetMinions(E.Range, MinionTypes.All, MinionTeam.Neutral).Any(x => HealthPrediction.GetHealthPrediction(x, 500) > 0 && x.isKillableAndValidTarget(E.GetDamage(x), TargetSelector.DamageType.Physical)))
+                        if (MinionManager.GetMinions(E.Range, MinionTypes.All, MinionTeam.Neutral, MinionOrderTypes.MaxHealth).Any(x => HealthPrediction.GetHealthPrediction(x, 500) > 0 && x.isKillableAndValidTarget(E.GetDamage(x), TargetSelector.DamageType.Physical)))
                             E.Cast();
                 }
 

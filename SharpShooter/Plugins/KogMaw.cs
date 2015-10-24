@@ -154,7 +154,7 @@ namespace SharpShooter.Plugins
                                     if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Jungleclear.IfMana))
                                         if (E.isReadyPerfectly())
                                         {
-                                            var Target = MinionManager.GetMinions(600, MinionTypes.All, MinionTeam.Neutral).FirstOrDefault(x => x.IsValidTarget(600));
+                                            var Target = MinionManager.GetMinions(600, MinionTypes.All, MinionTeam.Neutral, MinionOrderTypes.MaxHealth).FirstOrDefault(x => x.IsValidTarget(600));
                                             if (Target != null)
                                                 E.Cast(Target);
                                         }
@@ -164,7 +164,7 @@ namespace SharpShooter.Plugins
                                         if (R.isReadyPerfectly())
                                             if (ObjectManager.Player.GetBuffCount("kogmawlivingartillerycost") < MenuProvider.Champion.Jungleclear.getSliderValue("R Stacks Limit").Value)
                                             {
-                                                var Target = MinionManager.GetMinions(600, MinionTypes.All, MinionTeam.Neutral).FirstOrDefault(x => x.IsValidTarget(600));
+                                                var Target = MinionManager.GetMinions(600, MinionTypes.All, MinionTeam.Neutral, MinionOrderTypes.MaxHealth).FirstOrDefault(x => x.IsValidTarget(600));
                                                 if (Target != null)
                                                     R.Cast(Target);
                                             }
@@ -189,7 +189,7 @@ namespace SharpShooter.Plugins
                     case Orbwalking.OrbwalkingMode.LaneClear:
                         if (W.isReadyPerfectly())
                             if (MenuProvider.Champion.Jungleclear.UseW)
-                                if (MinionManager.GetMinions(Orbwalking.GetRealAutoAttackRange(ObjectManager.Player), MinionTypes.All, MinionTeam.Neutral).Any(x => x.NetworkId == args.Target.NetworkId))
+                                if (MinionManager.GetMinions(Orbwalking.GetRealAutoAttackRange(ObjectManager.Player), MinionTypes.All, MinionTeam.Neutral, MinionOrderTypes.MaxHealth).Any(x => x.NetworkId == args.Target.NetworkId))
                                     W.Cast();
                         break;
                 }

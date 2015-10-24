@@ -116,7 +116,7 @@ namespace SharpShooter.Plugins
                                     if (ObjectManager.Player.isManaPercentOkay(MenuProvider.Champion.Jungleclear.IfMana))
                                         if (Q.isReadyPerfectly())
                                         {
-                                            var Target = MinionManager.GetMinions(Q.Range, MinionTypes.All, MinionTeam.Neutral).FirstOrDefault(x => x.IsValidTarget(Q.Range));
+                                            var Target = MinionManager.GetMinions(Q.Range, MinionTypes.All, MinionTeam.Neutral, MinionOrderTypes.MaxHealth).FirstOrDefault(x => x.IsValidTarget(Q.Range));
                                             if (Target != null)
                                                 Q.Cast(Target);
                                         }
@@ -127,7 +127,7 @@ namespace SharpShooter.Plugins
                                         {
                                             if (R.Instance.Ammo > MenuProvider.Champion.Jungleclear.getSliderValue("Keep R Stacks").Value)
                                             {
-                                                var Target = MinionManager.GetMinions(R.Range, MinionTypes.All, MinionTeam.Neutral).FirstOrDefault(x => x.IsValidTarget(R.Range));
+                                                var Target = MinionManager.GetMinions(R.Range, MinionTypes.All, MinionTeam.Neutral, MinionOrderTypes.MaxHealth).FirstOrDefault(x => x.IsValidTarget(R.Range));
                                                 if (Target != null)
                                                     R.Cast(Target);
                                             }
